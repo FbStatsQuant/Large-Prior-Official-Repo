@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "Large series priors for adaptive and optimal Bayesian nonparametric regression: code and Lean formalization"
+type: software
+license: MIT
+authors:
+  - family-names: Bedoya
+    given-names: Felipe
+    affiliation: "Department of Statistics, Rice University"
+  - family-names: Li
+    given-names: Meng
+    affiliation: "Department of Statistics, Rice University"
+repository-code: "https://github.com/FbStatsQuant/Large-Prior-Official-Repo"
+preferred-citation:
+  type: article
+  title: "Large series priors for adaptive and optimal Bayesian nonparametric regression"
+  authors:
+    - family-names: Bedoya
+      given-names: Felipe
+      affiliation: "Department of Statistics, Rice University"
+    - family-names: Li
+      given-names: Meng
+      affiliation: "Department of Statistics, Rice University"

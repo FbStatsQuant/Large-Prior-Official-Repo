@@ -1,0 +1,40 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Lean build output
+lean/.lake/
+*.olean
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.synctex.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Outputs written by the scripts at run time
+# simulations/benchmarks_ridge_hs/ (run_all.R, trend_plots.R)
+simulations/benchmarks_ridge_hs/results/
+simulations/benchmarks_ridge_hs/quick_results/
+simulations/benchmarks_ridge_hs/trend_plots/
+# simulations/convergence_nots/ (worker, process and SLURM scripts, table2_slopes.R)
+simulations/convergence_nots/**/results/
+simulations/convergence_nots/**/processed/
+simulations/convergence_nots/**/logs/
+simulations/convergence_nots/final/
+# data_applications/ (run_applications.R, make_figure.R, prep_*.R)
+data_applications/output/
+data_applications/data/sunspots.csv
+data_applications/data/bike.csv
+# raw files downloaded by prep_sunspots.R and prep_bike.R (the SHA256SUMS.txt files stay tracked)
+data_applications/data/raw/sunspots/*
+!data_applications/data/raw/sunspots/SHA256SUMS.txt
+data_applications/data/raw/bike/*
+!data_applications/data/raw/bike/SHA256SUMS.txt
+
+# Internal provenance notes (not published)
+_internal/

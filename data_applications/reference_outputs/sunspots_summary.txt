@@ -1,0 +1,15 @@
+application: sunspots
+run date: 2026-10-27 19:04 CDT
+n = 1500
+K = floor(n^0.7) = 167
+dictionary = cosine  (M4): 1, cos(pi k x), k = 1..2K
+columns = 2K+1 = 335
+tau = K^-2 = 3.585643e-05
+nmc = 20000, burn = 10000, seed = 20261027
+posterior mean of sigma = 1.374167
+active frequencies count = 24
+active frequencies = 2 4 7 11 12 16 19 21 22 23 24 25 26 27 28 29 30 31 32 46 47 48 53 76
+run time (seconds) = 1685.9
+input data file = data/sunspots.csv
+input data sha256 = bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb
+sampler: horseshoe 0.2.0, method.tau = fixed, method.sigma = Jeffreys

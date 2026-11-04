@@ -1,0 +1,51 @@
+Ridge vs Horseshoe comparison: Function 2
+Target: |sin(pi * (x - 0.3))|^3 + 0.7 * |sin(pi * (x - 0.7))|^3
+Seed: 1991
+n: 1000
+Displayed Fourier dimension J (= p): 125
+MSE-grid Fourier dimensions J (= p): 140, 160, 180, 200, 220, 240, 260, 280, 300
+Known noise SD: 0.070000
+Empirical signal-to-noise ratio: 105.357633
+Horseshoe global-scale method: halfCauchy
+Horseshoe point estimate: coefficientwise posterior mean (BetaHat)
+MCMC: burn=1000, nmc=5000, thin=1
+Ridge CV folds: 20
+Ridge: direct solution of RSS + lambda*||beta||^2; all columns, including the constant, are penalized
+
+Displayed-fit metrics:
+ function_id    n   J   p sigma    method          mse mse_x1000
+           2 1000 125 125  0.07 Horseshoe 0.0001220132 0.1220132
+           2 1000 125 125  0.07     Ridge 0.0007410081 0.7410081
+ tau_posterior_mean lambda_rss lambda_per_observation      cv_mse
+        0.009008773         NA                     NA          NA
+                 NA   1.918752            0.001918752 0.006199907
+
+R session:
+R version 4.4.1 (2024-06-14 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] labeling_0.4.3     RColorBrewer_1.1-3 R6_2.6.1           tidyselect_1.2.1  
+ [5] horseshoe_0.2.0    farver_2.1.2       magrittr_2.0.4     gtable_0.3.6      
+ [9] glue_1.8.0         tibble_3.3.1       pkgconfig_2.0.3    dplyr_1.2.0       
+[13] generics_0.1.4     lifecycle_1.0.5    ggplot2_4.0.2      cli_3.6.5         
+[17] S7_0.2.1           scales_1.4.0       grid_4.4.1         vctrs_0.7.1       
+[21] withr_3.0.2        textshaping_1.0.5  systemfonts_1.3.2  compiler_4.4.1    
+[25] tools_4.4.1        ragg_1.5.1         pillar_1.11.1      rlang_1.1.7       

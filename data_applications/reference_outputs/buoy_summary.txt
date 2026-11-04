@@ -1,0 +1,15 @@
+application: buoy
+run date: 2026-10-27 19:16 CDT
+n = 650
+K = floor(n^0.7) = 93
+dictionary = fourier  (M2): 1, sin(2 pi k x), cos(2 pi k x), k = 1..K
+columns = 2K+1 = 187
+tau = K^-2 = 1.156203e-04
+nmc = 20000, burn = 10000, seed = 20261027
+posterior mean of sigma = 0.382619
+active frequencies count = 1
+active frequencies = 1
+run time (seconds) = 331.4
+input data file = data/buoy.csv
+input data sha256 = 12153911b62d82241fe2977395e2f949a4b45e2374032505054eca923bf241d3
+sampler: horseshoe 0.2.0, method.tau = fixed, method.sigma = Jeffreys

@@ -1,0 +1,15 @@
+application: bike
+run date: 2026-10-27 19:11 CDT
+n = 731
+K = floor(n^0.7) = 101
+dictionary = cosine  (M4): 1, cos(pi k x), k = 1..2K
+columns = 2K+1 = 203
+tau = K^-2 = 9.802960e-05
+nmc = 20000, burn = 10000, seed = 20261027
+posterior mean of sigma = 0.987727
+active frequencies count = 4
+active frequencies = 1 4 8 9
+run time (seconds) = 413.2
+input data file = data/bike.csv
+input data sha256 = ae14d64f655ee56b7c1025a98e075b8269f2c1e8c58fb9146bc6109049dcaa7a
+sampler: horseshoe 0.2.0, method.tau = fixed, method.sigma = Jeffreys
