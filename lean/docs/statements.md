@@ -106,7 +106,7 @@ E₀ is a genuine expectation under P₀. The posterior is a probability measure
    - a_n ≤ s_n ≤ C a_n;
    - a_n lies between C⁻¹(n/log n)^D and C(n/log n)^D;
    - ε_n lies between C⁻¹(n/log n)^{−r} and C(n/log n)^{−r}.
-2. **Bounds.** Set A′ = A C_s/C_sp and c = C_ε²/C_s, where C_a = 2^d C_sp + 1 and C_s = max{C_a, C_ε² + 1} (Appendix B). For every M_n → ∞ and all large n:
+2. **Bounds.** Set A′ = A C_s/C_sp and c = C_ε²/C_s, where C_a = 2^d C_sp + 1 and C_s = max{C_a, C_ε² + 1} (proof of Corollary 1 in the Appendix). For every M_n → ∞ and all large n:
    - E₀ Π(‖f_θ − f₀‖_{2,n} > M_n ε_n | Y) ≤ 5 e^{−c n ε_n²};
    - E₀ Π(#{j : |θ_j| > δ_n} > A′ a_n | Y) ≤ 2 e^{−c n ε_n²}.
 3. Both posterior probabilities tend to 0 in P₀-probability.
@@ -115,7 +115,7 @@ Here ε_n and s_n are Theorem 1's `epsRate` and `sRate` at the corollary's seque
 
 **`CorHorseshoeStatement`** (`cor_horseshoe`) gives the same conclusions for the Horseshoe with τ_n = J_n^{−(2+μ″)}/√n. Assumption 3 is derived rather than assumed. The scale τ_n depends only on n and J_n, not on α.
 
-## 6. The approximation lemmas (Appendix D)
+## 6. The sparse approximation lemmas (B-spline and Fourier)
 
 The lemmas are stated in sup-norm. The empirical-norm profile then follows at any design.
 

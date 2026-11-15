@@ -1,13 +1,13 @@
 # Lean formalization
 
-*Theorem 1 · Corollary 1 · Appendix D*
+*Theorem 1 · Corollary 1 · the sparse approximation lemmas*
 
 This folder contains machine-checked proofs, in Lean 4 with Mathlib, of the paper's main theoretical results:
 
 - **Theorem 1**: posterior contraction for product shrinkage priors under Assumptions 1–3.
 - **The Horseshoe paragraph** after Theorem 1: the Horseshoe with a deterministic global scale satisfies Assumption 3.
 - **Corollary 1**: adaptive near-minimax rates from the sparse approximation profile.
-- **The Appendix D lemmas**: the Fourier and B-spline approximation profiles. The classical approximation theorems they rely on enter as explicit hypotheses (see below).
+- **The sparse approximation lemmas** (B-spline and Fourier): the Fourier and B-spline approximation profiles. The classical approximation theorems they rely on enter as explicit hypotheses (see below).
 
 Everything is proved: there is no `sorry`, and the only axioms are Lean's standard three (`propext`, `Classical.choice`, `Quot.sound`).
 
@@ -57,7 +57,7 @@ The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), 
 - Every condition on the sequences is required only for large n.
 - (WG5) is stated with an almost-everywhere lower bound on the density. The paper's pointwise version implies it (`wg5Paper_implies_wg5`), and this form is needed for the Horseshoe, whose density is infinite at 0.
 
-**Corollary 1** has the paper's hypotheses and conclusions, including the explicit constants A′ = A C_s/C_sp and c = C_ε²/C_s of Appendix B. The differences point the same safe way: the constant 5 in place of 6 in the first bound of (ii), and the profile required only for large n.
+**Corollary 1** has the paper's hypotheses and conclusions, including the explicit constants A′ = A C_s/C_sp and c = C_ε²/C_s from the proof of Corollary 1 in the Appendix. The differences point the same safe way: the constant 5 in place of 6 in the first bound of (ii), and the profile required only for large n.
 
 **The classical approximation inputs** are hypotheses of the profile lemmas and the end-to-end statements: the Jackson–Stechkin inequality, B-spline stability, and the one-block spline approximation of Hölder functions. Each is proved in Lean for a base case:
 
