@@ -11,12 +11,6 @@
 #   - Adjusted = OLS slope of log(median RMSE) - 0.5 log(log n) on log(n);
 #   - gamma_q  = OLS slope of log(median q_hat) on log(n).
 #
-# This script was written for the repository from these rules; the one
-# used for the paper's table was not kept. On the F1 outputs shipped in
-# reference_outputs/F1/ it gives (raw / adjusted / gamma_q)
-#   B-spline  -0.153 / -0.211 / 0.705   (paper: -0.151 / -0.210 / 0.707)
-#   Cosine    -0.331 / -0.389 / 0.206   (paper: -0.332 / -0.390 / 0.241)
-#
 # Usage (from this folder):
 #   Rscript table2_slopes.R                    # reads F*/processed/F*_{fourier,spline}.csv
 #   Rscript table2_slopes.R --processed=reference_outputs/F1 --functions=F1

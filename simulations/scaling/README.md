@@ -74,5 +74,3 @@ The raw `.rds` fits (thousands of files) are not included. `reference_outputs/F1
 ```sh
 Rscript table2_slopes.R --processed=reference_outputs/F1 --functions=F1
 ```
-
-**Reproducibility note.** The script that computed the published slopes was not kept, so `table2_slopes.R` recomputes them from the rules stated in Section 3.2. On the f1 files above it gives raw and adjusted slopes of −0.153 and −0.211 (B-spline) and −0.331 and −0.389 (cosine), within 0.002 of Table 2. The count slopes γ̂_q are 0.705 and 0.206, against 0.707 and 0.241 in Table 2. The grid in `F3_worker.R` (n = 400, 800, …, 14800) differs from the grid of Table 2 (n = 1000, 1500, …, 20000).
