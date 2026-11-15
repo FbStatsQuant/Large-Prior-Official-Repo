@@ -69,15 +69,10 @@ Task `i` maps to `n = n_seq[(i - 1) %/% 100 + 1]` and `seed = (i - 1) %% 100 + 1
 
 ## Reference outputs
 
-The raw `.rds` fits (thousands of files) are not included. `reference_outputs/F1/` holds the processed f1 CSVs from our cluster run, with 100 data sets at each n = 1000, 1500, …, 23500. Rerunning task 1 locally reproduces its row to machine precision. To get the slopes from these files:
+The raw `.rds` fits (thousands of files) are not included. `reference_outputs/F1/` holds the processed f1 CSVs from our cluster run, with 100 data sets at each n = 1000, 1500, …, 23500; rerunning task 1 locally reproduces its row to machine precision. To compute the slopes from these files:
 
 ```sh
 Rscript table2_slopes.R --processed=reference_outputs/F1 --functions=F1
 ```
 
-We did not keep the script behind the published table, so `table2_slopes.R` re-implements the rules of Section 3.2. On these files it gives:
-
-| f1 | Raw | Adjusted | γ̂_q |
-|---|---|---|---|
-| B-spline (these files / Table 2) | −0.153 / −0.151 | −0.211 / −0.210 | 0.705 / 0.707 |
-| Cosine (these files / Table 2) | −0.331 / −0.332 | −0.389 / −0.390 | 0.206 / 0.241 |
+**Reproducibility note.** The script that computed the published slopes was not kept, so `table2_slopes.R` recomputes them from the rules stated in Section 3.2. On the f1 files above it gives raw and adjusted slopes of −0.153 and −0.211 (B-spline) and −0.331 and −0.389 (cosine), within 0.002 of Table 2. The count slopes γ̂_q are 0.705 and 0.206, against 0.707 and 0.241 in Table 2. The grid in `F3_worker.R` (n = 400, 800, …, 14800) differs from the grid of Table 2 (n = 1000, 1500, …, 20000).
