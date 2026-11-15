@@ -23,6 +23,7 @@ On the theory side, Theorem 1 gives posterior contraction for product shrinkage 
 | [`simulations/benchmarks/`](simulations/benchmarks) | §3.1: Figure 1, Table 1 | `Rscript run_all.R`, then `Rscript trend_plots.R` | 30–60 min per function |
 | [`simulations/scaling/`](simulations/scaling) | §3.2: Table 2 | SLURM arrays, then `Rscript table2_slopes.R` | 15,500 cluster tasks |
 | [`applications/`](applications) | §3.3: Figure 2 | `code/prep_*.R`, `run_applications.R`, `make_figure.R` | about 45 min |
+| [`paper/`](paper) | Appendix: proofs of all lemmas | read `lemma_proofs.pdf` | |
 | [`lean/`](lean) | Theorem 1, Corollary 1, Appendix D | `lake build`, then `lake env lean AxiomCheck.lean` | about 15 min with the Mathlib cache |
 
 Each folder has its own README with the settings, the commands and the outputs. Every R script runs from its own folder and writes next to itself, so nothing needs editing.
