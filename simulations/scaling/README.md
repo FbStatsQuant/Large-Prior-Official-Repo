@@ -1,8 +1,10 @@
-# Scaling experiment (Section 3.2, Table 2)
+# Scaling experiment
+
+*Section 3.2 · Table 2*
 
 How do the error of the posterior mean and the number of non-negligible coefficients grow with n, for a cosine basis versus a cubic B-spline basis? This folder runs that experiment. Each (n, data set) pair is a separate job, so it is set up as SLURM array jobs. We ran it on Rice's NOTS cluster.
 
-## Layout
+## Files
 
 ```
 scaling/
@@ -21,7 +23,7 @@ scaling/
 
 Every task simulates a data set, fits the Horseshoe with two bases, and saves the posterior means and medians of the coefficients. The design is equally spaced on [0, 1], J_n = ⌊n^0.7⌋, and σ² is treated as known.
 
-- **Cosine basis:** 1, cos(πx), …, cos(πJ_n x), which is J_n + 1 columns. The global scale τ is fixed.
+- **Cosine basis:** 1, cos(πx), …, cos(πJ_n x), which is J_n + 1 columns. The global scale τ is fixed. In file and variable names this basis is called `fourier`.
 - **B-spline basis:** cubic, `splines::bs(x, df = J_n, intercept = TRUE)`, which is J_n columns. The global scale has a half-Cauchy prior.
 
 | | f1 | f2 | f3 |
@@ -35,9 +37,9 @@ Every task simulates a data set, fits the Horseshoe with two bases, and saves th
 | MCMC (burn + draws) | 2000 + 5000 | 2000 + 5000 | 2000 + 6000 cosine, 2000 + 5000 B-spline |
 | Array tasks | 5,900 | 5,900 | 3,700 |
 
-The exact formulas for the targets are at the top of each `F*_worker.R`. The same formula is repeated in `F*_process.R`, which needs it to compute the error.
+The exact formulas for the targets are at the top of each `F*_worker.R`. The same formula is repeated in `F*_process.R`, which needs it to compute the error. f1 is the same function as in Section 3.1; f2 and f3 are not the benchmark targets of Section 3.1.
 
-From the saved coefficients, `F*_process.R` rebuilds the fitted curve at the design points and records the following:
+From the saved coefficients, `F*_process.R` rebuilds the fitted curve at the design points and records:
 
 - `rmse_mean`: ‖f̂ − f₀‖_{2,n} for the posterior mean. `rmse_median` is the same for the posterior median.
 - `a1`, `a2`, `a3`: how many posterior-mean coefficients exceed 1/√J_n, 1/J_n and 1/(J_n√n) in absolute value. Table 2 uses `a2`, the count above 1/J_n.
@@ -73,9 +75,9 @@ The raw `.rds` fits (thousands of files) are not included. `reference_outputs/F1
 Rscript table2_slopes.R --processed=reference_outputs/F1 --functions=F1
 ```
 
+We did not keep the script behind the published table, so `table2_slopes.R` re-implements the rules of Section 3.2. On these files it gives:
+
 | f1 | Raw | Adjusted | γ̂_q |
 |---|---|---|---|
-| B-spline (this file / Table 2) | −0.153 / −0.151 | −0.211 / −0.210 | 0.705 / 0.707 |
-| Cosine (this file / Table 2) | −0.331 / −0.332 | −0.389 / −0.390 | 0.206 / 0.241 |
-
-`table2_slopes.R` is a re-implementation of the rules stated in Section 3.2, because the script that produced the published table was not kept.
+| B-spline (these files / Table 2) | −0.153 / −0.151 | −0.211 / −0.210 | 0.705 / 0.707 |
+| Cosine (these files / Table 2) | −0.331 / −0.332 | −0.389 / −0.390 | 0.206 / 0.241 |

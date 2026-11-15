@@ -1,4 +1,6 @@
-# Real-data applications (Section 3.3, Figure 2)
+# Real-data applications
+
+*Section 3.3 · Figure 2*
 
 This folder applies the same large series prior to three noisy public series.
 
@@ -6,7 +8,7 @@ This folder applies the same large series prior to three noisy public series.
 |---|---|---|---|
 | Monthly sunspot number, 1900–2024 (√ scale) | 1500 | cosine | 335 |
 | Daily bike rentals, Washington DC, 2011–2012 (thousands) | 731 | cosine | 203 |
-| Daily significant wave height, NOAA buoy 46001, 2010–2023 (log scale, weekly) | 650 | Fourier | 187 |
+| Significant wave height, NOAA buoy 46001, 2010–2023 (one day per week, log scale) | 650 | Fourier | 187 |
 
 All three use the frequency cutoff K = ⌊n^0.7⌋, a Horseshoe with τ = K⁻², and a Jeffreys prior on σ. The chain runs 10,000 burn-in iterations and then keeps 20,000 draws. The two chronological series use cosines cos(πkx), k = 1, …, 2K, which do not force the two ends to meet. Wave height is periodic in day of year, so it uses the ordinary Fourier basis. [`MODEL.md`](MODEL.md) gives the full specification.
 
@@ -24,9 +26,13 @@ Rscript code/make_figure.R        # output/applications_fig.{png,pdf}
 
 The sunspot fit takes about half an hour, and the bike and buoy fits take 5–8 minutes each. You can also fit a subset, as in `Rscript code/run_applications.R bike buoy`. Adding `--nmc=500 --burn=100` gives a quick check, which writes to `output/_quick/`.
 
-SILSO revises its sunspot file every month, so a fresh download usually won't match the paper's hash. `prep_sunspots.R --refresh` accepts the current file. The paper's prepared series has SHA-256 `bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb`.
+SILSO revises its sunspot file every month, so a fresh download usually won't match the paper's hash. `prep_sunspots.R --refresh` accepts the current file. For reference, the paper's prepared `data/sunspots.csv` has SHA-256
 
-## What's here
+```
+bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb
+```
+
+## Files
 
 ```
 applications/
@@ -40,7 +46,7 @@ applications/
 ├── data/
 │   ├── buoy.csv           prepared wave-height series
 │   └── raw/               NOAA buoy files, plus SHA256SUMS.txt for all three sources
-└── reference_outputs/     summaries of the paper run, and the full buoy fit
+└── reference_outputs/     summaries of the paper run, the full buoy fit, and Figure 2
 ```
 
 The reference summaries record n, the number of columns, τ, E[σ | y], the active frequencies and the input hash. A rerun of the buoy example reproduces `reference_outputs/buoy_fit.csv` byte for byte.

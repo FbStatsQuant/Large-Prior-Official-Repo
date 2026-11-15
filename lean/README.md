@@ -1,5 +1,7 @@
 # Lean formalization
 
+*Theorem 1 · Corollary 1 · Appendix D*
+
 This folder contains machine-checked proofs, in Lean 4 with Mathlib, of the paper's main theoretical results:
 
 - **Theorem 1**: posterior contraction for product shrinkage priors under Assumptions 1–3.
@@ -25,7 +27,7 @@ lake env lean AxiomCheck.lean   # prints the axioms each main theorem uses
 - Lines like `example : AsymptoticStatement := asymptotic_theorem` compile only if the theorem has exactly the stated type.
 - The `#print axioms` lines should all read `[propext, Classical.choice, Quot.sound]`.
 
-`SHA256SUMS.txt` lists the hashes of the Lean sources.
+`SHA256SUMS.txt` lists the hashes of the Lean sources, so you can confirm they are the ones we checked (`sha256sum -c SHA256SUMS.txt`).
 
 ## Where the statements are
 
@@ -33,18 +35,21 @@ lake env lean AxiomCheck.lean   # prints the axioms each main theorem uses
 |---|---|---|
 | Theorem 1 | `AsymptoticStatement` | `asymptotic_theorem` |
 | Theorem 1 at a fixed n, with explicit conditions | `MasterStatement` | `master_theorem` |
-| Horseshoe paragraph (eq. hs-conditions ⇒ Assumption 3) | `HorseshoePaperConditionsStatement` | `horseshoe_paper_conditions` |
+| Horseshoe paragraph after Theorem 1 (its conditions ⇒ Assumption 3) | `HorseshoePaperConditionsStatement` | `horseshoe_paper_conditions` |
 | Theorem 1 for the Horseshoe | `MainHorseshoeStatement` | `main_horseshoe` |
 | Assumption 1 for Fourier / B-spline atoms | `FourierBasisStatement`, `BSplineBasisStatement` | `fourier_basis`, `bspline_basis` |
 | Corollary 1 | `CorollaryStatement` | `corollary_main` |
 | Corollary 1 for the Horseshoe | `CorHorseshoeStatement` | `cor_horseshoe` |
 | Fourier profile lemma | `FourierProfileStatement` | `fourier_profile` |
 | B-spline profile lemma | `BSplineProfileStatement`, `BSplineProfileCubeStatement` | `bspline_profile`, `bspline_profile_cube` |
-| Corollary 1 end to end (function class ⇒ rate) | `CorFourierStatement`, `CorBSplineStatement`, `CorBSplineCubeStatement`, `CorHolderStatement` | `cor_fourier`, `cor_bspline`, `cor_bspline_cube`, `cor_holder` |
+| Corollary 1 end to end: periodic Hölder–Zygmund f₀, Fourier | `CorFourierStatement` | `cor_fourier` |
+| Corollary 1 end to end: multiresolution B-splines | `CorBSplineStatement` | `cor_bspline` |
+| Corollary 1 end to end: B-splines, isotropic | `CorBSplineCubeStatement` | `cor_bspline_cube` |
+| Corollary 1 end to end: C^α([0,1]), 0 < α ≤ 1, nothing assumed | `CorHolderStatement` | `cor_holder` |
 
 The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), [`LargePrior/CorSpec.lean`](LargePrior/CorSpec.lean) and [`LargePrior/HorseshoePaper.lean`](LargePrior/HorseshoePaper.lean). [`docs/statements.md`](docs/statements.md) explains each one in plain mathematics, so you can compare it with the paper without reading Lean. The two blueprints in `docs/` follow the paper's proofs step by step and give the Lean name of every intermediate result: [`blueprint_theorem1.pdf`](docs/blueprint_theorem1.pdf) and [`blueprint_corollary1.pdf`](docs/blueprint_corollary1.pdf).
 
-## How the formal statements relate to the paper
+## Differences from the paper
 
 **Theorem 1** has the paper's hypotheses and conclusions, with some small differences that all point the safe way:
 
@@ -62,7 +67,7 @@ The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), 
 
 As a result, `CorHolderStatement`, which is Corollary 1 for every f₀ in a C^α([0,1]) ball with 0 < α ≤ 1, has no assumed input at all.
 
-## Layout
+## Files
 
 ```
 lean/
@@ -73,3 +78,16 @@ lean/
 ├── lakefile.toml, lake-manifest.json, lean-toolchain
 └── SHA256SUMS.txt
 ```
+
+A rough map of `LargePrior/`. Every file opens with a short description.
+
+| Part | Modules |
+|---|---|
+| Statements | `Spec`, `CorSpec`, `HorseshoePaper` |
+| Theorem 1 | `Basic`, `Gaussian`, `Posterior`, `LocalMass`, `Evidence`, `Sieve`, `BasicTest`, `Packing`, `Covering`, `Tests`, `Master`, `Asymptotic`, `WG4Perm`, `WG5Bridge` |
+| Horseshoe | `Horseshoe`, `WGFixed`, `HorseshoeAsymptotic`, `HorseshoeMain` |
+| Dictionaries | `Basis`, `BSpline` |
+| Corollary 1 | `CorSeqA`, `CorSeq`, `Corollary`, `CorHorseshoe`, `EndSizes`, `EndToEnd` |
+| Fourier profile | `TrigBasics`, `Fejer`, `VdPBasics`, `VdP` (de la Vallée Poussin), `FourierTensor`, `FourierExpand`, `FourierProfile`, `Jackson` |
+| B-spline profile | `SplineBook`, `SplineReadout`, `SplinePad`, `SplineProfile` |
+| Checks | `NonVacuity`, `CorNonVacuity`, `CorNonVacuityS`, `Sanity`, `CorSanity` |

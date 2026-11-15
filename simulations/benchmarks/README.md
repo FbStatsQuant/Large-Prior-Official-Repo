@@ -1,6 +1,8 @@
-# Benchmarks: Horseshoe vs. ridge (Section 3.1, Figure 1, Table 1)
+# Benchmarks: Horseshoe vs. ridge
 
-This folder fits the same real Fourier dictionary two ways and compares them on three periodic test functions. The two fits are a Horseshoe prior and ridge regression with a cross-validated penalty. Because the dictionary is shared, the comparison isolates the regularization.
+*Section 3.1 · Figure 1 · Table 1*
+
+We fit the same Fourier dictionary two ways, with a Horseshoe prior and with cross-validated ridge, on three periodic test functions. Both fits see the same basis, so any difference comes from the regularization alone.
 
 | | Target | Noise sd |
 |---|---|---|
@@ -10,13 +12,14 @@ This folder fits the same real Fourier dictionary two ways and compares them on 
 
 ## Files
 
-| File | What it does |
-|---|---|
-| `function_1.R`, `function_2.R`, `function_3.R` | one target each: simulate, fit, write results |
-| `run_all.R` | runs the three in turn |
-| `trend_plots.R` | draws Figure 1 from saved results, without rerunning the MCMC |
-| `_ridge_hs_common.R` | shared code: the dictionary, both fits, MSE tables, plots |
-| `reference_outputs/` | outputs of the paper run (see below) |
+```
+benchmarks/
+├── function_1.R  function_2.R  function_3.R   one target each: simulate, fit, write results
+├── run_all.R                                  runs the three in turn
+├── trend_plots.R                              draws Figure 1 from saved results (no MCMC)
+├── _ridge_hs_common.R                         shared code: dictionary, both fits, tables, plots
+└── reference_outputs/                         outputs of the paper run (see below)
+```
 
 ## Running it
 
@@ -42,7 +45,7 @@ To redraw Figure 1 without the MCMC, copy `reference_outputs/` to `results/` and
 
 ## Outputs
 
-Each `results/function_k/` gets the following files:
+Each `results/function_k/` ends up with:
 
 - the fitted curves: `f*_predictions.csv`, with the plots as JPG and PDF;
 - the error tables: `f*_display_metrics.csv` (Figure 1's MSE values), `f*_mse_long.csv` and `f*_mse_table.csv`;

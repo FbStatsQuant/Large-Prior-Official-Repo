@@ -1,25 +1,26 @@
 # The model behind the applications
 
-This file is the exact specification that `code/` implements for the three real-data examples of Section 3.3. All three use the same model. They differ only in the data and in the choice between two dictionaries.
+This is the exact model that `code/` fits in the three real-data examples (Section 3.3). All three use the same model. They differ only in the data and in the choice between two dictionaries.
 
 ## 1. Model
 
-Each data set is a set of observations (x_i, y_i), i = 1, …, n, with x_i ∈ [0, 1]:
+Each data set is a set of observations $(x_i, y_i)$, $i = 1, \dots, n$, with $x_i \in [0, 1]$:
 
-    y_i = f(x_i) + e_i,   e_i iid N(0, σ²).                                        (M1)
+$$y_i = f(x_i) + e_i, \qquad e_i \overset{\text{iid}}{\sim} N(0, \sigma^2). \tag{M1}$$
 
 **Fourier dictionary** (M2), with K frequencies and 2K + 1 columns (the constant, then sin/cos pairs):
 
-    f(x) = β_0 + Σ_{k=1}^{K} [ β_{k,s} sin(2πkx) + β_{k,c} cos(2πkx) ],   K = ⌊n^0.7⌋.
+$$f(x) = \beta_0 + \sum_{k=1}^{K} \bigl[\beta_{k,s} \sin(2\pi k x) + \beta_{k,c} \cos(2\pi k x)\bigr], \qquad K = \lfloor n^{0.7} \rfloor. \tag{M2}$$
 
 **Prior** (M3): a Horseshoe with a fixed global scale, plus a Jeffreys prior on σ, as in the `horseshoe` package:
 
-    β_j | λ_j, σ ~ N(0, σ² τ² λ_j²),   λ_j ~ C⁺(0, 1),   j = 1, …, 2K + 1 (constant included),
-    τ = K^{-2} (fixed),   p(σ²) ∝ 1/σ².
+$$\beta_j \mid \lambda_j, \sigma \sim N(0, \sigma^2 \tau^2 \lambda_j^2), \qquad \lambda_j \sim C^+(0, 1), \qquad \tau = K^{-2}\ \text{(fixed)}, \qquad p(\sigma^2) \propto 1/\sigma^2, \tag{M3}$$
+
+for $j = 1, \dots, 2K + 1$, the constant included.
 
 **Cosine dictionary** (M4). This is used for the two chronological series (sunspots, bikes), whose start and end levels differ. It has the same number of columns, 2K + 1, and the same highest frequency as (M2):
 
-    f(x) = β_0 + Σ_{k=1}^{2K} β_k cos(πkx),   K = ⌊n^0.7⌋.
+$$f(x) = \beta_0 + \sum_{k=1}^{2K} \beta_k \cos(\pi k x), \qquad K = \lfloor n^{0.7} \rfloor. \tag{M4}$$
 
 (M4) is the even half of the Fourier dictionary on [0, 2]. It does not force f(0) = f(1); instead, every element has zero slope at both ends. The prior is (M3), with τ = K^{-2} and j = 1, …, 2K + 1.
 

@@ -2,20 +2,6 @@
 
 This is a plain-mathematics reading of the formal statements, written so you can check them against the paper without reading Lean. The statements themselves live in [`LargePrior/Spec.lean`](../LargePrior/Spec.lean) (Theorem 1, the Horseshoe and the dictionaries), [`LargePrior/CorSpec.lean`](../LargePrior/CorSpec.lean) (Corollary 1 and the approximation lemmas) and [`LargePrior/HorseshoePaper.lean`](../LargePrior/HorseshoePaper.lean) (the Horseshoe paragraph of Section 2). [`AxiomCheck.lean`](../AxiomCheck.lean) pins each theorem to its statement.
 
-Contents:
-
-1. [Setting](#1-setting)
-2. [Theorem 1](#2-theorem-1)
-3. [The Horseshoe](#3-the-horseshoe)
-4. [The dictionaries (Assumption 1)](#4-the-dictionaries-assumption-1)
-5. [Corollary 1](#5-corollary-1)
-6. [The approximation lemmas (Appendix D)](#6-the-approximation-lemmas-appendix-d)
-7. [End-to-end versions of Corollary 1](#7-end-to-end-versions-of-corollary-1)
-8. [Checks that the hypotheses are not vacuous](#8-checks-that-the-hypotheses-are-not-vacuous)
-9. [Modelling choices](#9-modelling-choices)
-
----
-
 ## 1. Setting
 
 Functions are identified with their values at the n design points. The dictionary is the n × J matrix X with entries X_{ij} = ξ_j(x_i), and f_θ = Xθ. The design may change with n (it is a triangular array).
@@ -68,7 +54,7 @@ E₀ is a genuine expectation under P₀. The posterior is a probability measure
 ## 3. The Horseshoe
 
 - `horseshoePDF τ t` = ∫₀^∞ φ(t; 0, λ²τ²) · 2/(π(1 + λ²)) dλ. At t = 0 the true value is +∞, and Lean stores 0 there. This is a single point, so the law is unchanged. It is also why (WG5) is stated almost everywhere.
-- **`HorseshoeDensityStatement`**: for τ > 0 this is a probability density.
+- **`HorseshoeDensityStatement`** (`horseshoe_isProbDensity`): for τ > 0 this is a probability density.
 - **`HorseshoePaperConditionsStatement`** (`horseshoe_paper_conditions`) is the paragraph after Theorem 1. *Hypotheses:*
   - J_n → ∞ and n ε̄_n² / log J_n → ∞;
   - for all large n:
@@ -83,7 +69,7 @@ E₀ is a genuine expectation under P₀. The posterior is a probability measure
   - (WG5) holds with c₅.
 
   Only the lower half of δ_n ≍ ε̄_n/J_n is needed.
-- **`HorseshoeAssumption3Statement`** and **`HorseshoeAssumption3MuStatement`** are the same result with explicit constants: μ = μ″/2 (or any μ < μ″), c₄ = 1 and c₅ = B(6 + 5B). **`MainHorseshoeStatement`** combines this with Theorem 1.
+- **`HorseshoeAssumption3Statement`** and **`HorseshoeAssumption3MuStatement`** are the same result with explicit constants. Here the scale condition is written τ_n ≤ c_τ J_n^{−(2+μ″)}/√n, with μ″ playing the role of the paper's μ′. The constants are μ = μ″/2 (or any μ < μ″), c₄ = 1 and c₅ = B(6 + 5B). **`MainHorseshoeStatement`** combines this with Theorem 1.
 
 ## 4. The dictionaries (Assumption 1)
 
