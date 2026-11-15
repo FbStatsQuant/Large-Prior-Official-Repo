@@ -1,5 +1,5 @@
 # =====================================================================
-# Three-panel figure of the real-data applications (METHODS_SPEC.md version 3, Section 3).
+# Three-panel figure of the real-data applications (MODEL.md, Section 3).
 # Plotting only: reads output/<name>_fit.csv (t, x, y, fhat, lo, hi) written
 # by run_applications.R; no statistics are computed here.
 #   data: small grey points; posterior mean: navy line; 95% band: light
@@ -9,7 +9,7 @@
 # =====================================================================
 
 # Locate this script's folder and load the shared helpers (common.R); the
-# data_applications/ root is found from there (or from LP_APP_ROOT).
+# applications/ root is found from there (or from LP_APP_ROOT).
 local({
   a <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   d <- if (length(a)) dirname(sub("^--file=", "", a[1L])) else file.path(Sys.getenv("LP_APP_ROOT", "."), "code")

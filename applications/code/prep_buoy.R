@@ -1,7 +1,7 @@
-# prep_buoy.R -- METHODS_SPEC.md Section 2C, 5. Output: data/buoy.csv (t = day of year, x, y)
+# prep_buoy.R -- MODEL.md Section 2C, 5. Output: data/buoy.csv (t = day of year, x, y)
 # Usage: Rscript prep_buoy.R [--refresh]
 # Locate this script's folder and load the shared helpers (common.R); the
-# data_applications/ root is found from there (or from LP_APP_ROOT).
+# applications/ root is found from there (or from LP_APP_ROOT).
 local({
   a <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   d <- if (length(a)) dirname(sub("^--file=", "", a[1L])) else file.path(Sys.getenv("LP_APP_ROOT", "."), "code")
@@ -17,7 +17,7 @@ download_all <- function()
     download.file(paste0("https://www.ndbc.noaa.gov/data/historical/stdmet/", f),
                   file.path(raw, f), mode = "wb", quiet = TRUE)
 
-# Raw data handling (spec Section 5): see prepare_raw() in common.R
+# Raw data handling (MODEL.md Section 5): see prepare_raw() in common.R
 prepare_raw(raw, raw_files, download_all)
 
 # Read all years: 2 header lines starting '#'; WVHT >= 99 is missing; times UTC

@@ -1,6 +1,6 @@
 # =====================================================================
 # Series dictionaries + fixed-scale horseshoe: functions only.
-# Implements METHODS_SPEC.md (version 3), Section 1, equations (M1)-(M4).
+# Implements MODEL.md, Section 1, equations (M1)-(M4).
 #
 #   (M1)  y_i = f(x_i) + e_i,  e_i iid N(0, sigma^2),  x_i in [0,1]
 #   (M2)  Fourier: f(x) = beta_0 + sum_{k=1}^K [beta_{k,s} sin(2 pi k x) + beta_{k,c} cos(2 pi k x)]

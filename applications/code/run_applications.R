@@ -1,5 +1,5 @@
 # =====================================================================
-# Real-data applications (METHODS_SPEC.md version 3, Sections 1 and 4):
+# Real-data applications (MODEL.md, Sections 1 and 4):
 #   sunspots (cosine dictionary (M4)), bike (cosine (M4)), buoy (Fourier (M2)).
 # For each series: read data/<name>.csv (columns t, x, y), fit the dictionary
 # with the fixed-scale horseshoe (M1)-(M4) on the n original points, write
@@ -16,7 +16,7 @@
 # =====================================================================
 
 # Locate this script's folder and load the shared helpers (common.R); the
-# data_applications/ root is found from there (or from LP_APP_ROOT).
+# applications/ root is found from there (or from LP_APP_ROOT).
 local({
   a <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   d <- if (length(a)) dirname(sub("^--file=", "", a[1L])) else file.path(Sys.getenv("LP_APP_ROOT", "."), "code")

@@ -1,7 +1,7 @@
-# prep_bike.R -- METHODS_SPEC.md Section 2B, 5. Output: data/bike.csv (t, x, y)
+# prep_bike.R -- MODEL.md Section 2B, 5. Output: data/bike.csv (t, x, y)
 # Usage: Rscript prep_bike.R [--refresh]
 # Locate this script's folder and load the shared helpers (common.R); the
-# data_applications/ root is found from there (or from LP_APP_ROOT).
+# applications/ root is found from there (or from LP_APP_ROOT).
 local({
   a <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   d <- if (length(a)) dirname(sub("^--file=", "", a[1L])) else file.path(Sys.getenv("LP_APP_ROOT", "."), "code")
@@ -18,7 +18,7 @@ download_all <- function() {
   unzip(zipf, files = c("day.csv", "hour.csv"), exdir = raw)
 }
 
-# Raw data handling (spec Section 5): see prepare_raw() in common.R
+# Raw data handling (MODEL.md Section 5): see prepare_raw() in common.R
 prepare_raw(raw, raw_files, download_all)
 
 day <- read.csv(file.path(raw, "day.csv"))
@@ -27,7 +27,7 @@ day <- day[order(as.Date(day$dteday)), ]
 n <- nrow(day)
 stopifnot(n == 731, day$dteday[1] == "2011-01-01", day$dteday[n] == "2012-12-31", all(day$cnt > 0))
 
-# y = cnt/1000 (spec v3: daily rentals in thousands, untransformed); x_i = (i - 1/2)/n
+# y = cnt/1000 (daily rentals in thousands, untransformed); x_i = (i - 1/2)/n
 out <- data.frame(t = day$dteday, x = ((1:n) - 0.5) / n, y = day$cnt / 1000)
 
 # Assertion: max |y*1000 - day.cnt| == 0

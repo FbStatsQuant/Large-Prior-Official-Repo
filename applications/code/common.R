@@ -2,7 +2,7 @@
 # common.R -- shared helpers for the data-application scripts
 # (added for the public repository; not part of the original run).
 #
-#   app_root()          the data_applications/ folder: the parent of the folder
+#   app_root()          the applications/ folder: the parent of the folder
 #                       holding the running script, or the LP_APP_ROOT
 #                       environment variable when it is set.
 #   sha256_file(f)      SHA-256 of a file's bytes (package 'digest', so no
@@ -20,7 +20,7 @@ app_root <- function() {
   if (nzchar(env)) return(normalizePath(env, winslash = "/", mustWork = TRUE))
   file_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   if (length(file_arg) == 0L) {
-    stop("Run this script with Rscript, or set LP_APP_ROOT to the data_applications folder.")
+    stop("Run this script with Rscript, or set LP_APP_ROOT to the applications folder.")
   }
   script <- normalizePath(sub("^--file=", "", file_arg[1L]), winslash = "/", mustWork = TRUE)
   dirname(dirname(script))
@@ -34,7 +34,7 @@ write_sha256sums <- function(dir, files, sums_file = file.path(dir, "SHA256SUMS.
   invisible(lines)
 }
 
-# Raw data handling (METHODS_SPEC.md Section 5), shared by the three prep scripts.
+# Raw data handling (MODEL.md Section 5), shared by the three prep scripts.
 #   default:   download any missing raw file, then verify every raw file against
 #              the shipped SHA256SUMS.txt (the hashes of the paper's run) and stop
 #              on a mismatch;

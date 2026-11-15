@@ -1,7 +1,7 @@
-# prep_sunspots.R -- METHODS_SPEC.md Section 2A, 5. Output: data/sunspots.csv (t, x, y)
+# prep_sunspots.R -- MODEL.md Section 2A, 5. Output: data/sunspots.csv (t, x, y)
 # Usage: Rscript prep_sunspots.R [--refresh]
 # Locate this script's folder and load the shared helpers (common.R); the
-# data_applications/ root is found from there (or from LP_APP_ROOT).
+# applications/ root is found from there (or from LP_APP_ROOT).
 local({
   a <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
   d <- if (length(a)) dirname(sub("^--file=", "", a[1L])) else file.path(Sys.getenv("LP_APP_ROOT", "."), "code")
@@ -18,7 +18,7 @@ download_all <- function() {
   download.file("https://www.sidc.be/SILSO/INFO/sndtotcsv.php", f_d, mode = "wb", quiet = TRUE)
 }
 
-# Raw data handling (spec Section 5): see prepare_raw() in common.R
+# Raw data handling (MODEL.md Section 5): see prepare_raw() in common.R
 prepare_raw(raw, raw_files, download_all)
 
 # Monthly file: year; month; decimal date; mean SN; std dev; n obs; definitive flag
