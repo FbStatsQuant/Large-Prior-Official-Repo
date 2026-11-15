@@ -259,12 +259,46 @@ lemma corAprime_pos {A d : ℕ} {Csp Ceps : ℝ} (hA : 1 ≤ A) (hCsp : 0 < Csp)
   unfold corAprime
   positivity
 
-/-- `0 < c = C_ε² / C_a`. -/
+/-- `0 < c = C_ε² / C_s`. -/
 lemma corExpConst_pos {d : ℕ} {Csp Ceps : ℝ} (hCsp : 0 < Csp) (hCeps : 0 < Ceps) :
     0 < corExpConst d Csp Ceps := by
   have hCa : 0 < corCa d Csp := by unfold corCa; positivity
+  have hCs : 0 < corCs d Csp Ceps := lt_of_lt_of_le hCa (le_max_left _ _)
   unfold corExpConst
   positivity
+
+/-- Lemma cor-rates(b) of Appendix B: `s_n ≤ C_s N_n^D` for all large `n`. -/
+lemma cor_sRate_le_Cs {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
+    {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
+    ∀ᶠ n : ℕ in atTop,
+      (sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) : ℝ) ≤
+        corCs d Csp Ceps * corN n (J n) ^ dimExp α := by
+  obtain ⟨c1, C1, -, -, hb⟩ := seq_base h
+  have hD := (exponents_pos h.hd h.hα).2.2.1
+  filter_upwards [hb, (tendsto_corN h).eventually_ge_atTop 1] with n hn hN
+  obtain ⟨hn2, hJ3, hlogJ, -⟩ := hn
+  have hN0 : 0 < corN n (J n) := by linarith
+  have hND : 1 ≤ corN n (J n) ^ dimExp α := Real.one_le_rpow hN hD.le
+  have hX : 0 ≤ Ceps ^ 2 * corN n (J n) ^ dimExp α :=
+    mul_nonneg (sq_nonneg _) (Real.rpow_nonneg hN0.le _)
+  have hNDnn : 0 ≤ corN n (J n) ^ dimExp α := by linarith
+  have hceil : ((⌈(n : ℝ) * corEpsT Ceps α n (J n) ^ 2 / Real.log (J n)⌉₊ : ℕ) : ℝ) ≤
+      (Ceps ^ 2 + 1) * corN n (J n) ^ dimExp α := by
+    rw [n_epsT_sq_eq h.hd h.hα Ceps (by omega) (by omega), mul_div_assoc,
+      div_self (by linarith), mul_one]
+    have := Nat.ceil_lt_add_one hX
+    nlinarith
+  have hcs1 : corCa d Csp ≤ corCs d Csp Ceps := le_max_left _ _
+  have hcs2 : Ceps ^ 2 + 1 ≤ corCs d Csp Ceps := le_max_right _ _
+  have hup := (corA_bounds h.hd h.hα h.hCsp hN).2
+  unfold sRate
+  rw [Nat.cast_max]
+  apply max_le
+  · have : (corA Csp α n (J n) : ℝ) ≤ corCa d Csp * corN n (J n) ^ dimExp α := by
+      unfold corCa
+      nlinarith
+    exact this.trans (mul_le_mul_of_nonneg_right hcs1 hNDnn)
+  · exact hceil.trans (mul_le_mul_of_nonneg_right hcs2 hNDnn)
 
 /-- Translation 3 of Appendix B: `A s_n ≤ A' a_n` for all large `n`
 (from `s_n ≤ C_s N_n^D` and `C_sp N_n^D ≤ a_n`). -/
@@ -318,33 +352,41 @@ lemma cor_sRate_le_Aprime {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d �
         unfold corAprime
         ring
 
-/-- Translation 2 of Appendix B: `c a_n log J_n ≤ n ε̃_n²` for all large `n`, with
-`c = C_ε² / C_a`, `C_a = 2^d C_sp + 1`. -/
+/-- Translation 2 of Appendix B: `c n ε_n² ≤ n ε̃_n²` for all large `n`, with
+`c = C_ε² / C_s`. Since `n ε_n² = s_n log J_n`, `s_n ≤ C_s N_n^D` and
+`n ε̃_n² = C_ε² N_n^D log J_n`. -/
 lemma cor_exp_lower_explicit {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     ∀ᶠ n : ℕ in atTop,
-      corExpConst d Csp Ceps * corA Csp α n (J n) * Real.log (J n) ≤
+      corExpConst d Csp Ceps *
+          ((n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2) ≤
         (n : ℝ) * corEpsT Ceps α n (J n) ^ 2 := by
   obtain ⟨c1, C1, -, -, hb⟩ := seq_base h
-  have hD := (exponents_pos h.hd h.hα).2.2.1
-  have hCsp := h.hCsp
-  have hCa : 0 < corCa d Csp := by unfold corCa; positivity
-  have hC2 : 0 < Ceps ^ 2 := pow_pos h.hCeps 2
-  filter_upwards [hb, (tendsto_corN h).eventually_ge_atTop 1] with n hn hN
+  have hCa : 0 < corCa d Csp := by unfold corCa; have := h.hCsp; positivity
+  have hCs : 0 < corCs d Csp Ceps := lt_of_lt_of_le hCa (le_max_left _ _)
+  filter_upwards [hb, cor_sRate_le_Cs h] with n hn hs
   obtain ⟨hn2, hJ3, hlogJ, -⟩ := hn
-  have hND : 1 ≤ corN n (J n) ^ dimExp α := Real.one_le_rpow hN hD.le
-  have hup := (corA_bounds h.hd h.hα h.hCsp hN).2
-  rw [n_epsT_sq_eq h.hd h.hα Ceps (by omega) (by omega)]
-  have hle : corExpConst d Csp Ceps * corA Csp α n (J n) ≤
+  have hnR : (0 : ℝ) < n := by exact_mod_cast (show 0 < n by omega)
+  have hlog0 : 0 < Real.log (J n) := by linarith
+  have hsq : (n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2 =
+      (sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) : ℝ) * Real.log (J n) := by
+    unfold epsRate
+    rw [Real.sq_sqrt (div_nonneg (mul_nonneg (Nat.cast_nonneg _) hlog0.le) hnR.le)]
+    field_simp
+  rw [hsq, n_epsT_sq_eq h.hd h.hα Ceps (by omega) (by omega)]
+  have key : corExpConst d Csp Ceps *
+      (sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) : ℝ) ≤
       Ceps ^ 2 * corN n (J n) ^ dimExp α := by
     unfold corExpConst
-    rw [div_mul_eq_mul_div, div_le_iff₀ hCa]
-    have : (corA Csp α n (J n) : ℝ) ≤ corCa d Csp * corN n (J n) ^ dimExp α := by
-      unfold corCa
-      nlinarith
-    nlinarith [mul_le_mul_of_nonneg_left this hC2.le]
-  exact mul_le_mul_of_nonneg_right hle (by linarith)
-
+    rw [div_mul_eq_mul_div, div_le_iff₀ hCs]
+    nlinarith [mul_le_mul_of_nonneg_left hs (sq_nonneg Ceps)]
+  calc corExpConst d Csp Ceps *
+        ((sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) : ℝ) * Real.log (J n))
+      = (corExpConst d Csp Ceps *
+          (sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) : ℝ)) *
+          Real.log (J n) := by ring
+    _ ≤ (Ceps ^ 2 * corN n (J n) ^ dimExp α) * Real.log (J n) :=
+        mul_le_mul_of_nonneg_right key hlog0.le
 
 /-- `s_n ≤ C_s N_n^D` eventually. -/
 private lemma sRate_le {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
@@ -387,11 +429,12 @@ lemma tendsto_sRate_log {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → 
       ← mul_div_assoc]
     exact div_le_div_of_nonneg_right hs hN0.le
 
-/-- `n ε̃_n² ≳ a_n log J_n`: some `c > 0` has `c a_n log J_n ≤ n ε̃_n²` for large `n`. -/
+/-- `n ε̃_n² ≳ n ε_n²`: some `c > 0` has `c n ε_n² ≤ n ε̃_n²` for large `n`. -/
 lemma cor_exp_lower {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     ∃ c : ℝ, 0 < c ∧ ∀ᶠ n : ℕ in atTop,
-      c * corA Csp α n (J n) * Real.log (J n) ≤ (n : ℝ) * corEpsT Ceps α n (J n) ^ 2 := by
+      c * ((n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2) ≤
+        (n : ℝ) * corEpsT Ceps α n (J n) ^ 2 := by
   exact ⟨corExpConst d Csp Ceps, corExpConst_pos h.hCsp h.hCeps,
     cor_exp_lower_explicit h⟩
 

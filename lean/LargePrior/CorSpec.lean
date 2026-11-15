@@ -133,8 +133,8 @@ def corCs (d : ℕ) (Csp Ceps : ℝ) : ℝ := max (corCa d Csp) (Ceps ^ 2 + 1)
 /-- `A' = A C_s / C_sp`, with `A` the integer of Theorem 1. -/
 def corAprime (A d : ℕ) (Csp Ceps : ℝ) : ℝ := A * corCs d Csp Ceps / Csp
 
-/-- `c = C_ε² / C_a`. -/
-def corExpConst (d : ℕ) (Csp Ceps : ℝ) : ℝ := Ceps ^ 2 / corCa d Csp
+/-- `c = C_ε² / C_s` (Appendix B, eq:cor-constants). -/
+def corExpConst (d : ℕ) (Csp Ceps : ℝ) : ℝ := Ceps ^ 2 / corCs d Csp Ceps
 
 /-- `{θ : #{j : |θ_j| > δ} > t}` for a real threshold `t` (used with `t = A' a_n`; `A'` need not
 be an integer). -/
@@ -145,10 +145,10 @@ integer `Aconst K η σ μ c₄ c₅` of Theorem 1). Writing `a_n = corA`, `ε̃
 `δ_n = corDelta`, `s_n = sRate`, `ε_n = epsRate`, `ρ_n = corRate`:
 (i) orders: for some `C > 0` and all large `n`, `a_n ≤ s_n ≤ C a_n`,
 `C⁻¹ (n/log n)^D ≤ a_n ≤ C (n/log n)^D`, `C⁻¹ ρ_n ≤ ε_n ≤ C ρ_n`;
-(ii) with the explicit constants `A' = A C_s / C_sp > 0` and `c = C_ε² / C_a > 0` (functions of
+(ii) with the explicit constants `A' = A C_s / C_sp > 0` and `c = C_ε² / C_s > 0` (functions of
 `A, C_sp, C_ε, d` only), for every `M_n → ∞` and all large `n`:
-`E₀ Π(‖f − f₀‖_{2,n} > M_n ρ_n | Y) ≤ 5 e^{−c a_n log J_n}` and
-`E₀ Π(#{j : |θ_j| > δ_n} > A' a_n | Y) ≤ 2 e^{−c a_n log J_n}`;
+`E₀ Π(‖f − f₀‖_{2,n} > M_n ε_n | Y) ≤ 5 e^{−c n ε_n²}` and
+`E₀ Π(#{j : |θ_j| > δ_n} > A' a_n | Y) ≤ 2 e^{−c n ε_n²}`;
 (iii) both posterior probabilities tend to `0` in `P₀`-probability. -/
 def CorConclusion {d : ℕ} (α : Fin d → ℝ) (J : ℕ → ℕ)
     (X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ) (f₀ : ∀ n : ℕ, Fin n → ℝ) (σ : ℝ)
@@ -165,17 +165,21 @@ def CorConclusion {d : ℕ} (α : Fin d → ℝ) (J : ℕ → ℕ)
   ∀ M : ℕ → ℝ, Tendsto M atTop atTop → (
     (∀ᶠ n in atTop,
       (∫⁻ y, posterior σ (X n) (f₀ n) (prior (J n) (pdf n)) y
-          (farSet (X n) (f₀ n) (M n * corRate α n)) ∂(dataLaw σ (f₀ n))
-        ≤ ENNReal.ofReal (5 * Real.exp
-            (-(corExpConst d Csp Ceps * corA Csp α n (J n) * Real.log (J n))))) ∧
+          (farSet (X n) (f₀ n)
+            (M n * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n))))
+          ∂(dataLaw σ (f₀ n))
+        ≤ ENNReal.ofReal (5 * Real.exp (-(corExpConst d Csp Ceps *
+            ((n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2))))) ∧
       (∫⁻ y, posterior σ (X n) (f₀ n) (prior (J n) (pdf n)) y
           (denseSetReal (corDelta cδ Ceps α n (J n))
             (corAprime A d Csp Ceps * corA Csp α n (J n))) ∂(dataLaw σ (f₀ n))
-        ≤ ENNReal.ofReal (2 * Real.exp
-            (-(corExpConst d Csp Ceps * corA Csp α n (J n) * Real.log (J n)))))) ∧
+        ≤ ENNReal.ofReal (2 * Real.exp (-(corExpConst d Csp Ceps *
+            ((n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2)))))) ∧
     (∀ ζ : ℝ, 0 < ζ → Tendsto (fun n : ℕ => dataLaw σ (f₀ n)
         {y | ENNReal.ofReal ζ < posterior σ (X n) (f₀ n) (prior (J n) (pdf n)) y
-          (farSet (X n) (f₀ n) (M n * corRate α n))}) atTop (𝓝 0)) ∧
+          (farSet (X n) (f₀ n)
+            (M n * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n))))})
+        atTop (𝓝 0)) ∧
     (∀ ζ : ℝ, 0 < ζ → Tendsto (fun n : ℕ => dataLaw σ (f₀ n)
         {y | ENNReal.ofReal ζ < posterior σ (X n) (f₀ n) (prior (J n) (pdf n)) y
           (denseSetReal (corDelta cδ Ceps α n (J n))

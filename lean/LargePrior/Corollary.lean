@@ -158,22 +158,9 @@ theorem corollary_main : CorollaryStatement := by
   obtain ⟨C, hC, hord⟩ := cor_orders hs
   refine ⟨⟨C, hC, hord⟩, corAprime_pos hA1 h.hCsp, corExpConst_pos h.hCsp h.hCeps,
     fun M hM => ?_⟩
-  -- Theorem 1 applied once, with `M_n / C`
-  have hM' : Tendsto (fun n => M n / C) atTop atTop := hM.atTop_div_const hC
+  -- Theorem 1 applied once, with the same `M_n`
   obtain ⟨hmain, hfar, hdense⟩ := asymptotic_theorem _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-    (h.asymptoticHyp hM')
-  have hMpos : ∀ᶠ n in atTop, 0 ≤ M n := hM.eventually_ge_atTop 0
-  -- Translation 1 (the radius): `M_n/C · ε_n ≤ M_n ρ_n`
-  have hfarsub : ∀ᶠ n in atTop, farSet (X n) (f₀ n) (M n * corRate α n) ⊆
-      farSet (X n) (f₀ n) (M n / C * epsRate n (J n) (corA Csp α n (J n))
-        (corEpsT Ceps α n (J n))) := by
-    filter_upwards [hord, hMpos] with n hn hMn
-    obtain ⟨-, -, -, -, -, hεr⟩ := hn
-    apply farSet_anti
-    calc M n / C * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n))
-        ≤ M n / C * (C * corRate α n) :=
-          mul_le_mul_of_nonneg_left hεr (div_nonneg hMn hC.le)
-      _ = M n * corRate α n := by field_simp
+    (h.asymptoticHyp hM)
   -- Translation 3 (the support size): `A s_n ≤ A' a_n`
   have hdensesub : ∀ᶠ n in atTop,
       denseSetReal (J := J n) (corDelta cδ Ceps α n (J n))
@@ -182,29 +169,22 @@ theorem corollary_main : CorollaryStatement := by
           (A * sRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n))) := by
     filter_upwards [cor_sRate_le_Aprime hs A] with n hn
     exact denseSetReal_subset_denseSet _ hn
-  -- Translation 2 (the exponent): `e^{-n ε̃_n²} ≤ e^{-c a_n log J_n}`
+  -- Translation 2 (the exponent): `e^{-n ε̃_n²} ≤ e^{-c n ε_n²}`
   have hexple : ∀ᶠ n : ℕ in atTop, ∀ k : ℝ, 0 ≤ k →
       ENNReal.ofReal (k * Real.exp (-((n : ℝ) * corEpsT Ceps α n (J n) ^ 2))) ≤
-        ENNReal.ofReal (k * Real.exp
-          (-(corExpConst d Csp Ceps * corA Csp α n (J n) * Real.log (J n)))) := by
+        ENNReal.ofReal (k * Real.exp (-(corExpConst d Csp Ceps *
+          ((n : ℝ) * epsRate n (J n) (corA Csp α n (J n)) (corEpsT Ceps α n (J n)) ^ 2)))) := by
     filter_upwards [cor_exp_lower_explicit hs] with n hn k hk
     apply ENNReal.ofReal_le_ofReal
     apply mul_le_mul_of_nonneg_left _ hk
     exact Real.exp_le_exp.2 (neg_le_neg hn)
-  refine ⟨?_, ?_, ?_⟩
-  · filter_upwards [hmain, hfarsub, hdensesub, hexple] with n hn hf hd' he
+  refine ⟨?_, hfar, ?_⟩
+  · filter_upwards [hmain, hdensesub, hexple] with n hn hd' he
     obtain ⟨hfarBound, hdenseBound⟩ := hn
     refine ⟨?_, ?_⟩
-    · exact le_trans (lintegral_mono fun y => measure_mono hf)
-        (hfarBound.trans (he 5 (by norm_num)))
+    · exact hfarBound.trans (he 5 (by norm_num))
     · exact le_trans (lintegral_mono fun y => measure_mono hd')
         (hdenseBound.trans (he 2 (by norm_num)))
-  · -- convergence in probability, radius
-    intro ζ hζ
-    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hfar ζ hζ)
-      (Eventually.of_forall fun n => bot_le) ?_
-    filter_upwards [hfarsub] with n hn
-    exact measure_mono fun y hy => lt_of_lt_of_le hy (measure_mono hn)
   · -- convergence in probability, support size
     intro ζ hζ
     refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hdense ζ hζ)

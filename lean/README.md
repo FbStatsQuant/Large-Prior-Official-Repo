@@ -47,7 +47,7 @@ lake env lean AxiomCheck.lean   # prints the axioms each main theorem uses
 | Corollary 1 end to end: B-splines, isotropic | `CorBSplineCubeStatement` | `cor_bspline_cube` |
 | Corollary 1 end to end: C^α([0,1]), 0 < α ≤ 1, nothing assumed | `CorHolderStatement` | `cor_holder` |
 
-The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), [`LargePrior/CorSpec.lean`](LargePrior/CorSpec.lean) and [`LargePrior/HorseshoePaper.lean`](LargePrior/HorseshoePaper.lean). [`docs/statements.md`](docs/statements.md) explains each one in plain mathematics, so you can compare it with the paper without reading Lean. The two blueprints in `docs/` follow the paper's proofs step by step and give the Lean name of every intermediate result: [`blueprint_theorem1.pdf`](docs/blueprint_theorem1.pdf) and [`blueprint_corollary1.pdf`](docs/blueprint_corollary1.pdf).
+The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), [`LargePrior/CorSpec.lean`](LargePrior/CorSpec.lean) and [`LargePrior/HorseshoePaper.lean`](LargePrior/HorseshoePaper.lean). [`docs/statements.md`](docs/statements.md) explains each one in plain mathematics, so you can compare it with the paper without reading Lean.
 
 ## Differences from the paper
 
@@ -57,7 +57,7 @@ The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), 
 - Every condition on the sequences is required only for large n.
 - (WG5) is stated with an almost-everywhere lower bound on the density. The paper's pointwise version implies it (`wg5Paper_implies_wg5`), and this form is needed for the Horseshoe, whose density is infinite at 0.
 
-**Corollary 1** has the paper's hypotheses, with the profile required only for large n, and conclusions (i) and (iii) as in the paper. Part (ii) is written in an equivalent-radius form, M_n (n/log n)^{−r}. It has the constant 5 in place of 6, and its exponent is c·a_n·log J_n with c = C_ε²/C_a.
+**Corollary 1** has the paper's hypotheses and conclusions, including the explicit constants A′ = A C_s/C_sp and c = C_ε²/C_s of Appendix B. The differences point the same safe way: the constant 5 in place of 6 in the first bound of (ii), and the profile required only for large n.
 
 **The classical approximation inputs** are hypotheses of the profile lemmas and the end-to-end statements: the Jackson–Stechkin inequality, B-spline stability, and the one-block spline approximation of Hölder functions. Each is proved in Lean for a base case:
 
@@ -74,7 +74,7 @@ lean/
 ├── LargePrior/            the development (Spec.lean and CorSpec.lean hold the statements)
 ├── LargePrior.lean        imports every module
 ├── AxiomCheck.lean        type and axiom checks for the main results
-├── docs/                  statements in plain mathematics, and the two blueprints
+├── docs/statements.md     the statements in plain mathematics
 ├── lakefile.toml, lake-manifest.json, lean-toolchain
 └── SHA256SUMS.txt
 ```

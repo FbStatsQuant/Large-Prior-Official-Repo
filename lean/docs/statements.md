@@ -106,12 +106,12 @@ E₀ is a genuine expectation under P₀. The posterior is a probability measure
    - a_n ≤ s_n ≤ C a_n;
    - a_n lies between C⁻¹(n/log n)^D and C(n/log n)^D;
    - ε_n lies between C⁻¹(n/log n)^{−r} and C(n/log n)^{−r}.
-2. **Bounds.** Set A′ = A C_s/C_sp and c = C_ε²/C_a, where C_a = 2^d C_sp + 1 and C_s = max{C_a, C_ε² + 1}. For every M_n → ∞ and all large n:
-   - E₀ Π(‖f_θ − f₀‖_{2,n} > M_n (n/log n)^{−r} | Y) ≤ 5 e^{−c a_n log J_n};
-   - E₀ Π(#{j : |θ_j| > δ_n} > A′ a_n | Y) ≤ 2 e^{−c a_n log J_n}.
+2. **Bounds.** Set A′ = A C_s/C_sp and c = C_ε²/C_s, where C_a = 2^d C_sp + 1 and C_s = max{C_a, C_ε² + 1} (Appendix B). For every M_n → ∞ and all large n:
+   - E₀ Π(‖f_θ − f₀‖_{2,n} > M_n ε_n | Y) ≤ 5 e^{−c n ε_n²};
+   - E₀ Π(#{j : |θ_j| > δ_n} > A′ a_n | Y) ≤ 2 e^{−c n ε_n²}.
 3. Both posterior probabilities tend to 0 in P₀-probability.
 
-Because M_n is arbitrary and ε_n ≍ (n/log n)^{−r}, the radius M_n (n/log n)^{−r} is interchangeable with the paper's M_n ε_n. The exponent is written as c a_n log J_n with c = C_ε²/C_a. The paper writes it as c n ε_n² with c = C_ε²/C_s (Appendix B).
+Here ε_n and s_n are Theorem 1's `epsRate` and `sRate` at the corollary's sequences, so part (ii) has exactly the paper's radius, exponent and constants, with 5 in place of 6.
 
 **`CorHorseshoeStatement`** (`cor_horseshoe`) gives the same conclusions for the Horseshoe with τ_n = J_n^{−(2+μ″)}/√n. Assumption 3 is derived rather than assumed. The scale τ_n depends only on n and J_n, not on α.
 
@@ -139,7 +139,7 @@ These derive Assumption 2 from a function class rather than assuming a profile. 
 
 - **`CorFourierStatement`**: periodic f₀ in `HZBall`, given Jackson, with the Fourier dictionary of sizes ⌈n^{b_k}⌉.
 - **`CorBSplineStatement`** and **`CorBSplineCubeStatement`**: multiresolution B-splines with H_{n,k} = ⌈b_k log₂ n⌉ levels, given the spline inputs above.
-- **`CorHolderStatement`** (`cor_holder`) needs **no assumed input**. Take any f₀ in the C^α([0,1]) ball with 0 < α ≤ 1, any b ≥ 1/(2α + 1), any design in [0,1], order-1 multiresolution B-splines and the Horseshoe. The posterior then contracts at M_n (n/log n)^{−α/(2α+1)}.
+- **`CorHolderStatement`** (`cor_holder`) needs **no assumed input**. Take any f₀ in the C^α([0,1]) ball with 0 < α ≤ 1, any b ≥ 1/(2α + 1), any design in [0,1], order-1 multiresolution B-splines and the Horseshoe. The posterior then contracts at M_n ε_n, with ε_n ≍ (n/log n)^{−α/(2α+1)}.
 
 ## 8. Checks that the hypotheses are not vacuous
 
