@@ -1,0 +1,615 @@
+\subsection*{Proof of Theorem~\ref{thm:main}}
+
+The proof follows the testing approach of \citet{Ghosal2000} and \citet{Ghosal2007} and rests on four estimates, stated below as Lemmas~\ref{lem:local-mass}--\ref{lem:tests}: a lower bound on the prior mass of a prediction ball around $f_0$; a lower bound on the evidence $D_n$ holding with high $P_0$-probability; an upper bound on the prior mass of the non-sparse coefficient vectors; and tests separating $f_0$ from the sparse vectors whose prediction lies farther than $M_n\epsilon_n$ from $f_0$. Given the four lemmas, the theorem is proved immediately after them. The lemmas are proved next; the last of them rests on a basic Gaussian test, an elementary packing bound, and a covering of the prediction-distance shells.
+
+\subsubsection*{Preliminaries}
+
+\paragraph*{Likelihood, evidence, and posterior.}
+Throughout, a function is identified with its evaluation vector in $\R^n$, and all balls, projections, and coverings take place in $(\R^n,\langle\cdot,\cdot\rangle_n)$. Set
+\begin{align*}
+L_n(\theta)=\frac{p_\theta}{p_0}(Y^{(n)}),
+\qquad
+D_n=\int_{\R^{J_n}}L_n(\theta)\,d\Pi_n(\theta).
+\end{align*}
+For every Borel set $H\subset\R^{J_n}$, Bayes' formula reads
+\begin{align}
+\Post{H}=\frac{\int_HL_n(\theta)\,d\Pi_n(\theta)}{D_n}.
+\label{eq:bayes}
+\end{align}
+In line with the induced-prior convention of Section~\ref{sec:prior-def}, a prior or posterior probability of a set of functions is the probability of the set of coefficient vectors realizing those functions; in particular $\Post{\emp{f-f_0}>M_n\epsilon_n}$ means $\Post{\{\theta:\emp{f_\theta-f_0}>M_n\epsilon_n\}}$, and no uniqueness of the coefficient representation is ever used. The map $(\theta,y)\mapsto(p_\theta/p_0)(y)$ is continuous and strictly positive, so $D_n$ is a measurable function of the data, $D_n>0$ for every data vector, and, by Tonelli's theorem and $\int p_\theta(y)\,dy=1$, $E_0D_n=\int E_0L_n(\theta)\,d\Pi_n(\theta)=1$; hence $D_n<\infty$ $P_0$-almost surely and~\eqref{eq:bayes} is well defined; on the $P_0$-null set $\{D_n=\infty\}$ the posterior may be defined arbitrarily, and nothing below depends on that choice. For the same reason, the posterior probability of any Borel coefficient set is a measurable function of $Y^{(n)}$.
+
+The proof of our main result relies on the following facts, constants, and lemmas.
+
+\begin{fact}[Rate relations]\label{fact:rates}
+Under~\eqref{sparsity} and~\eqref{eq:standing-sequences}, and with $J_n\geq2$ and $J_n\to\infty$ as in Section~\ref{sec:prior-def}, for every $n$,
+\begin{align}
+0<\en\leq\epsilon_n,
+\qquad
+n\epsilon_n^2=s_n\log J_n\geq\log2,
+\label{eq:rate-relations}
+\end{align}
+and, as $n\to\infty$,
+\begin{align}
+n\epsilon_n^2\to\infty,\qquad
+\epsilon_n\to0,\qquad
+\en\to0 .
+\label{eq:rate-limits}
+\end{align}
+\end{fact}
+
+
+The rate $\en$ governs the prior mass near $f_0$ and the evidence, whereas $\epsilon_n$ governs the sparse sieve and the tests and is the contraction rate; the inequality $\en\leq\epsilon_n$ is what allows the two groups of estimates to be combined.
+
+\paragraph*{Constants.}
+The proof uses the following constants, each depending only on the ones before it:
+\begin{gather}
+\widetilde L=1+K(1+2\eta),
+\qquad
+C_0=\frac{\sqrt2\,\widetilde L}{\sigma}+\frac{\widetilde L^2}{2\sigma^2},
+\qquad
+C_\Pi=c_4+c_5+1,
+\label{eq:constants}\\
+C_1=C_\Pi+C_0,
+\qquad
+A=\left\lceil\frac{C_1+1}{\mu}\right\rceil .
+\label{eq:constants-A}
+\end{gather}
+Thus $A$ is a positive integer depending only on $(K,\sigma,\mu,\eta,c_4,c_5)$, as required in Theorem~\ref{thm:main}, and $\mu A\geq C_1+1$.
+
+\begin{fact}[Gaussian tail bound]\label{fact:gauss}
+If $X\sim N(0,\tau^2)$ with $\tau>0$, then for every $t\geq0$,
+\begin{align}
+\Pr\{X\geq t\}\leq e^{-t^2/(2\tau^2)},
+\qquad
+\Pr\{X\leq-t\}\leq e^{-t^2/(2\tau^2)} .
+\label{eq:gausstail}
+\end{align}
+\end{fact}
+
+\begin{fact}[Change of measure]\label{fact:com}
+For every $\theta\in\R^{J_n}$ and every nonnegative measurable function $h$ on $\R^n$,
+\begin{align}
+E_0\{L_n(\theta)\,h(Y^{(n)})\}=E_{f_\theta}h(Y^{(n)}).
+\label{eq:com}
+\end{align}
+\end{fact}
+
+
+\paragraph*{Three coefficient sets.}
+With $A$ the integer in~\eqref{eq:constants-A}, let
+\begin{align}
+N(\theta)&=\#\{j:|\theta_j|>\delta_n\},
+&\Theta_n&=\{\theta:N(\theta)\leq As_n\},
+\label{eq:sieve-def}\\
+&&B_n&=\{\theta:\emp{f_\theta-f_0}\leq\widetilde L\en\},
+\label{eq:ball-def}\\
+&&U_n&=\{\theta:\emp{f_\theta-f_0}>M_n\epsilon_n\}.
+\label{eq:far-def}
+\end{align}
+The \emph{sieve} $\Theta_n$ consists of the \emph{sparse} coefficient vectors, those with at most $As_n$ non-negligible coordinates; its complement is exactly the event in~\eqref{eq:main-support-L1}. The \emph{local ball} $B_n$ is the neighborhood of $f_0$ whose prior mass drives the evidence. The set $U_n$ is the event in~\eqref{eq:main-L1}. All three are Borel sets: $N$ is a finite sum of indicators of open sets, and $\theta\mapsto f_\theta$ is linear. Finally, $W_n=\{f_\theta:\theta\in\Theta_n\}$ denotes the set of functions with at least one sparse representative.
+
+\subsubsection*{The four estimates}
+
+\begin{auxlemma}[Local prior mass]\label{lem:local-mass}
+For all sufficiently large $n$,
+\begin{align}
+\Pi_n(B_n)\geq e^{-C_\Pi n\en^2}.
+\label{eq:local-mass}
+\end{align}
+\end{auxlemma}
+
+\begin{auxlemma}[Evidence lower bound]\label{lem:evidence}
+For all sufficiently large $n$,
+\begin{align}
+P_0\{D_n<e^{-C_1n\en^2}\}\leq e^{-n\en^2}.
+\label{eq:evidence}
+\end{align}
+\end{auxlemma}
+
+\begin{auxlemma}[Prior mass of the sieve complement]\label{lem:sieve}
+For every $n$ for which~\eqref{eq:3} holds,
+\begin{align}
+\Pi_n(\Theta_n^c)=\Pi_n\{N(\theta)>As_n\}
+\leq e^{-\mu As_n\log J_n}
+=e^{-\mu An\epsilon_n^2}.
+\label{eq:sieve-mass}
+\end{align}
+\end{auxlemma}
+
+\begin{auxlemma}[Tests]\label{lem:tests}
+There exist measurable tests $\phi_n=\phi_n(Y^{(n)})\in\{0,1\}$ such that, for all sufficiently large $n$,
+\begin{align}
+E_0\phi_n&\leq2e^{-n\epsilon_n^2},
+\label{eq:type-I}\\
+\sup_{\theta\in\Theta_n\cap U_n}E_{f_\theta}(1-\phi_n)
+&\leq\exp\Big\{-\frac{M_n^2n\epsilon_n^2}{64\sigma^2}\Big\}.
+\label{eq:type-II}
+\end{align}
+The construction uses the eventual conditions $M_n\geq16K$ and $\log J_n\geq1+\log97$, and the Type~I bound~\eqref{eq:type-I} uses $M_n^2\geq16\sigma^2(2A+1)$.
+\end{auxlemma}
+
+The hypotheses enter as follows. Assumption~\ref{ass:sparse} and conditions~\eqref{eq:4}--\eqref{eq:5} are used only in Lemma~\ref{lem:local-mass}; condition~\eqref{eq:3} is used in Lemma~\ref{lem:sieve} and in one case of Lemma~\ref{lem:local-mass}; Assumption~\ref{ass:basis} and the threshold requirement $\delta_n\leq\en/J_n$ are used in Lemmas~\ref{lem:local-mass} and~\ref{lem:tests}; the Gaussian form of the model is used in Lemmas~\ref{lem:evidence} and~\ref{lem:tests}. Lemma~\ref{lem:sieve} holds for every integer $A\geq1$; the specific choice~\eqref{eq:constants-A} is what makes the sieve bound survive division by the evidence bound.
+
+\subsubsection*{Proof of the theorem from the four estimates}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $d_n^*=e^{-C_1n\en^2}$, let $Z_n=\Post{U_n}$ be the posterior probability in~\eqref{eq:main-L1}, and let $\phi_n$ be the tests of Lemma~\ref{lem:tests}. Splitting $1=\phi_n+(1-\phi_n)$, then splitting $1-\phi_n$ according to the event $\{D_n<d_n^*\}$ and its complement, and using $0\leq Z_n\leq1$,
+\begin{align}
+E_0Z_n
+&=E_0(\phi_nZ_n)
+ +E_0\{(1-\phi_n)\mathbf1\{D_n<d_n^*\}Z_n\}
+ +E_0\{(1-\phi_n)\mathbf1\{D_n\geq d_n^*\}Z_n\}\notag\\
+&\leq E_0\phi_n+P_0(D_n<d_n^*)+R_n,
+\label{eq:decomposition}
+\end{align}
+where $R_n$ denotes the last expectation. By~\eqref{eq:type-I} and~\eqref{eq:evidence}, the first two terms are at most $2e^{-n\epsilon_n^2}$ and $e^{-n\en^2}$.
+
+To bound $R_n$, note that $\Theta_n^c$ and $U_n\cap\Theta_n$ are disjoint and their union contains $U_n$. On the event $\{D_n\geq d_n^*\}$, by~\eqref{eq:bayes}, $L_n\geq0$, and $0\leq1-\phi_n\leq1$,
+\begin{align*}
+(1-\phi_n)Z_n
+\leq\frac1{d_n^*}\Big[
+ \int_{\Theta_n^c}L_n(\theta)\,d\Pi_n(\theta)
+ +\int_{U_n\cap\Theta_n}(1-\phi_n)L_n(\theta)\,d\Pi_n(\theta)
+ \Big],
+\end{align*}
+where $1-\phi_n$, a function of the data alone, was moved inside the second integral and dropped from the first. Take $E_0$, discard the indicator of $\{D_n\geq d_n^*\}$, and apply Tonelli's theorem, legitimate because the integrands are nonnegative and jointly measurable in $(\theta,y)$, together with~\eqref{eq:com} for $h=1$ and $h=1-\phi_n$:
+\begin{align}
+R_n
+\leq e^{C_1n\en^2}\Big[
+\Pi_n(\Theta_n^c)
++\int_{U_n\cap\Theta_n}E_{f_\theta}(1-\phi_n)\,d\Pi_n(\theta)
+\Big].
+\label{eq:remainder}
+\end{align}
+The two terms in brackets are controlled by Lemmas~\ref{lem:sieve} and~\ref{lem:tests}. By~\eqref{eq:sieve-mass}, $\en\leq\epsilon_n$, and $\mu A\geq C_1+1$,
+\begin{align}
+e^{C_1n\en^2}\Pi_n(\Theta_n^c)
+\leq\exp\{C_1n\epsilon_n^2-\mu An\epsilon_n^2\}
+\leq e^{-n\epsilon_n^2}.
+\label{eq:sieve-after-evidence}
+\end{align}
+Offsetting the factor $e^{C_1n\en^2}$ is the purpose of the choice of $A$ in~\eqref{eq:constants-A}. By~\eqref{eq:type-II}, $\Pi_n(U_n\cap\Theta_n)\leq1$, and again $\en\leq\epsilon_n$,
+\begin{align*}
+e^{C_1n\en^2}\int_{U_n\cap\Theta_n}E_{f_\theta}(1-\phi_n)\,d\Pi_n(\theta)
+\leq\exp\Big\{-\Big(\frac{M_n^2}{64\sigma^2}-C_1\Big)n\epsilon_n^2\Big\}
+\leq e^{-n\epsilon_n^2},
+\end{align*}
+once $M_n^2\geq64\sigma^2(C_1+1)$. Collecting the four bounds in~\eqref{eq:decomposition} and using $e^{-n\epsilon_n^2}\leq e^{-n\en^2}$,
+\begin{align*}
+E_0Z_n
+\leq2e^{-n\epsilon_n^2}+e^{-n\en^2}+e^{-n\epsilon_n^2}+e^{-n\epsilon_n^2}
+\leq5e^{-n\en^2}
+\leq6e^{-n\en^2},
+\end{align*}
+which is~\eqref{eq:main-L1}.
+
+For the support assertion let $Q_n=\Post{\Theta_n^c}$, the posterior probability in~\eqref{eq:main-support-L1}. No test is needed, because Lemma~\ref{lem:sieve} bounds the prior mass of the whole set $\Theta_n^c$ and the choice of $A$ alone offsets the factor $1/d_n^*$. Splitting according to $\{D_n<d_n^*\}$ as in~\eqref{eq:decomposition} with $\phi_n\equiv0$, and using~\eqref{eq:com} with $h=1$ and then~\eqref{eq:sieve-after-evidence},
+\begin{align*}
+E_0Q_n
+\leq P_0(D_n<d_n^*)+e^{C_1n\en^2}\Pi_n(\Theta_n^c)
+\leq e^{-n\en^2}+e^{-n\epsilon_n^2}
+\leq2e^{-n\en^2}.
+\end{align*}
+
+Finally, for every fixed $\zeta>0$, Markov's inequality gives
+\begin{align*}
+P_0(Z_n>\zeta)\leq\frac5\zeta e^{-n\en^2}\to0,
+\qquad
+P_0(Q_n>\zeta)\leq\frac2\zeta e^{-n\en^2}\to0,
+\end{align*}
+because $n\en^2\to\infty$. The first limit is~\eqref{eq:main-contraction}, posterior contraction at the rate $\epsilon_n$; the second is the corresponding statement for the effective support.
+\end{proof}
+
+\subsubsection*{Proof of Lemma~\ref{lem:local-mass}: local prior mass}
+
+\begin{proof}
+Let $\theta_0$ and $\xi_n^*$ be the approximant and the set of $a_n$ indices fixed in Assumption~\ref{ass:sparse}, and put
+\begin{align*}
+h_n=\frac{\eta\en}{a_n}.
+\end{align*}
+By the triangle inequality, linearity of $\theta\mapsto f_\theta$, Assumption~\ref{ass:basis}, and~\eqref{approx}, an $\ell_1$ coefficient error translates into a prediction error:
+\begin{align}
+\emp{f_\theta-f_0}
+&\leq\emp{f_{\theta_0}-f_0}+\emp{f_\theta-f_{\theta_0}}
+\leq\en+\sum_{j=1}^{J_n}|\theta_j-\theta_{0,j}|\emp{\xi_j}\notag\\
+&\leq\en+K\|\theta-\theta_0\|_1 .
+\label{eq:coefficient-ball}
+\end{align}
+Since $\en+K(1+2\eta)\en=\widetilde L\en$, it follows that
+\begin{align}
+\{\theta:\|\theta-\theta_0\|_1\leq(1+2\eta)\en\}\subset B_n,
+\label{eq:l1-in-Bn}
+\end{align}
+and it suffices to bound the prior mass of the left side from below.
+
+We exhibit an event $H_{n,1}\cap H_{n,0}$ inside it, where $H_{n,1}$ constrains the $a_n$ active coordinates $j\in\xi_n^*$ and $H_{n,0}$ constrains the $J_n-a_n$ inactive ones. The two events involve disjoint blocks of coordinates, so they are independent under the product prior and $\Pi_n(H_{n,1}\cap H_{n,0})=\Pi_n(H_{n,1})\Pi_n(H_{n,0})$. For the inactive block take
+\begin{align*}
+H_{n,0}=\Big\{\sum_{j\notin\xi_n^*}|\theta_j|\leq\eta\en\Big\},
+\qquad
+\Pi_n(H_{n,0})\geq e^{-c_4n\en^2},
+\end{align*}
+the bound being condition~\eqref{eq:4} after exponentiation. On $H_{n,0}$, since $|\theta_{0,j}|\leq\delta_n$ for $j\notin\xi_n^*$,
+\begin{align}
+\sum_{j\notin\xi_n^*}|\theta_j-\theta_{0,j}|
+\leq\sum_{j\notin\xi_n^*}|\theta_j|+\sum_{j\notin\xi_n^*}|\theta_{0,j}|
+\leq\eta\en+(J_n-a_n)\delta_n .
+\label{eq:inactive-block}
+\end{align}
+The construction of $H_{n,1}$ depends on whether the coefficient bound $E_n$ exceeds the interval length $h_n$. Both cases must be considered because Assumption~\ref{ass:sparse} places no lower bound on $E_n$; if $E_n=E>0$ is fixed, only Case~1 occurs for large $n$, since $a_n\geq1$ gives $h_n\leq\eta\en\to0$. The eventual conditions used below, $\en\leq\eta$, $J_n^\mu\geq2$, and $n\en^2\geq\log2$, are imposed simultaneously, so it is immaterial which case is active for a given $n$.
+
+\smallskip\noindent\emph{Case 1: $E_n\geq h_n$.}
+For each $j\in\xi_n^*$ define an inward one-sided interval of length $h_n$,
+\begin{align*}
+I_j=
+\begin{cases}
+[\theta_{0,j}-h_n,\theta_{0,j}],&\theta_{0,j}>0,\\
+[\theta_{0,j},\theta_{0,j}+h_n],&\theta_{0,j}\leq0,
+\end{cases}
+\qquad
+H_{n,1}=\{\theta_j\in I_j\text{ for every }j\in\xi_n^*\}.
+\end{align*}
+Each $I_j$ is contained in $[-E_n,E_n]$. When $\theta_{0,j}>0$, the upper endpoint is $\theta_{0,j}\leq E_n$ and the lower endpoint exceeds $-h_n\geq-E_n$. When $\theta_{0,j}\leq0$, the lower endpoint is $\theta_{0,j}\geq-E_n$ and the upper endpoint is at most $h_n\leq E_n$. On $H_{n,1}\cap H_{n,0}$, each active coordinate satisfies $|\theta_j-\theta_{0,j}|\leq h_n$, so the active block contributes at most $a_nh_n=\eta\en$.
+
+Together with~\eqref{eq:inactive-block} and $J_n\delta_n\leq\en$, this gives
+\begin{align*}
+\|\theta-\theta_0\|_1
+\leq\eta\en+\eta\en+(J_n-a_n)\delta_n
+\leq(1+2\eta)\en .
+\end{align*}
+Hence $H_{n,1}\cap H_{n,0}\subset B_n$ by~\eqref{eq:l1-in-Bn}. For the probability of $H_{n,1}$, since $I_j\subset[-E_n,E_n]$ has length $h_n$ and $\pi_n\geq\pinf$ on $[-E_n,E_n]$,
+\begin{align*}
+\Pi_{n,j}(I_j)=\int_{I_j}\pi_n(t)\,dt\geq h_n\pinf=:b_n>0 .
+\end{align*}
+By independence of the $a_n$ active coordinates, $\Pi_n(H_{n,1})=\prod_{j\in\xi_n^*}\Pi_{n,j}(I_j)\geq b_n^{a_n}$, so
+\begin{align*}
+-\log\Pi_n(H_{n,1})
+&\leq a_n\log\frac1{b_n}
+=a_n\Big[\log a_n+\log\frac1{\eta\en}-\log\pinf\Big]\\
+&\leq a_n\Big[\log a_n+2\log\Big(\frac1\en\Big)-\log\pinf\Big]_+
+\leq c_5n\en^2 .
+\end{align*}
+The second inequality uses $\en\leq\eta$, so that $1/(\eta\en)\leq1/\en^2$, together with $x\leq[x]_+$; the last is condition~\eqref{eq:5}. Therefore
+\begin{align*}
+\Pi_n(B_n)\geq\Pi_n(H_{n,1})\Pi_n(H_{n,0})\geq e^{-(c_4+c_5)n\en^2}.
+\end{align*}
+
+\smallskip\noindent\emph{Case 2: $E_n<h_n$.}
+Now the active coefficients of the approximant are themselves small, $\sum_{j\in\xi_n^*}|\theta_{0,j}|\leq a_nE_n<a_nh_n=\eta\en$, and it suffices to ask the active coordinates to be negligible:
+\begin{align*}
+H_{n,1}=\{|\theta_j|\leq\delta_n\text{ for every }j\in\xi_n^*\}.
+\end{align*}
+On $H_{n,1}\cap H_{n,0}$, by~\eqref{eq:inactive-block} and $J_n\delta_n\leq\en$,
+\begin{align*}
+\|\theta-\theta_0\|_1
+&\leq\sum_{j\in\xi_n^*}|\theta_j|+\sum_{j\in\xi_n^*}|\theta_{0,j}|
+  +\eta\en+(J_n-a_n)\delta_n\\
+&\leq a_n\delta_n+\eta\en+\eta\en+(J_n-a_n)\delta_n
+\leq(1+2\eta)\en,
+\end{align*}
+so again $H_{n,1}\cap H_{n,0}\subset B_n$. For the probability of $H_{n,1}$, note that $\Pi_{n,j}(|\theta_j|>\delta_n)=\int_{|t|>\delta_n}\pi_n(t)\,dt\leq J_n^{-(1+\mu)}$ by~\eqref{eq:3}; a union bound over the $a_n$ active coordinates, together with $a_n\leq J_n$, gives
+\begin{align*}
+\Pi_n(H_{n,1})
+\geq1-\sum_{j\in\xi_n^*}\Pi_{n,j}(|\theta_j|>\delta_n)
+\geq1-a_nJ_n^{-(1+\mu)}
+\geq1-J_n^{-\mu}
+\geq\frac12,
+\end{align*}
+the last step once $J_n^\mu\geq2$. Hence
+\begin{align*}
+\Pi_n(B_n)\geq\frac12e^{-c_4n\en^2}\geq e^{-(c_4+1)n\en^2},
+\end{align*}
+the last step once $n\en^2\geq\log2$.
+
+In both cases $\Pi_n(B_n)\geq e^{-(c_4+c_5+1)n\en^2}=e^{-C_\Pi n\en^2}$, because $c_5\geq0$ and $1\geq0$. This is~\eqref{eq:local-mass}. The bound requires neither monotonicity nor a positive lower bound for $E_n$.
+\end{proof}
+
+\subsubsection*{Proof of Lemma~\ref{lem:evidence}: evidence lower bound}
+
+\begin{proof}
+Under $P_0$, write $y_i=f_0(x_i)+\sigma \omega_i$, where $\omega_i=(y_i-f_0(x_i))/\sigma$ are independent standard normal variables, and put $g_\theta=f_\theta-f_0\in\R^n$. The normalizing constants of the Gaussian densities cancel in the ratio, and $(y_i-f_\theta(x_i))^2-(y_i-f_0(x_i))^2=(\sigma \omega_i-g_\theta(x_i))^2-(\sigma \omega_i)^2=-2\sigma \omega_ig_\theta(x_i)+g_\theta(x_i)^2$, so
+\begin{align}
+\log L_n(\theta)
+&=-\frac1{2\sigma^2}\sum_{i=1}^n
+\left[(y_i-f_\theta(x_i))^2-(y_i-f_0(x_i))^2\right]\notag\\
+&=\frac1\sigma\sum_{i=1}^n\omega_ig_\theta(x_i)-\frac{n}{2\sigma^2}\emp{g_\theta}^2 .
+\label{eq:gaussian-lr}
+\end{align}
+In particular $E_0\log(p_0/p_\theta)=\{n/(2\sigma^2)\}\emp{g_\theta}^2$ and $\operatorname{Var}_0\log(p_0/p_\theta)=(n/\sigma^2)\emp{g_\theta}^2$, so on $B_n$ the Kullback--Leibler divergence and the variance of the log-likelihood ratio are at most $\{\widetilde L^2/(2\sigma^2)\}n\en^2$ and $(\widetilde L^2/\sigma^2)n\en^2$: $B_n$ is a Kullback--Leibler neighborhood of $p_0$ in the sense of \citet{Ghosal2000}. Rather than invoking a generic Kullback--Leibler argument, we use the exact expression~\eqref{eq:gaussian-lr}.
+
+By Lemma~\ref{lem:local-mass}, $\Pi_n(B_n)>0$ for all large $n$, so the prior renormalized to $B_n$, $\Pi_{n,B_n}(H)=\Pi_n(H\cap B_n)/\Pi_n(B_n)$, is a probability measure. On $B_n$ each evaluation satisfies $|g_\theta(x_i)|\leq\{\sum_kg_\theta(x_k)^2\}^{1/2}=\sqrt n\emp{g_\theta}\leq\sqrt n\,\widetilde L\en$, so for each fixed data vector
+\begin{align*}
+|\log L_n(\theta)|
+\leq\frac{\sqrt n\,\widetilde L\en}{\sigma}\sum_{i=1}^n|\omega_i|+\frac{n\widetilde L^2\en^2}{2\sigma^2}
+\qquad\text{for all }\theta\in B_n.
+\end{align*}
+$\log L_n$ is bounded on $B_n$, hence $L_n$ and $\log L_n$ are $\Pi_{n,B_n}$-integrable, and Jensen's inequality for the concave logarithm applies. Restricting the integral defining $D_n$ to $B_n$ (the integrand is positive),
+\begin{align*}
+\log D_n
+\geq\log\Pi_n(B_n)+\log\int L_n(\theta)\,d\Pi_{n,B_n}(\theta)
+\geq\log\Pi_n(B_n)+\int\log L_n(\theta)\,d\Pi_{n,B_n}(\theta).
+\end{align*}
+Inserting~\eqref{eq:gaussian-lr} and exchanging the finite sum over $i$ with the integral,
+\begin{align*}
+\int\log L_n(\theta)\,d\Pi_{n,B_n}(\theta)
+=\frac1\sigma\sum_{i=1}^n\omega_i\bar g(x_i)
+ -\frac{n}{2\sigma^2}\int\emp{g_\theta}^2\,d\Pi_{n,B_n}(\theta),
+\end{align*}
+where $\bar g=\int g_\theta\,d\Pi_{n,B_n}(\theta)\in\R^n$ is the coordinatewise average of the bounded evaluation vectors $g_\theta$, $\theta\in B_n$. The definition of $B_n$ gives the first bound below, and Jensen's inequality for the convex function $\emp\cdot$ (equivalently, $\emp{\int h\,d\nu}\leq\int\emp h\,d\nu$ for a probability measure $\nu$ and an integrable $\R^n$-valued $h$) gives the second:
+\begin{align*}
+\int\emp{g_\theta}^2\,d\Pi_{n,B_n}(\theta)\leq\widetilde L^2\en^2,
+\qquad
+\emp{\bar g}\leq\int\emp{g_\theta}\,d\Pi_{n,B_n}(\theta)\leq\widetilde L\en .
+\end{align*}
+
+The vector $\bar g$ is determined by $\Pi_n$, $B_n$, $f_0$, and the design, none of which involves the noise, so it is deterministic. Hence $G_n=\sigma^{-1}\sum_i\omega_i\bar g(x_i)$ is, under $P_0$, a centered Gaussian variable with variance
+\begin{align*}
+v_n=\frac1{\sigma^2}\sum_{i=1}^n\bar g(x_i)^2=\frac{n\emp{\bar g}^2}{\sigma^2}\leq\frac{n\widetilde L^2\en^2}{\sigma^2}.
+\end{align*}
+Put $t_n^*=\sqrt2\,\widetilde L n\en^2/\sigma>0$. If $v_n=0$ then $G_n=0$ almost surely and $P_0\{G_n<-t_n^*\}=0$. Otherwise, by~\eqref{eq:gausstail} and the bound on $v_n$,
+\begin{align*}
+P_0\{G_n<-t_n^*\}
+\leq\exp\Big\{-\frac{(t_n^*)^2}{2v_n}\Big\}
+=\exp\Big\{-\frac{\widetilde L^2n^2\en^4/\sigma^2}{v_n}\Big\}
+\leq\exp\Big\{-\frac{\widetilde L^2n^2\en^4/\sigma^2}{n\widetilde L^2\en^2/\sigma^2}\Big\}
+=e^{-n\en^2}.
+\end{align*}
+On the complementary event $\{G_n\geq-t_n^*\}$, combining the three displays above with~\eqref{eq:local-mass},
+\begin{align*}
+\log D_n
+\geq\log\Pi_n(B_n)-\frac{\sqrt2\,\widetilde L}{\sigma}n\en^2-\frac{\widetilde L^2}{2\sigma^2}n\en^2
+\geq-C_\Pi n\en^2-C_0n\en^2
+=-C_1n\en^2 .
+\end{align*}
+Thus $\{D_n<e^{-C_1n\en^2}\}\subset\{G_n<-t_n^*\}$, and~\eqref{eq:evidence} follows.
+\end{proof}
+
+\subsubsection*{Proof of Lemma~\ref{lem:sieve}: prior mass of the sieve complement}
+
+\begin{proof}
+Let $\nu_n=\Pi_{n,j}(|\theta_j|>\delta_n)=\int_{|t|>\delta_n}\pi_n(t)\,dt$ be the common exceedance probability of a coordinate; condition~\eqref{eq:3} gives $\nu_n\leq J_n^{-(1+\mu)}$. If $As_n\geq J_n$, then $N(\theta)\leq J_n\leq As_n$ for every $\theta$, so $\Theta_n^c$ is empty and there is nothing to prove. Otherwise $k=As_n$ is an integer with $1\leq k<J_n$, because $A\geq1$ and $s_n\geq a_n\geq1$ are integers. We claim
+\begin{align*}
+\{N(\theta)\geq k\}
+=\bigcup_{S\subset\{1,\ldots,J_n\}:\,|S|=k}\ \bigcap_{j\in S}\{|\theta_j|>\delta_n\}.
+\end{align*}
+If $N(\theta)\geq k$, the set of exceeding indices $\{j:|\theta_j|>\delta_n\}$ has at least $k$ elements and therefore contains a subset $S$ of cardinality exactly $k$, and $\theta$ belongs to the intersection indexed by that $S$. Conversely, if $\theta$ belongs to the intersection indexed by some $S$ with $|S|=k$, then $S$ is contained in the set of exceeding indices, so $N(\theta)\geq k$.
+
+For fixed $S$ the events $\{|\theta_j|>\delta_n\}$, $j\in S$, concern distinct coordinates, hence are independent under the product prior, and each has probability $\nu_n$; their intersection has probability $\nu_n^k$. A union bound over the $\binom{J_n}{k}\leq J_n^k$ subsets gives
+\begin{align*}
+\Pi_n\{N(\theta)\geq k\}
+\leq\binom{J_n}{k}\nu_n^k
+\leq J_n^kJ_n^{-(1+\mu)k}
+=J_n^{-\mu k}.
+\end{align*}
+With $k=As_n$ and $n\epsilon_n^2=s_n\log J_n$,
+\begin{align*}
+\Pi_n\{N(\theta)>As_n\}
+\leq\Pi_n\{N(\theta)\geq As_n\}
+\leq J_n^{-\mu As_n}
+=e^{-\mu As_n\log J_n}
+=e^{-\mu An\epsilon_n^2}.
+\end{align*}
+This is~\eqref{eq:sieve-mass}.
+\end{proof}
+
+\paragraph*{Prediction-distance shells.}
+For each integer $\ell\geq1$, define the $\ell$th shell inside the sieve, with $W_n=\{f_\theta:\theta\in\Theta_n\}$ as in the Preliminaries, as the set of functions
+\begin{align}
+\mathcal S_\ell=\{f\in W_n:\ell M_n\epsilon_n<\emp{f-f_0}\leq(\ell+1)M_n\epsilon_n\}.
+\label{eq:shell}
+\end{align}
+The shells are pairwise disjoint and their union is $W_n\cap\{f:\emp{f-f_0}>M_n\epsilon_n\}$, because the intervals $(\ell M_n\epsilon_n,(\ell+1)M_n\epsilon_n]$, $\ell\geq1$, partition $(M_n\epsilon_n,\infty)$. Consequently, if $\theta\in\Theta_n\cap U_n$, then $f_\theta\in\mathcal S_\ell$ for exactly one $\ell\geq1$, namely $\ell=\lceil\emp{f_\theta-f_0}/(M_n\epsilon_n)\rceil-1$. Every $f\in\mathcal S_\ell$ has at least one representative $\theta\in\Theta_n\cap U_n$ because $\mathcal S_\ell\subset W_n$, but it may also have non-sparse representatives when the dictionary is redundant; only the forward implication is used.
+
+The covering radius for a shell will be proportional to its distance from $f_0$; this is what permits the neighborhood bound of Lemma~\ref{lem:test} to apply to every point of the shell. The non-negligible coefficients of a sparse vector are not bounded in magnitude, but within a shell their combined prediction is bounded, and once a support is fixed that prediction lies in a subspace of dimension at most the size of the support. We cover this bounded set inside its subspace, using Lemma~\ref{lem:packing}.
+
+\subsubsection*{Proof of Lemma~\ref{lem:tests}: tests}
+
+Lemma~\ref{lem:tests} rests on three ingredients: a test of $f_0$ against a neighborhood of one fixed alternative (Lemma~\ref{lem:test}); an elementary packing bound in a finite-dimensional subspace (Lemma~\ref{lem:packing}); and a covering of the sparse alternatives at prediction distance beyond $M_n\epsilon_n$ by finitely many such neighborhoods, with a controlled number of centers (Lemma~\ref{lem:covering}). The test of Lemma~\ref{lem:tests} rejects if any local test rejects.
+
+\begin{proof}[Proof]
+Assume $M_n\geq16K$, $\log J_n\geq1+\log97$, and $M_n^2\geq16\sigma^2(2A+1)$, all of which hold for all sufficiently large $n$ because $M_n\to\infty$ and $J_n\to\infty$. Let the centers $g_{\ell,k}$ be as in Lemma~\ref{lem:covering}, let $\psi_g$ be the test of Lemma~\ref{lem:test}, and define
+\begin{align*}
+\phi_n=\sup_{\ell\geq1}\ \sup_{1\leq k\leq N_\ell}\psi_{g_{\ell,k}},
+\qquad\sup\varnothing:=0,
+\end{align*}
+which rejects if any local test rejects. Each $\psi_g$ is the indicator of a closed half-space of $\R^n$, so $\phi_n$, the indicator of a countable union of such sets, is measurable. The centers and the tests depend on the fixed truth $f_0$; as is standard in posterior-contraction arguments, $\phi_n$ is an analytic device, not an implementable procedure. By~\eqref{eq:center-away} every center satisfies $d_{\ell,k}:=\emp{g_{\ell,k}-f_0}\geq\frac{15}{16}\ell M_n\epsilon_n>0$, so Lemma~\ref{lem:test} applies to each.
+
+\emph{Type I error.} Since $(15/16)^2=225/256\geq1/2$, Lemma~\ref{lem:test} gives, with $t_n=M_n^2n\epsilon_n^2/(16\sigma^2)$,
+\begin{align*}
+E_0\psi_{g_{\ell,k}}
+\leq\exp\Big\{-\frac{nd_{\ell,k}^2}{8\sigma^2}\Big\}
+\leq\exp\Big\{-\frac{(15/16)^2\ell^2M_n^2n\epsilon_n^2}{8\sigma^2}\Big\}
+\leq\exp\Big\{-\frac{\ell^2M_n^2n\epsilon_n^2}{16\sigma^2}\Big\}
+=e^{-\ell^2t_n}.
+\end{align*}
+The hypothesis $M_n^2\geq16\sigma^2(2A+1)$ and~\eqref{eq:rate-relations} give $t_n\geq(2A+1)n\epsilon_n^2\geq3\log2>\log2$, hence $(1-e^{-t_n})^{-1}\leq2$. A union bound over the centers, the count~\eqref{eq:center-count}, $\ell^2\geq\ell$, and the geometric series give
+\begin{align*}
+E_0\phi_n
+&\leq\sum_{\ell\geq1}N_\ell e^{-\ell^2t_n}
+\leq e^{2An\epsilon_n^2}\sum_{\ell\geq1}e^{-\ell t_n}
+=e^{2An\epsilon_n^2}\frac{e^{-t_n}}{1-e^{-t_n}}\\
+&\leq2\exp\Big\{-\Big(\frac{M_n^2}{16\sigma^2}-2A\Big)n\epsilon_n^2\Big\}
+\leq2e^{-n\epsilon_n^2},
+\end{align*}
+the last step because $M_n^2/(16\sigma^2)-2A\geq1$. This is~\eqref{eq:type-I}.
+
+\emph{Type II error.} Fix $\theta\in\Theta_n\cap U_n$. Then $f_\theta\in\mathcal S_\ell$ for some $\ell\geq1$, and Lemma~\ref{lem:covering} assigns a center $g_{\ell,k}$ with $\emp{f_\theta-g_{\ell,k}}\leq d_{\ell,k}/4$. Since $\phi_n\geq\psi_{g_{\ell,k}}$ pointwise, Lemma~\ref{lem:test} applied at $v=f_\theta$, followed by $(15/16)^2\geq1/2$ and $\ell\geq1$, gives
+\begin{align*}
+E_{f_\theta}(1-\phi_n)
+\leq E_{f_\theta}(1-\psi_{g_{\ell,k}})
+\leq\exp\Big\{-\frac{nd_{\ell,k}^2}{32\sigma^2}\Big\}
+\leq\exp\Big\{-\frac{\ell^2M_n^2n\epsilon_n^2}{64\sigma^2}\Big\}
+\leq\exp\Big\{-\frac{M_n^2n\epsilon_n^2}{64\sigma^2}\Big\}.
+\end{align*}
+The bound does not depend on $\theta$, which proves~\eqref{eq:type-II}. Unlike the Type~I calculation, no count of centers is needed: each alternative uses only its one assigned local test.
+\end{proof}
+
+
+\begin{auxlemma}[Basic Gaussian test]\label{lem:test}
+Let $g\in\R^n$ with $\varrho:=\emp{g-f_0}>0$, and define
+\begin{align*}
+T_g=\sum_{i=1}^n(y_i-f_0(x_i))(g_i-f_0(x_i)),
+\qquad
+\psi_g=\mathbf1\{T_g\geq n\varrho^2/2\}.
+\end{align*}
+Then
+\begin{align*}
+E_0\psi_g\leq e^{-n\varrho^2/(8\sigma^2)},
+\qquad
+\sup_{v\in\R^n:\,\emp{v-g}\leq \varrho/4}E_v(1-\psi_g)\leq e^{-n\varrho^2/(32\sigma^2)} .
+\end{align*}
+\end{auxlemma}
+
+\begin{proof}
+The statistic $T_g$ measures the alignment of the residuals $y_i-f_0(x_i)$ with the fixed direction $g-f_0$. Abbreviate $w_i=g_i-f_0(x_i)$, so that $\sum_{i=1}^nw_i^2=n\emp{g-f_0}^2=n\varrho^2$. Under $P_v$ the observations are $y_i=v_i+\varepsilon_i$, so $y_i-f_0(x_i)=\{v_i-f_0(x_i)\}+\varepsilon_i$ and $T_g$ splits into a deterministic mean and a Gaussian noise term,
+\begin{align*}
+T_g=m_v+W,
+\qquad
+m_v=\sum_{i=1}^n\{v_i-f_0(x_i)\}w_i,
+\qquad
+W=\sum_{i=1}^n\varepsilon_iw_i\sim N(0,\sigma^2n\varrho^2),
+\end{align*}
+the law of $W$ being that of a linear combination of independent $N(0,\sigma^2)$ variables with fixed coefficients; its variance is positive since $\varrho>0$.
+
+\emph{Type I error.} Under $P_0$ we have $v=f_0$, hence $m_v=0$ and $T_g=W$. By~\eqref{eq:gausstail} with $t=n\varrho^2/2$ and $\tau^2=\sigma^2n\varrho^2$,
+\begin{align*}
+E_0\psi_g
+=\Pr\Big(W\geq\frac{n\varrho^2}{2}\Big)
+\leq\exp\Big\{-\frac{(n\varrho^2/2)^2}{2\sigma^2n\varrho^2}\Big\}
+=e^{-n\varrho^2/(8\sigma^2)}.
+\end{align*}
+
+\emph{Type II error.} Fix $v$ with $\emp{v-g}\leq \varrho/4$. Writing $v_i-f_0(x_i)=(v_i-g_i)+w_i$,
+\begin{align*}
+m_v&=n\varrho^2+S,
+\qquad
+S=\sum_{i=1}^n(v_i-g_i)w_i,
+\\
+|S|&\leq\Big\{\sum_{i=1}^n(v_i-g_i)^2\Big\}^{1/2}\Big\{\sum_{i=1}^nw_i^2\Big\}^{1/2}
+=n\emp{v-g}\,\varrho\leq\frac{n\varrho^2}{4},
+\end{align*}
+by the Cauchy--Schwarz inequality. Hence $m_v\geq3n\varrho^2/4$: the mean of $T_g$ exceeds the rejection threshold $n\varrho^2/2$ by at least $n\varrho^2/4$. The test fails to reject only if the noise $W$ is more negative than this margin, so by~\eqref{eq:gausstail} with $t=n\varrho^2/4$,
+\begin{align*}
+E_v(1-\psi_g)
+&=\Pr\Big(W<\frac{n\varrho^2}{2}-m_v\Big)
+\leq\Pr\Big(W\leq-\frac{n\varrho^2}{4}\Big)\\
+&\leq\exp\Big\{-\frac{(n\varrho^2/4)^2}{2\sigma^2n\varrho^2}\Big\}
+=e^{-n\varrho^2/(32\sigma^2)}.
+\end{align*}
+The bound depends on $v$ only through the constraint $\emp{v-g}\leq \varrho/4$, so it is uniform over the stated neighborhood.
+\end{proof}
+
+\begin{auxlemma}[Packing bound]\label{lem:packing}
+Let $V\subset\R^n$ be a linear subspace of dimension $k\geq1$, equipped with $\langle\cdot,\cdot\rangle_n$; let $x\in V$, $R>0$, $r>0$, and let $G\subset V$ be a set of points, each within distance $R$ of $x$, with pairwise distances exceeding $r$. Then $G$ is finite and
+\begin{align*}
+|G|\leq\Big(1+\frac{2R}{r}\Big)^k .
+\end{align*}
+Consequently, every nonempty set $F\subset V$ contained in the ball of radius $R$ around $x$ has a finite subset $G\subset F$ with pairwise distances exceeding $r$, of cardinality at most $(1+2R/r)^k$, such that every point of $F$ lies within distance $r$ of some point of $G$.
+\end{auxlemma}
+
+\begin{proof}
+Choose an orthonormal basis of $V$ for $\langle\cdot,\cdot\rangle_n$; the coordinate map is a linear isometry between $(V,\emp\cdot)$ and Euclidean $\R^k$, under which balls of radius $\rho$ in $V$ correspond to Euclidean balls of radius $\rho$, of Lebesgue volume $c_k\rho^k$ for a constant $c_k>0$. The open balls of radius $r/2$ around the points of $G$ are pairwise disjoint: a point lying in two of them would put two points of $G$ at distance less than $r$. By the triangle inequality each of them lies inside the ball of radius $R+r/2$ around $x$. Comparing volumes of any finite subfamily of $m$ of these balls, $mc_k(r/2)^k\leq c_k(R+r/2)^k$, so $m\leq(1+2R/r)^k$; hence $G$ is finite with the same bound.
+
+For the consequence, the cardinalities of subsets of $F$ with pairwise distances exceeding $r$ are bounded by $(1+2R/r)^k$, and the family of such subsets is nonempty (singletons), so it has a member $G$ of maximal cardinality. If some point $y\in F$ were at distance exceeding $r$ from every point of $G$, then $G\cup\{y\}$ would be a larger such subset; hence every point of $F$ is within $r$ of $G$.
+\end{proof}
+
+\begin{auxlemma}[Covering of the shells]\label{lem:covering}
+Suppose $M_n\geq16K$ and $\log J_n\geq1+\log97$. Then for every $\ell\geq1$ there are $N_\ell$ centers $g_{\ell,1},\ldots,g_{\ell,N_\ell}\in\R^n$ such that
+\begin{align}
+\emp{g_{\ell,k}-f_0}\geq\frac{15}{16}\ell M_n\epsilon_n
+\qquad(1\leq k\leq N_\ell),
+\label{eq:center-away}
+\end{align}
+every $f\in\mathcal S_\ell$ satisfies, for some $k$,
+\begin{align}
+\emp{f-g_{\ell,k}}\leq\frac{\ell M_n\epsilon_n}{8}\leq\frac14\emp{g_{\ell,k}-f_0},
+\label{eq:center-close}
+\end{align}
+and, uniformly over $\ell\geq1$,
+\begin{align}
+N_\ell\leq e^{2As_n\log J_n}=e^{2An\epsilon_n^2}.
+\label{eq:center-count}
+\end{align}
+\end{auxlemma}
+
+\begin{proof}
+Fix $\ell\geq1$. The construction proceeds in four steps: remove the negligible coordinates, cover the remaining predictions for each support, combine the supports, and add the negligible coordinates back. The two hypotheses on $M_n$ and $J_n$ do not involve $\ell$, and every inequality in $\ell$ below holds for all $\ell\geq1$; this is the uniformity claimed in~\eqref{eq:center-count}.
+
+\smallskip\noindent\emph{Step 1: remove the negligible coordinates.}
+Let $\theta\in\Theta_n$ with $f_\theta\in\mathcal S_\ell$, and put $S(\theta)=\{j:|\theta_j|>\delta_n\}$, a set of size $N(\theta)\leq As_n$. Write $\theta=\theta^{(1)}+\theta^{(2)}$, where $\theta^{(1)}$ agrees with $\theta$ on $S(\theta)$ and vanishes elsewhere, so that $f_\theta=f_{\theta^{(1)}}+f_{\theta^{(2)}}$ and every entry of $\theta^{(2)}$ has magnitude at most $\delta_n$. By the triangle inequality, Assumption~\ref{ass:basis}, the threshold requirement $\delta_n\leq\en/J_n$, and $\en\leq\epsilon_n$,
+\begin{align}
+\emp{f_{\theta^{(2)}}}
+\leq\sum_{j\notin S(\theta)}|\theta_j|\emp{\xi_j}
+\leq KJ_n\delta_n
+\leq K\en\leq K\epsilon_n
+\leq\frac{M_n\epsilon_n}{16},
+\label{eq:negligible-part}
+\end{align}
+the last step by $M_n\geq16K$. Removing the negligible part therefore changes the distance from $f_0$ by at most $M_n\epsilon_n/16$. The two shell bounds and the triangle inequality give
+\begin{align}
+\frac{15}{16}\ell M_n\epsilon_n
+\leq\Big(\ell-\frac1{16}\Big)M_n\epsilon_n
+<\emp{f_{\theta^{(1)}}-f_0}
+\leq\Big(\ell+1+\frac1{16}\Big)M_n\epsilon_n
+\leq(\ell+2)M_n\epsilon_n,
+\label{eq:sparse-part-bounds}
+\end{align}
+where the outer comparisons use $\ell\geq1$. Thus every sparse part arising from the $\ell$th shell lies in a bounded region but remains separated from $f_0$.
+
+\smallskip\noindent\emph{Step 2: cover the sparse parts for one fixed support.}
+Fix a support $S\subset\{1,\ldots,J_n\}$ of size $s\leq As_n$, let $V_S$ be the span of the evaluation vectors $\{\xi_j:j\in S\}$, and let $s'=\dim V_S\leq s$, with strict inequality if the vectors are linearly dependent. Consider
+\begin{align*}
+\mathcal F_{\ell,S}
+=\{f_{\theta^{(1)}}:\theta\in\Theta_n,\ f_\theta\in\mathcal S_\ell,\ S(\theta)=S\}
+\subset V_S,
+\qquad
+R_\ell=(\ell+2)M_n\epsilon_n,
+\qquad
+r_\ell=\frac{\ell M_n\epsilon_n}{16}.
+\end{align*}
+By~\eqref{eq:sparse-part-bounds}, $\mathcal F_{\ell,S}$ lies in the ball of radius $R_\ell$ around $f_0$. The point $f_0$ need not lie in $V_S$, but if $P_S$ denotes the orthogonal projection onto $V_S$ for $\langle\cdot,\cdot\rangle_n$, then for $v\in V_S$ we have $v-P_Sf_0=P_S(v-f_0)$ and hence $\emp{v-P_Sf_0}\leq\emp{v-f_0}$, since an orthogonal projection does not increase the norm. So $\mathcal F_{\ell,S}$ also lies in the ball of radius $R_\ell$ around the point $P_Sf_0$ of $V_S$.
+
+If $\mathcal F_{\ell,S}$ is empty, use no centers. If $\mathcal F_{\ell,S}$ is nonempty and $s'=0$, then $V_S=\{0\}$, hence $\mathcal F_{\ell,S}=\{0\}$, and we use the single center $0\in\mathcal F_{\ell,S}$. Otherwise apply Lemma~\ref{lem:packing} in $V_S$ with $x=P_Sf_0$, $R=R_\ell$, $r=r_\ell$: there is a finite subset $\{g_{\ell,S,k}:1\leq k\leq N_{\ell,S}\}$ of $\mathcal F_{\ell,S}$ such that every point of $\mathcal F_{\ell,S}$ lies within $r_\ell$ of some $g_{\ell,S,k}$, and
+\begin{align*}
+N_{\ell,S}
+\leq\Big(1+\frac{2R_\ell}{r_\ell}\Big)^{s'}
+=\Big(1+\frac{32(\ell+2)}{\ell}\Big)^{s'}
+\leq97^{s'}
+\leq97^{s},
+\end{align*}
+using $(\ell+2)/\ell\leq3$ and $s'\leq s$. In all cases $N_{\ell,S}\leq97^s$, and since the centers belong to $\mathcal F_{\ell,S}$,~\eqref{eq:sparse-part-bounds} gives
+\begin{align}
+\emp{g_{\ell,S,k}-f_0}\geq\frac{15}{16}\ell M_n\epsilon_n .
+\label{eq:center-away-S}
+\end{align}
+
+\smallskip\noindent\emph{Step 3: combine all supports.}
+Supports are subsets of $\{1,\ldots,J_n\}$ of size at most $q_n=\min\{As_n,J_n\}$, and there are $\binom{J_n}{s}\leq J_n^s$ of size $s$. Take the union of the center sets over all such supports and relabel it $g_{\ell,1},\ldots,g_{\ell,N_\ell}$. Then, since each summand below is at most $(97J_n)^{q_n}\leq(97J_n)^{As_n}$,
+\begin{align*}
+N_\ell\leq\sum_{s=0}^{q_n}\binom{J_n}{s}97^s
+\leq(As_n+1)(97J_n)^{As_n}.
+\end{align*}
+When $N_\ell\geq1$, using $\log(1+x)\leq x$ with $x=As_n$ and then $\log J_n\geq1+\log97$,
+\begin{align*}
+\log N_\ell
+&\leq As_n\log J_n+As_n\log97+\log(As_n+1)
+\leq As_n(\log J_n+\log97+1)\\
+&\leq2As_n\log J_n
+=2An\epsilon_n^2 .
+\end{align*}
+If $N_\ell=0$ the bound is immediate. This proves~\eqref{eq:center-count}, and~\eqref{eq:center-away} is~\eqref{eq:center-away-S} after relabeling.
+
+\smallskip\noindent\emph{Step 4: return from the sparse part to the full function.}
+Fix $f\in\mathcal S_\ell$, choose any $\theta\in\Theta_n$ with $f=f_\theta$, and put $S=S(\theta)$. Then $f_{\theta^{(1)}}\in\mathcal F_{\ell,S}$, so Step~2 provides a center $g=g_{\ell,S,k}$ with $\emp{f_{\theta^{(1)}}-g}\leq r_\ell$. Adding back the negligible part with~\eqref{eq:negligible-part}, and using $\ell+1\leq2\ell$,
+\begin{align*}
+\emp{f_\theta-g}
+&\leq\emp{f_{\theta^{(1)}}-g}+\emp{f_{\theta^{(2)}}}
+\leq\frac{\ell M_n\epsilon_n}{16}+\frac{M_n\epsilon_n}{16}
+\leq\frac{\ell M_n\epsilon_n}{8}\\
+&=\frac{8}{64}\ell M_n\epsilon_n
+\leq\frac{15}{64}\ell M_n\epsilon_n
+=\frac14\cdot\frac{15}{16}\ell M_n\epsilon_n
+\leq\frac14\emp{g-f_0},
+\end{align*}
+by~\eqref{eq:center-away-S} in the last step. This is~\eqref{eq:center-close}: every function in the shell is within a quarter of its center's distance from $f_0$, which is the neighborhood required by Lemma~\ref{lem:test}. The choice of the sparse representative $\theta$ is immaterial; any choice produces a valid center.
+\end{proof}
+

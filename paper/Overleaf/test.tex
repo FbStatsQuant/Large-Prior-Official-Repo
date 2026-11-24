@@ -1,0 +1,12 @@
+\documentclass{article}
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{refs.bib}  % mismo nombre que tu archivo .bib
+
+\begin{document}
+
+Prueba de cita \parencite{Abraham2015}.
+
+\nocite{*}
+\printbibliography
+
+\end{document}

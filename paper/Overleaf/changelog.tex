@@ -1,0 +1,63 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\title{Change Log\\[4pt]\large Large series priors for adaptive and optimal Bayesian nonparametric regression}
+\author{Felipe Bedoya}
+\date{Last updated: November 2, 2026}
+
+\begin{document}
+\maketitle
+
+Major changes to the manuscript are recorded here
+
+\begin{itemize}
+    \item August, 6: Revised Section 2 for readability: restructured the balance between the main body and the Appendix, moving non-fundamental technical material to the Appendix. No changes to the mathematical content.
+
+    \item August, 7: Corollary is intentionally shown to proof how if sparsity behaves as the ideal number of basis functions, then the rate is nearly optimal. However, it did not show the clear connection sparsity-convergence rate discussed in section, a paragraph was added balancing both terms.
+    
+
+    \item August, 9: Further trimming of section 2 for better readability. Also, corollary 3 was improved in terms of readeability.
+
+    \item August, 15:  Asked AI for interesting data applications for the Fourier base, see that at the end of section 3.
+
+    \item August, 16: Rewrote the proofs of Lemmas 1 and 2 in the Appendix to be fully self-contained and accessible; lemma statements unchanged.
+
+    \item Removed the Wei--Ghosal correspondence and Horseshoe verification parts of the Appendix; the paper now states that we will just adjust the variables from Wei and Ghosal (2020).
+
+    \item Reorganized the Appendix: the main proof now comes first, then the corollary proof, with the basis-system lemmas (now Lemmas 3 and 4) and their proofs at the end; those proofs were also lightly restyled.
+
+    \item September, 1: The contraction radius in Theorem 1 now uses an arbitrary diverging sequence $M_n$ instead of a fixed constant; the sieve and shells in the proof were adjusted accordingly.
+
+    \item September, 13: Rewrote the proof of Theorem 1 for readability, reordering the steps and closing a gap in the prior-mass argument; theorem statement unchanged.
+
+    \item September, 15: Restructured the proof of Theorem 1 (Copy III): the four estimates are now stated as Lemmas 1--4 before a short proof of the theorem, with lemma proofs afterwards; constants and all eventual conditions on $n$ collected in one place; no change to any bound or constant. Section 2.3 proof description updated to match. Bibliography verified against CrossRef: corrected author names in Bach--Klein, Guha--Ho--Nguyen, Leung, Liu--Dobriban, Song--Liang, and Wei--Ghosal; added missing journal/volume/page data and DOIs; fixed two citation commands and a dangling remark reference.
+
+    \item September, 29 (Final\_Project, built from Copy III): Replaced the proof of Theorem 1 in the Appendix with a revised modular proof that was independently verified line by line: the four estimates are stated as Lemmas 1--4; the Gaussian tail bound, the change of measure and the rate relations are stated as Facts with proofs; a packing bound is isolated as a separate lemma; the redundant eventual condition $M_n^2n\epsilon_n^2\geq16\sigma^2$ was removed; the proof delivers the constant 5 in the first conclusion, which implies the stated 6. Theorem statement, assumptions and Section 2 are mathematically unchanged. The shell-partition equivalence in the covering argument was corrected to a one-sided implication.
+
+    \item September, 29: Split main.tex into one file per section: main.tex now holds only the preamble and \verb|\input|s sections/00--05 and appendix/A--D. Removed descriptive comments from the preamble. References now precede an unnumbered Appendix. Fixed PDF metadata placeholders, the blinded-title placeholder, and several typographical issues (comma splices, B-spline capitalization, American spelling, non-breaking spaces before references, overfull displays, unnumbered paragraph headings, hard-coded corollary numbers). Completed the Ghosal and van der Vaart (2007) and Temlyakov (2018) bibliography entries and protected the capital in Shen--Ghosal. The build has no undefined references or citations and no overfull boxes.
+
+    \item October, 12: Expository fixes, no change to any statement, bound, or constant. Section 2.2 now introduces all four given sequences ($\widetilde\epsilon_n$, $a_n$, $\delta_n$, $E_n$); previously $\widetilde\epsilon_n$ and $E_n$ were used without being introduced. In the proof of the evidence lower bound, the standardized noise variables are renamed from $Z_i$ to $\omega_i$, because $Z_i$ with $i=n$ collided with the posterior probability $Z_n$ in the proof of the theorem. The same fixes, plus three more, were made in Theorem1\_standalone.
+
+    \item October, 27: Replaced the Galveston application with three real-data applications in a new Section~3.3: monthly sunspot numbers (1900--2024), daily Capital Bikeshare rentals (2011--2012), and weekly wave heights at NOAA buoy 46001 (2010--2023). All three use the same rule, $J_n=\lfloor n^{0.7}\rfloor$ and $\tau=J_n^{-2}$, with a Jeffreys prior on $\sigma$. The two chronological series use the cosine half of the Fourier dictionary to avoid the periodic constraint. New figure \texttt{applications\_fig.png}, five new bibliography entries, and one sentence each in the Section~3 opening and the Conclusion. Code, data, and reviews are in \texttt{Real data/Applications}.
+
+    \item October, 28: Restructured Corollary~1 and replaced its proof (Appendix) with an independently verified lemma-based proof laid out like the proof of Theorem~1: four lemmas (exponent algebra, size of the term budget, the sparse approximant, variance and rate), a short proof from them, the lemma proofs, and tables of the inputs of Theorem~1 and of the conditions on $n$; all constants are explicit. Statement: corrected the order of the sparsity level to $a_n\asymp(n/\log n)^{d/(2\alpha^*+d)}$ (it was printed as $(n/\log n)^{1/(2\alpha^*+d)}$, which is correct only for $d=1$); the orders of $s_n$ and $a_n$, previously phrased as hypotheses, are now conclusions; the sequence choices moved from the Appendix into the statement, with explicit constants $C_\epsilon\geq dC_{\mathrm{app}}$ and $c_\delta\in(0,1)$, because the prior condition is a condition on them; the Horseshoe clause was removed from the formal statement; the H\"older radius $R$ and the qualifications of the B-spline and Fourier profiles are stated. Completed the isotropic and univariate special-cases paragraph and added a short paragraph on what adaptation means here. The new corollary lemmas are Lemmas~8--11, so the B-spline and Fourier lemmas are now Lemmas~12 and~13. Smaller fixes: the Notation paragraph now identifies $\lesssim$ (not $\asymp$) with big-$O$ and defines $\|\theta\|_\infty$, $\operatorname{supp}\theta$, and $\#S$; the univariate preview in Section~2.4 names the profile and prior conditions; the Conclusion states the corollary's rate without the hedges; Section~3 no longer calls Assumption~2 a ``nested'' condition; the B-spline lemma's discussion now shows how its isotropic (cube) profile gives the rectangular profile of the corollary; one sentence each in the Appendix introduction and the admissible-ranges subsection. Work files, adviser and reviewer reports are in \texttt{corollary\_proof/integration}.
+
+    \item November, 2: Whole-paper consistency revision; no theorem, proof, or number changed. Abstract and introduction: efficiency claims removed; literature positioning rewritten (incorrect uses of Liu--Dobriban and Leung removed; van der Pas et al.\ 2014/2017, Arbel et al., de Jonge--van Zanten, Castillo et al., Johnstone--Silverman, Bach--Klein placed). Section~2: the Horseshoe with a deterministic global scale is now stated to satisfy Assumption~3 via the proof of Wei and Ghosal (2020, Theorem~3.3), with explicit conditions on $\tau_n$ and the sequences (new display \texttt{eq:hs-conditions}); ``we will just adjust the variables'' removed; interpretations of Assumptions~2--3 and Theorem~1 made precise; Practical guidance rewritten (single- versus multiresolution splines; exact smoothness thresholds $3/14$ and $1/8$). Section~3: one consistent description of each experiment's prior; the contradictory statements on the global scale in Section~3.2 removed; Table~2 basis renamed Cosine and given a Benchmark column $-m/(2m+1)$; honest reading of the slopes (no adaptation visible); ridge scope; exact application facts ($F_n$ frequencies, counts $1/4/24$, MCMC lengths, omitted buoy dates). New limitations paragraph in the Conclusion. Notation: Section~3.3's $K$ renamed $F_n$, $p_n$ and $d_n(g,h)$ removed, proof-local symbols in Appendices~A and D renamed. Bibliography entries completed; Carvalho et al.\ (2010) and the \texttt{horseshoe} package added. Copy-edits throughout. Work files and reviews are in \texttt{proof\_packets/consistency\_review}; the pre-revision copy is \texttt{Manuscripts/Final\_Project\_BACKUP\_2026-11-02\_before\_consistency}.
+
+    \item November, 14 (Official\_Version): Writing and message revision; no theorem, proof, or reported number changed. One message throughout: the rate is driven by the sparsity with which the dictionary represents $f_0$ (abstract, introduction, Section~2.2, Remark~1, Section~3.2, conclusion). Repeated caveats and hedged verbs removed (``can achieve'', ``may achieve'', ``the final rate will depend\ldots''). Section~2: B-spline capitalization made uniform; the isotropic special case now states $a_n$ as a conclusion of Corollary~1, not as a hypothesis; Horseshoe scale written $\tau_n$ throughout; the discussion of~(WG3)--(WG5) de-duplicated; Remark~2 now states once that scales much below $1/J_n^2$ make the Gibbs sampler unstable. Section~3.1: ridge presented as the posterior mean under a Gaussian prior, with the ridge error roughly doubling while the Horseshoe stays flat as $J_n$ grows. Section~3.2: the threshold $1/J_n$ is justified by the practical $\tau$; Table~2 drops the minimax Benchmark column and adds the exponent $(\widehat\gamma_q-1)/2$ implied by Remark~1; two sentences explain why slopes need not match the minimax exponents (weaker practical shrinkage, finite $n$). Conclusion rewritten around the numerical findings. The introduction now states that Theorem~1 and Corollary~1 are formally verified in Lean~4; on the same day the Lean target of Corollary~1(ii) was aligned with the paper (constant $c=C_\epsilon^2/C_s$, exponent $n\epsilon_n^2$, radius $M_n\epsilon_n$). The pre-revision copy is \texttt{Large Prior\_BACKUP\_2026-11-14\_before\_writing\_revision}.
+
+
+
+\end{itemize}
+\section*{Earlier (context)}
+
+The previous draft changed substantially relative to the prior version: rate sequences were adjusted to fully leverage the Wei--Ghosal framework, a dedicated approximation lemma was developed for the Fourier basis, the Fourier construction was reworked (not an immediate extension of Shen--Ghosal 2020), and the rate analysis was centered on basis-induced sparsity. The data application was also changed to reflect a more realistic scenario of noisy data, with the goal of recovering the underlying trend.
+
+About the main proof, the test was built from principles in a similar way Song (2015) and Wei - Ghosal (2020) [High-dimensional linear / logistic regression]. Also, since there is no entropy involved, I did find any Ghosal theorem that shows the desired result based on the properties proven. I opted for showing it directly, which is a final, short part of the proof, with the main advantage being that the final result is a bit stronger.
+
+Finally, given the complexity of the proof, corollary has more nuances than previously though, only the anisotropic case was proven and isotropic and uni-dimensional cases are verbatim mentioned as specific instances.
+
+\end{document}

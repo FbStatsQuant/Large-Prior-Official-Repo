@@ -1,0 +1,190 @@
+\subsection*{Proof of Corollary~\ref{cor:anisotropic}}
+
+Theorem~\ref{thm:main} turns sparse approximability of $f_0$ into a contraction rate: if $f_0$ is approximated to accuracy $\en$ by a dictionary vector with $a_n$ non-negligible coefficients, the posterior contracts at the rate $\epsilon_n=\sqrt{s_n\log J_n/n}$ of~\eqref{sparsity}. Corollary~\ref{cor:anisotropic} is therefore a matter of choosing the four sequences $(\en,a_n,\delta_n,E_n)$ of Section~\ref{sec:rates-assumptions} well and checking the inputs of the theorem. The choice is the usual bias--variance balance. A budget of $m_{n,k}$ terms in coordinate direction $k$ gives an approximation error (bias) of order $\sum_km_{n,k}^{-\alpha_k}$, while the cost of finding the $a_n\approx\prod_km_{n,k}$ active terms among $J_n$ (variance) is of order $a_n\log J_n/n$; choosing the budget so that the \emph{squared} bias and the variance are of the same order gives the rate $\epsilon_n\asymp(n/\log n)^{-\alpha^*/(2\alpha^*+d)}$. The sparse approximation profile~\eqref{eq:aniso-profile} is the only dictionary-specific hypothesis beyond Assumption~\ref{ass:basis}; Lemmas~\ref{lem:bspline-profile} and~\ref{lem:fourier-profile}, stated and proved at the end of this Appendix, verify it for the multiresolution spline and Fourier dictionaries, with the spline-order restrictions and anisotropic qualification stated there.
+
+The proof has the same architecture as that of Theorem~\ref{thm:main}. After the sequence choices and the constants, four short lemmas are stated: Lemma~\ref{lem:cor-exponents} records the identities among the exponents that make the balance exact; Lemma~\ref{lem:cor-budget} gives explicit two-sided bounds on $\log J_n$, on the budget, and on $a_n$, and in particular shows that the budget fits inside the dictionary; Lemma~\ref{lem:cor-approximant} (bias) verifies Assumption~\ref{ass:sparse}; and Lemma~\ref{lem:cor-rates} (variance and rate) verifies the standing requirements~\eqref{eq:standing-sequences} and gives the order of $s_n$ and $\epsilon_n$. The corollary then follows by applying Theorem~\ref{thm:main} once and translating its conclusions. The lemmas are proved next. All constants are explicit, so every relation $\asymp$ below can be checked by hand.
+
+\subsubsection*{Preliminaries}
+
+\paragraph*{Sequence choices.}
+The term budget $\boldsymbol m_n=(m_{n,1},\ldots,m_{n,d})$ and the analytical sequences are those of~\eqref{eq:aniso-choice}--\eqref{eq:aniso-prior-choice}, with fixed constants $C_\epsilon\geq d\,C_{\mathrm{app}}$ and $c_\delta\in(0,1)$. Only the rectangle $\boldsymbol m_n$ is used below, so the sparse approximation profile~\eqref{eq:aniso-profile} is needed only at $\boldsymbol m_n$ for all sufficiently large $n$. Like Theorem~\ref{thm:main}, the corollary concerns only large $n$; on the finitely many $n$ at which Lemma~\ref{lem:cor-budget} below fails, the sequences may be redefined arbitrarily (for instance $a_n=1$) so that $a_n\in\{1,\ldots,J_n\}$ for every $n$, as Section~\ref{sec:rates-assumptions} requires.
+
+\paragraph*{Where the budget comes from.}
+The heuristic behind the choices~\eqref{eq:aniso-choice}--\eqref{eq:aniso-prior-choice} is not needed to follow the proof, but it explains them. Aim for a common bias level $\varepsilon$ in every direction: $m_k^{-\alpha_k}=\varepsilon$, that is, $m_k=\varepsilon^{-1/\alpha_k}$. The number of active terms is then $\prod_km_k=\varepsilon^{-\sum_k1/\alpha_k}=\varepsilon^{-d/\alpha^*}$, and the variance cost of selecting them is $\varepsilon^{-d/\alpha^*}\log J_n/n=\varepsilon^{-d/\alpha^*}/N_n$. Equating squared bias and variance, $\varepsilon^2=\varepsilon^{-d/\alpha^*}/N_n$, gives $\varepsilon=N_n^{-\alpha^*/(2\alpha^*+d)}=N_n^{-r}$ and $m_k=N_n^{r/\alpha_k}=N_n^{\beta_k}$. Rough directions, those with small $\alpha_k$, receive more terms.
+
+\paragraph*{Constants.}
+Reading $L_{n,k}\asymp n^{b_k}$ and $J_n\asymp\prod_kL_{n,k}$ in the sense of the Notation paragraph of Section~\ref{sec-intro}, fix constants $0<\underline c_k\leq\overline c_k$ and $0<\underline c_J\leq\overline c_J$ such that, for all sufficiently large $n$,
+\begin{align}
+\underline c_k\,n^{b_k}\leq L_{n,k}\leq\overline c_k\,n^{b_k}\quad(k=1,\ldots,d),
+\qquad
+\underline c_J\prod_{k=1}^dL_{n,k}\leq J_n\leq\overline c_J\prod_{k=1}^dL_{n,k}. \label{eq:cor-sizes}
+\end{align}
+Put $b_+=\sum_kb_k$ and define
+\begin{gather}
+C_a=2^dC_{\mathrm{sp}}+1,
+\qquad
+C_s=\max\{C_a,\,C_\epsilon^2+1\},
+\notag\\
+c=\frac{C_\epsilon^2}{C_s},
+\qquad
+A'=\frac{A\,C_s}{C_{\mathrm{sp}}}, \label{eq:cor-constants}
+\end{gather}
+with $A$ the integer of Theorem~\ref{thm:main}. Their roles: $C_a$ bounds $a_n/N_n^D$ (Lemma~\ref{lem:cor-budget}), $C_s$ bounds $s_n/N_n^D$ and $\epsilon_n^2/N_n^{-2r}$ (Lemma~\ref{lem:cor-rates}), and $c$ and $A'$ are the constants in~\eqref{eq:cor1-L1}--\eqref{eq:cor1-support}. None of them depends on $n$ or on $M_n$; in particular $A$, defined in~\eqref{eq:constants-A} and depending only on $(K,\sigma,\mu,\eta,c_4,c_5)$, does not depend on $M_n$. The constant $A'$ need not be an integer; the event $\{\#\{j:|\theta_j|>\delta_n\}>A'a_n\}$ makes sense for every real $A'>0$.
+
+\subsubsection*{The four lemmas}
+
+\begin{auxlemma}[Exponent algebra]\label{lem:cor-exponents}
+The exponents~\eqref{eq:aniso-exponents}--\eqref{eq:aniso-beta} satisfy $r>0$, $0<D<1$, $\beta_k>0$ for every $k$, and
+\begin{align}
+\alpha_k\beta_k=r\quad(k=1,\ldots,d),
+\qquad
+\sum_{k=1}^d\beta_k=D,
+\qquad
+2r+D=1. \label{eq:aniso-identities}
+\end{align}
+\end{auxlemma}
+
+\begin{auxlemma}[Size of the budget]\label{lem:cor-budget}
+$J_n\to\infty$ and $N_n\to\infty$, and for all sufficiently large $n$:
+\begin{enumerate}[label=(\alph*),itemsep=1pt]
+\item $\tfrac{b_+}2\log n\leq\log J_n\leq2b_+\log n$; hence $N_n\geq1$ and
+$\dfrac{n}{2b_+\log n}\leq N_n\leq\dfrac{2n}{b_+\log n}$;
+\item for every $k$, $N_n^{\beta_k}\leq m_{n,k}\leq2N_n^{\beta_k}$ and $1\leq m_{n,k}\leq L_{n,k}$; that is, the budget fits inside the dictionary;
+\item $C_{\mathrm{sp}}N_n^D\leq a_n\leq C_aN_n^D$ and $1\leq a_n\leq J_n$.
+\end{enumerate}
+\end{auxlemma}
+
+\begin{auxlemma}[Bias: the sparse approximant]\label{lem:cor-approximant}
+For every $n$ for which Lemma~\ref{lem:cor-budget} holds, the profile vector $\theta_0=\theta(\boldsymbol m_n)$ at the budget $\boldsymbol m_n$ satisfies~\eqref{approx} and both conditions in~\eqref{eq:sparse-approximant}, and a set $\xi_n^*$ as in Assumption~\ref{ass:sparse} exists. Thus Assumption~\ref{ass:sparse} holds for the sequences~\eqref{eq:aniso-choice}--\eqref{eq:aniso-prior-choice}.
+\end{auxlemma}
+
+\begin{auxlemma}[Variance and rate]\label{lem:cor-rates}
+The standing requirements~\eqref{eq:standing-sequences} hold. Moreover, for every $n$ for which Lemma~\ref{lem:cor-budget} holds:
+\begin{enumerate}[label=(\alph*),itemsep=1pt]
+\item $n\en^2=C_\epsilon^2N_n^D\log J_n$;
+\item $C_{\mathrm{sp}}N_n^D\leq s_n\leq C_sN_n^D$, and therefore $a_n\leq s_n\leq(C_s/C_{\mathrm{sp}})\,a_n$;
+\item $C_\epsilon N_n^{-r}\leq\epsilon_n\leq\sqrt{C_s}\,N_n^{-r}$, and therefore $\epsilon_n\asymp(n/\log n)^{-\alpha^*/(2\alpha^*+d)}$.
+\end{enumerate}
+\end{auxlemma}
+
+The hypotheses of the corollary enter as follows. The smoothness of $f_0$ enters only through the profile~\eqref{eq:aniso-profile}: the H\"older exponents $\alpha_k$ appear as the decay rates $m_k^{-\alpha_k}$, and the radius $R$ is absorbed into $C_{\mathrm{app}}$ (and possibly $E$). The profile is used only in Lemma~\ref{lem:cor-approximant}; the size conditions $L_{n,k}\asymp n^{b_k}$, $b_k\geq\beta_k$, and $J_n\asymp\prod_kL_{n,k}$ only in Lemma~\ref{lem:cor-budget}; and Assumptions~\ref{ass:basis} and~\ref{ass:prior} are passed to Theorem~\ref{thm:main} unchanged.
+
+\subsubsection*{Proof of the corollary from the four lemmas}
+
+\begin{proof}[Proof of Corollary~\ref{cor:anisotropic}]
+Throughout, $n$ is large enough for Lemma~\ref{lem:cor-budget} to hold.
+
+\emph{Orders of $a_n$, $s_n$, and $\epsilon_n$.} By Lemma~\ref{lem:cor-budget}(c) and Lemma~\ref{lem:cor-rates}(b), $a_n$ and $s_n$ both lie between $C_{\mathrm{sp}}N_n^D$ and $C_sN_n^D$, so $s_n\asymp a_n\asymp N_n^D$. Raising the bounds on $N_n$ in Lemma~\ref{lem:cor-budget}(a) to the power $D>0$,
+\begin{align*}
+(2b_+)^{-D}\Big(\frac n{\log n}\Big)^D\leq N_n^D\leq\Big(\frac2{b_+}\Big)^D\Big(\frac n{\log n}\Big)^D,
+\end{align*}
+so $N_n^D\asymp(n/\log n)^{D}=(n/\log n)^{d/(2\alpha^*+d)}$. Lemma~\ref{lem:cor-rates}(c) gives $\epsilon_n\asymp(n/\log n)^{-\alpha^*/(2\alpha^*+d)}$ with explicit constants.
+
+\emph{Theorem~\ref{thm:main} applies.} Its inputs are in place, as recorded in the first table at the end of this subsection: Assumption~\ref{ass:sparse} holds by Lemma~\ref{lem:cor-approximant}, the standing requirements~\eqref{eq:standing-sequences} hold by Lemma~\ref{lem:cor-rates}, and Assumptions~\ref{ass:basis} and~\ref{ass:prior} are hypotheses of the corollary. Let $A$ be the integer it provides. Now fix a sequence $M_n\to\infty$ and apply Theorem~\ref{thm:main} with this sequence. Its contraction radius is already $M_n\epsilon_n$; only the exponent and support bound need to be rewritten.
+
+\emph{The exponent.} By Lemma~\ref{lem:cor-rates}(a)--(b) and~\eqref{sparsity},
+\begin{align*}
+n\en^2=C_\epsilon^2N_n^D\log J_n
+\geq\frac{C_\epsilon^2}{C_s}\,s_n\log J_n
+=c\,n\epsilon_n^2.
+\end{align*}
+Consequently,~\eqref{eq:main-L1} gives
+\begin{align*}
+E_0\,\Post{\emp{f-f_0}>M_n\epsilon_n}
+\leq6e^{-n\en^2}\leq6e^{-c n\epsilon_n^2},
+\end{align*}
+which proves~\eqref{eq:cor1-L1}.
+
+\emph{The support size.} By Lemma~\ref{lem:cor-rates}(b), $As_n\leq A(C_s/C_{\mathrm{sp}})a_n=A'a_n$. Hence $\{\#\{j:|\theta_j|>\delta_n\}>A'a_n\}\subset\{\#\{j:|\theta_j|>\delta_n\}>As_n\}$, and~\eqref{eq:main-support-L1} together with the exponent bound above gives~\eqref{eq:cor1-support}.
+
+\emph{Convergence in probability.} Since $s_n\geq1$ and $J_n\to\infty$, $n\epsilon_n^2=s_n\log J_n\to\infty$, so both right-hand sides in~\eqref{eq:cor1-L1}--\eqref{eq:cor1-support} tend to zero. For a posterior probability $Z_n\in[0,1]$ and any fixed $\zeta>0$, Markov's inequality gives $P_0(Z_n>\zeta)\leq E_0Z_n/\zeta\to0$.
+
+The constants are those of~\eqref{eq:cor-constants}; only the threshold ``sufficiently large $n$'' depends on $M_n$, exactly as in Theorem~\ref{thm:main}.
+\end{proof}
+
+\subsubsection*{Proofs of Lemmas~\ref{lem:cor-exponents}--\ref{lem:cor-rates}}
+
+Except for the purely algebraic Lemma~\ref{lem:cor-exponents}, all statements below are for $n$ sufficiently large; each eventual condition is named where it is used and collected at the end of this subsection.
+
+\begin{proof}[Proof of Lemma~\ref{lem:cor-exponents}]
+Since every $\alpha_k\in(0,\infty)$, $\alpha^*>0$, hence $r>0$, $D>0$, and $\beta_k>0$; and $D<1$ because $2\alpha^*>0$. Next, $\alpha_k\beta_k=\alpha^*/(2\alpha^*+d)=r$ for every $k$. Using $\sum_k\alpha_k^{-1}=d/\alpha^*$,
+\begin{align*}
+\sum_{k=1}^d\beta_k=\frac{\alpha^*}{2\alpha^*+d}\sum_{k=1}^d\frac1{\alpha_k}=\frac{\alpha^*}{2\alpha^*+d}\cdot\frac d{\alpha^*}=D.
+\end{align*}
+Finally, $2r+D=(2\alpha^*+d)/(2\alpha^*+d)=1$.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cor-budget}]
+\emph{(a)} By~\eqref{eq:cor-sizes}, for all sufficiently large $n$,
+\begin{align*}
+\underline c_J\Big(\prod_k\underline c_k\Big)n^{b_+}\leq J_n\leq\overline c_J\Big(\prod_k\overline c_k\Big)n^{b_+},
+\qquad\text{so}\qquad
+\log J_n=b_+\log n+O(1).
+\end{align*}
+Since $b_+\geq\sum_k\beta_k=D>0$ (because $b_k\geq\beta_k$, and Lemma~\ref{lem:cor-exponents}), $J_n\to\infty$ and $\log J_n/\log n\to b_+$; in particular $\tfrac{b_+}2\log n\leq\log J_n\leq2b_+\log n$ for all sufficiently large $n$. Dividing $n$ by these bounds gives the two-sided bound on $N_n$, whose lower end tends to infinity; hence $N_n\to\infty$ and $N_n\geq1$ for all sufficiently large $n$.
+
+\emph{(b)} For $x>0$, $x\leq\lceil x\rceil<x+1$. With $x=N_n^{\beta_k}\geq1$ (by (a) and $\beta_k>0$), this gives $1\leq N_n^{\beta_k}\leq m_{n,k}\leq2N_n^{\beta_k}$. For the upper bound by $L_{n,k}$, use $N_n=n/\log J_n$ and, since $n\geq1$ and $\beta_k\leq b_k$, the bound $n^{\beta_k}\leq n^{b_k}$:
+\begin{align*}
+m_{n,k}\leq2N_n^{\beta_k}=\frac{2\,n^{\beta_k}}{(\log J_n)^{\beta_k}}\leq\frac{2}{(\log J_n)^{\beta_k}}\,n^{b_k}\leq\underline c_k\,n^{b_k}\leq L_{n,k},
+\end{align*}
+where the third inequality holds as soon as $(\log J_n)^{\beta_k}\geq2/\underline c_k$, which is true for all sufficiently large $n$ because $J_n\to\infty$. When $b_k=\beta_k$, it is exactly the factor $(\log J_n)^{-\beta_k}$ that makes the budget fit.
+
+\emph{(c)} Multiplying the bounds in (b) over $k$ and using $\sum_k\beta_k=D$ (Lemma~\ref{lem:cor-exponents}),
+\begin{align*}
+N_n^D\leq\prod_{k=1}^dm_{n,k}\leq2^dN_n^D.
+\end{align*}
+Hence $a_n=\lceil C_{\mathrm{sp}}\prod_km_{n,k}\rceil\geq C_{\mathrm{sp}}N_n^D$ and, because $N_n^D\geq1$, $a_n\leq2^dC_{\mathrm{sp}}N_n^D+1\leq C_aN_n^D$. Also $a_n\geq1$, being the ceiling of a positive number. For $a_n\leq J_n$, combine~\eqref{eq:cor-sizes} with $n^{b_+}\geq n^D$ (as $b_+\geq D$):
+\begin{align*}
+J_n\geq\underline c_J\Big(\prod_k\underline c_k\Big)n^D,
+\qquad
+a_n\leq C_aN_n^D=\frac{C_a\,n^D}{(\log J_n)^D},
+\end{align*}
+so $a_n\leq J_n$ as soon as $(\log J_n)^D\geq C_a/(\underline c_J\prod_k\underline c_k)$, which holds for all sufficiently large $n$.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cor-approximant}]
+By Lemma~\ref{lem:cor-budget}(b), $\boldsymbol m_n$ is an integer rectangle with $1\leq m_{n,k}\leq L_{n,k}$, so the profile~\eqref{eq:aniso-profile} applies at $\boldsymbol m_n$. Let $\theta_0=\theta(\boldsymbol m_n)$.
+
+\emph{Accuracy,~\eqref{approx}.} Since $m_{n,k}\geq N_n^{\beta_k}$ and $\alpha_k>0$, Lemma~\ref{lem:cor-exponents} gives $m_{n,k}^{-\alpha_k}\leq N_n^{-\alpha_k\beta_k}=N_n^{-r}$. Therefore
+\begin{align*}
+\emp{f_0-f_{\theta_0}}\leq C_{\mathrm{app}}\sum_{k=1}^dm_{n,k}^{-\alpha_k}\leq d\,C_{\mathrm{app}}N_n^{-r}\leq C_\epsilon N_n^{-r}=\en,
+\end{align*}
+using $C_\epsilon\geq d\,C_{\mathrm{app}}$. The common exponent $r$ in every direction is what the choice $m_{n,k}=\lceil N_n^{\beta_k}\rceil$ was designed for.
+
+\emph{Sparsity, first condition in~\eqref{eq:sparse-approximant}.} Every coordinate with $|\theta_{0,j}|>\delta_n$ is in particular nonzero, so
+\begin{align*}
+\#\{j:|\theta_{0,j}|>\delta_n\}\leq\#\operatorname{supp}\theta_0\leq C_{\mathrm{sp}}\prod_{k=1}^dm_{n,k}\leq a_n.
+\end{align*}
+This holds for every threshold $\delta_n>0$; the particular value of $\delta_n$ plays no role here.
+
+\emph{Coefficient bound, second condition in~\eqref{eq:sparse-approximant}.} $\|\theta_0\|_\infty\leq E=E_n$.
+
+\emph{The index set $\xi_n^*$.} The support of $\theta_0$ has at most $a_n$ elements and $a_n\leq J_n$ (Lemma~\ref{lem:cor-budget}(c)), so it can be enlarged to a set $\xi_n^*$ of exactly $a_n$ indices. Every $j$ with $|\theta_{0,j}|>\delta_n$ lies in the support, hence in $\xi_n^*$.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cor-rates}]
+\emph{(a)} By~\eqref{eq:aniso-prior-choice}, $n\en^2=C_\epsilon^2\,n\,N_n^{-2r}$. Writing $n=N_n\log J_n$ and using $1-2r=D$ (Lemma~\ref{lem:cor-exponents}),
+\begin{align*}
+n\en^2=C_\epsilon^2N_n^{1-2r}\log J_n=C_\epsilon^2N_n^D\log J_n.
+\end{align*}
+
+\emph{(b)} By (a), the second entry in the definition~\eqref{sparsity} of $s_n$ is $\lceil n\en^2/\log J_n\rceil=\lceil C_\epsilon^2N_n^D\rceil$, which lies between $C_\epsilon^2N_n^D$ and $C_\epsilon^2N_n^D+1\leq(C_\epsilon^2+1)N_n^D$. The first entry, $a_n$, lies between $C_{\mathrm{sp}}N_n^D$ and $C_aN_n^D$ by Lemma~\ref{lem:cor-budget}(c). The maximum of the two entries therefore satisfies
+\begin{align*}
+C_{\mathrm{sp}}N_n^D\leq a_n\leq s_n\leq\max\{C_a,C_\epsilon^2+1\}N_n^D=C_sN_n^D,
+\end{align*}
+and $s_n\leq C_sN_n^D\leq(C_s/C_{\mathrm{sp}})\,a_n$.
+
+\emph{(c)} Since $\log J_n/n=1/N_n$, we have $\epsilon_n^2=s_n/N_n$. The definition of $s_n$ and the proof of (b) give $C_\epsilon^2N_n^D\leq\lceil C_\epsilon^2N_n^D\rceil\leq s_n\leq C_sN_n^D$; dividing by $N_n$ and using $D-1=-2r$,
+\begin{align*}
+C_\epsilon^2N_n^{-2r}\leq\epsilon_n^2\leq C_sN_n^{-2r}.
+\end{align*}
+Take square roots and insert the bounds $n/(2b_+\log n)\leq N_n\leq2n/(b_+\log n)$ of Lemma~\ref{lem:cor-budget}(a). Since $r>0$,
+\begin{align*}
+C_\epsilon\left(\frac{b_+}{2}\right)^r\left(\frac n{\log n}\right)^{-r}
+\leq\epsilon_n
+\leq(2b_+)^r\sqrt{C_s}\left(\frac n{\log n}\right)^{-r}.
+\end{align*}
+Thus $\epsilon_n\asymp(n/\log n)^{-\alpha^*/(2\alpha^*+d)}$.
+
+\emph{Standing requirements.} The first requirement in~\eqref{eq:standing-sequences}: by (a), $n\en^2=C_\epsilon^2N_n^D\log J_n\to\infty$, since $N_n\to\infty$, $D>0$, and $\log J_n\to\infty$. The second: $\delta_n=c_\delta\en/J_n\leq\en/J_n$ because $c_\delta<1$. The third: $s_n\log J_n/n=\epsilon_n^2\leq C_sN_n^{-2r}\to0$, since $r>0$ and $N_n\to\infty$.
+\end{proof}

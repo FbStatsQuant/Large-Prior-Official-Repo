@@ -1,0 +1,26 @@
+\subsection*{Admissible smoothness ranges for fixed dictionary exponents}
+
+This subsection records the formal description of the adaptation ranges discussed in Section~\ref{sec:adaptive-rates} and Remark~\ref{rem:practical}, that is, the constraints that dictionary growth places on the smoothness covered by Corollary~\ref{cor:anisotropic}. In the univariate setting, the dictionary-growth condition for one fixed exponent $b$ holds on
+\begin{align*}
+\mathcal A_b^{(1)}
+=\left\{\alpha>0:b\geq\frac1{2\alpha+1}\right\}.
+\end{align*}
+For $0<b<1$ this is equivalent to
+$\alpha\geq(1/b-1)/2$, while $b\geq1$ covers every fixed $\alpha>0$.
+In the isotropic $d$-dimensional setting, with common coordinate exponent $b$, that is, $L_{n,k}\asymp n^b$ and total size $J_n\asymp n^{db}$, the analogous
+range is
+\begin{align*}
+\mathcal A_{b,d}^{\mathrm{iso}}
+=\left\{\alpha>0:b\geq\frac1{2\alpha+d}\right\}.
+\end{align*}
+If $b<1/d$, this means $\alpha\geq(1/b-d)/2$; if $b\geq1/d$, every
+fixed $\alpha>0$ is covered. For fixed anisotropic exponents
+$\boldsymbol b=(b_1,\ldots,b_d)$, the admissible range is
+\begin{align*}
+\mathcal A_{\boldsymbol b}^{\mathrm{aniso}}
+=\left\{\boldsymbol\alpha\in(0,\infty)^d:
+\frac{\alpha^*}{\alpha_k(2\alpha^*+d)}\leq b_k
+\text{ for every }k\right\}.
+\end{align*}
+Thus a prescribed anisotropic set $\mathcal A$ is covered by choosing $b_k$ at least as large as the supremum of the displayed fraction over $\boldsymbol\alpha\in\mathcal A$; taking every $b_k\geq1$ covers every fixed positive smoothness vector, although the resulting dictionary can
+be very large. These ranges concern dictionary growth only; within them, Corollary~\ref{cor:anisotropic} still requires the sparse approximation profile~\eqref{eq:aniso-profile} and Assumption~\ref{ass:prior} for the sequences~\eqref{eq:aniso-choice}--\eqref{eq:aniso-prior-choice} of each smoothness vector.

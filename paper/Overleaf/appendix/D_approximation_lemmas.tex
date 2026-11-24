@@ -1,0 +1,473 @@
+\subsection*{Sparse approximation lemmas for the B-spline\\ and Fourier dictionaries}
+
+This subsection states and proves the two lemmas invoked in Section~\ref{sec:adaptive-rates}. They verify, for the two concrete dictionaries used in this paper, the sparse approximation profile that Corollary~\ref{cor:anisotropic} takes as its only dictionary-specific hypothesis beyond the normalization of Assumption~\ref{ass:basis}. In words, the profile asks that for every term budget one can build an approximant of $f_0$ that (i) activates no more dictionary elements than the budget allows, (ii) has approximation error decaying polynomially in the budget, and (iii) has coefficients bounded by a fixed constant. In the proof of Corollary~\ref{cor:anisotropic} these three properties become, respectively, the sparsity level $a_n$, the approximation accuracy $\en$, and the coefficient bound $E_n=E$ of Assumption~\ref{ass:sparse}, and the profile of the dictionary in use is invoked exactly once there (Lemma~\ref{lem:cor-approximant}), at the balanced budget $m_{n,k}\asymp(n/\log J_n)^{\beta_k}$. Lemma~\ref{lem:bspline-profile} treats the B-spline dictionary and Lemma~\ref{lem:fourier-profile} the Fourier dictionary. Every object appearing in the statements is defined below, and each proof reduces to a small number of classical results, quoted in full where they are used.
+
+\paragraph*{Conventions.}
+For a finite set $S$, $\#S$ denotes its number of elements. For a vector $\theta$, $\operatorname{supp}\theta=\{j:\theta_j\neq0\}$ is its \emph{support}, the set of indices of its nonzero coordinates, and $\|\theta\|_\infty=\max_j|\theta_j|$ is its largest coordinate in absolute value. For a bounded function $g$, $\|g\|_\infty=\sup_x|g(x)|$ is the supremum (sup-)norm, the largest absolute value that $g$ attains. For a real number $x$, $\lfloor x\rfloor$ is the greatest integer not exceeding $x$. Because the empirical norm $\|g\|_{2,n}$, introduced in the notation paragraph of Section~\ref{sec-intro}, is an average of squared values of $g$ at the design points, and an average can never exceed a maximum,
+\begin{align}
+\|g\|_{2,n}=\left\{\frac1n\sum_{i=1}^ng(x_i)^2\right\}^{1/2}\leq\|g\|_\infty .
+\label{eq:sup-to-empirical}
+\end{align}
+Consequently, every approximation bound proved below in sup-norm holds verbatim in the empirical norm, for every $n$ and every configuration of design points; this is how the empirical-norm conclusions of both lemmas follow from their sup-norm displays. Classical results from approximation theory are quoted in the course of the proofs, each stated with all of its hypotheses, so that nothing requires consulting the references.
+
+\paragraph*{B-splines.}
+Fix an integer spline order $q\geq1$, independent of $n$; an order-$q$ spline is a piecewise polynomial of degree at most $q-1$. The familiar special cases are $q=1$, piecewise constants; $q=2$, continuous piecewise-linear functions; and $q=4$, cubic splines. At resolution level $\ell\geq0$, divide $[0,1]$ into $K_\ell=2^\ell$ equal subintervals and consider the space of splines of order $q$ on this partition: functions that are polynomials of degree at most $q-1$ on each subinterval, joined so that the function and its first $q-2$ derivatives are continuous at the interior breakpoints (no continuity is imposed when $q=1$). Its dimension is
+\begin{align*}
+D_\ell=K_\ell+q-1,
+\end{align*}
+which follows by counting: the $K_\ell$ polynomial pieces contribute $K_\ell q$ coefficients, each of the $K_\ell-1$ interior breakpoints imposes $q-1$ linearly independent matching constraints, and $K_\ell q-(K_\ell-1)(q-1)=K_\ell+q-1$ \citep[Chapter~4]{Schumaker2007}. The only structural information about this space that the proof of Lemma~\ref{lem:bspline-profile} uses is the following. For every order $q\geq1$ and level $\ell\geq0$, the level-$\ell$ spline space has a basis
+\begin{align*}
+\mathcal B_\ell^{(q)}
+=\{B_{\ell,1},\ldots,B_{\ell,D_\ell}\},
+\end{align*}
+the B-spline basis, built from the clamped (open) knot vector in which the endpoints $0$ and $1$ are repeated $q$ times, with the following classical properties \citep[Chapter~4 and Theorem~4.41]{Schumaker2007}.
+\begin{enumerate}
+\item Boundedness: $0\leq B_{\ell,j}(x)\leq1$ for every $x\in[0,1]$ and every $j$.
+\item Local support: each $B_{\ell,j}$ vanishes outside at most $q$ consecutive subintervals, so each basis function influences the fit only locally.
+\item Partition of unity: $\sum_{j=1}^{D_\ell}B_{\ell,j}(x)=1$ for every $x\in[0,1]$.
+\item Dual functionals: there are linear maps $\gamma_{\ell,1},\ldots,\gamma_{\ell,D_\ell}$, defined for every continuous function $g$ on $[0,1]$, such that $\gamma_{\ell,j}(B_{\ell,i})$ equals $1$ if $i=j$ and $0$ otherwise, and
+\begin{align*}
+|\gamma_{\ell,j}(g)|\leq C_{\mathrm{dual}}\|g\|_\infty
+\end{align*}
+for a constant $C_{\mathrm{dual}}\geq1$ depending only on $q$~--- not on $\ell$, $j$, or $g$.
+\end{enumerate}
+
+Two examples make the basis concrete. For $q=1$, $B_{\ell,j}$ is the indicator of the $j$th subinterval, the function equal to one there and zero elsewhere (each subinterval taken closed on the left and the last one also closed on the right, so that the indicators sum to one at every point of $[0,1]$), and $\gamma_{\ell,j}(g)$ can be taken to be the value of $g$ at the midpoint of that subinterval. For $q=2$, the $B_{\ell,j}$ are the piecewise-linear ``hat'' functions, each equal to one at one breakpoint and decreasing linearly to zero at the neighboring breakpoints, and $\gamma_{\ell,j}(g)$ can be taken to be the value of $g$ at the $j$th breakpoint; in both examples all four properties can be checked directly. For general $q$ the dual functionals are certain local weighted averages of $g$, and their uniform boundedness is a classical result \citep[Theorem~4.41]{Schumaker2007}. Property~4 is the mechanism by which spline coefficients are read off stably: if $s=\sum_i\theta_iB_{\ell,i}$, applying $\gamma_{\ell,j}$ to both sides and using linearity kills every term except the $j$th, so
+\begin{align}
+\theta_j=\gamma_{\ell,j}(s),
+\qquad\text{and hence}\qquad
+\max_j|\theta_j|\leq C_{\mathrm{dual}}\|s\|_\infty.
+\label{eq:dual-readout}
+\end{align}
+In particular, a bounded spline has bounded coefficients.
+
+\paragraph*{Why a union of resolutions rather than a single fine grid.}
+The partition-of-unity property is what prevents a single fine-resolution basis from providing small-budget sparse approximants. To represent the constant function $1$ at level $H$, every one of the $D_H$ coefficients must equal one; more generally, because each $B_{H,j}$ is supported on a few narrow subintervals, any function bounded away from zero on $[0,1]$ needs essentially all $D_H$ coefficients to be non-negligible, since setting the coefficients over a subinterval to zero abandons the fit there. A single fine basis therefore does not provide the small-budget sparse approximation profile required by Corollary~\ref{cor:anisotropic} for globally supported smooth functions (it does not preclude Assumption~\ref{ass:sparse} with a dense approximant, $a_n=J_n$). The remedy is to include all coarser bases alongside the finest one. Define the tagged multiresolution union and its tensor product
+\begin{align*}
+\mathcal U_H^{(q)}=\bigsqcup_{\ell=0}^H\mathcal B_\ell^{(q)},
+\qquad U_H=\sum_{\ell=0}^HD_\ell,
+\qquad
+\mathcal D_{\boldsymbol H}^{(q)}
+=\bigotimes_{k=1}^d\mathcal U_{H_k}^{(q)},
+\end{align*}
+where ``tagged'' means that the dictionary columns are indexed by the pair (level, position): atoms from different resolutions retain different coefficient indices, and no coefficients are shared across levels. The dictionary $\mathcal D_{\boldsymbol H}^{(q)}$ consists of all products $\prod_{k=1}^dB_{\ell_k,j_k}(x_k)$ with one factor per coordinate, taken from any levels $\ell_k\leq H_k$. Its coordinate cardinalities are $L_k=U_{H_k}$ and its total cardinality is $J_{\boldsymbol H}=\prod_{k=1}^dL_k$. Every atom takes values in $[0,1]$, so its empirical norm is at most one. The redundancy is inexpensive: the level dimensions grow geometrically, so $U_H$ is of the same order as $D_H$ alone, and the union costs only a constant factor while ensuring that a block of dimension comparable to any prescribed budget is available within the dictionary. This is the sense in which the spline dictionary is a redundant union of resolution blocks rather than one oversized fine-grid basis.
+
+\paragraph*{\boldmath The isotropic H\"older classes on $[0,1]$ and $[0,1]^d$.}
+Parts~1 and~2 of Lemma~\ref{lem:bspline-profile} use the standard, nonperiodic H\"older scale. For noninteger $\alpha>0$, the class $C^\alpha([0,1]^d)$ consists of the functions whose partial derivatives of every order up to $\lfloor\alpha\rfloor$ exist, are continuous, and are bounded, and whose derivatives of order exactly $\lfloor\alpha\rfloor$ are $(\alpha-\lfloor\alpha\rfloor)$-H\"older continuous, meaning that $|D f(x)-D f(y)|\leq L\,\|x-y\|^{\alpha-\lfloor\alpha\rfloor}$ for such a derivative $Df$, all $x,y$, and a finite constant $L$, with $\|x-y\|$ the Euclidean distance. The ball of radius $R$ collects the $f$ for which all of these suprema and H\"older constants are at most $R$; in particular $\|f\|_\infty\leq R$. At an integer $\alpha\geq1$ we use the Lipschitz--H\"older convention $C^\alpha=C^{\alpha-1,1}$: derivatives up to order $\alpha-1$ continuous and bounded, those of order $\alpha-1$ Lipschitz. For $d=1$ these are the classical H\"older classes on the interval, with ordinary derivatives.
+
+\paragraph*{The anisotropic smoothness class for splines.}
+For positive integers $\alpha_1,\ldots,\alpha_d$ with $\max_k\alpha_k\leq q$, let $C^{\boldsymbol\alpha}([0,1]^d)$ denote the class of functions $f$ on $[0,1]^d$ whose mixed partial derivatives
+\begin{align*}
+\frac{\partial^{l_1+\cdots+l_d}f}
+{\partial x_1^{l_1}\cdots\partial x_d^{l_d}},
+\qquad
+l_1,\ldots,l_d\ \text{nonnegative integers with}\
+\sum_{k=1}^d\frac{l_k}{\alpha_k}\leq1,
+\end{align*}
+all exist, are continuous, and are bounded; the ball of radius $R$ collects the $f$ for which all of these sup-norms are at most $R$. In particular each pure derivative $\partial^{\alpha_k}f/\partial x_k^{\alpha_k}$ is bounded, and mixed derivatives are allowed in proportion to the directional smoothness. This is a version of the class of \citet[Section~3.2]{ShenGhosal2015}, with a non-strict inequality, and it plays for splines the role that the H\"older--Zygmund ball, introduced in the Fourier part below, plays for the Fourier dictionary.
+
+\begin{auxlemma}[Sparse approximation by multiresolution B-splines]
+\label{lem:bspline-profile}
+Fix the spline order $q\geq1$ and the dictionary $\mathcal D_{\boldsymbol H}^{(q)}$ defined above. The following conclusions hold with constants $C_{\mathrm{sp}},C_{\mathrm{app}},E$ independent of $\boldsymbol H$, the selected truncation levels, $n$, and the design points:
+\begin{enumerate}
+\item If $d=1$, $0<\alpha\leq q$, and $f_0$ belongs to a fixed ball in
+$C^\alpha([0,1])$, then for every $1\leq m\leq U_H$ there is $\theta(m)\in\mathbb R^{U_H}$ satisfying
+\begin{align*}
+\#\operatorname{supp}\theta(m)&\leq C_{\mathrm{sp}}m,
+&\|f_0-f_{\theta(m)}\|_\infty&\leq C_{\mathrm{app}}m^{-\alpha},
+&\|\theta(m)\|_\infty&\leq E.
+\end{align*}
+\item If $d$ is fixed, $0<\alpha\leq q$, and $f_0$ belongs to a fixed ball
+in $C^\alpha([0,1]^d)$, then, when $H_1=\cdots=H_d=H$, for every $1\leq m\leq U_H$ there is $\theta(m)\in\mathbb R^{U_H^d}$ satisfying
+\begin{align*}
+\#\operatorname{supp}\theta(m)&\leq C_{\mathrm{sp}}m^d,
+&\|f_0-f_{\theta(m)}\|_\infty&\leq C_{\mathrm{app}}m^{-\alpha},
+&\|\theta(m)\|_\infty&\leq E.
+\end{align*}
+\item If $\alpha_1,\ldots,\alpha_d$ are positive integers with
+$\max_k\alpha_k\leq q$ and $f_0$ belongs to a fixed ball of the anisotropic class $C^{\boldsymbol\alpha}([0,1]^d)$ defined above, then for every rectangle $1\leq m_k\leq U_{H_k}$ there is $\theta(\boldsymbol m)\in\mathbb R^{J_{\boldsymbol H}}$ satisfying
+\begin{align*}
+\#\operatorname{supp}\theta(\boldsymbol m)
+&\leq C_{\mathrm{sp}}\prod_{k=1}^dm_k,\\
+\|f_0-f_{\theta(\boldsymbol m)}\|_\infty
+&\leq C_{\mathrm{app}}\sum_{k=1}^dm_k^{-\alpha_k},\\
+\|\theta(\boldsymbol m)\|_\infty&\leq E.
+\end{align*}
+\end{enumerate}
+In every case the same approximation bound holds in the empirical norm. The three conclusions give, respectively, the univariate, isotropic, and, in the stated integer-smoothness regime, anisotropic sparse profiles used in the proof of Corollary~\ref{cor:anisotropic}.
+\end{auxlemma}
+
+The reading of Lemma~\ref{lem:bspline-profile} is that, for sparse approximation purposes, the multiresolution dictionary behaves like all ordinary spline bases of every size simultaneously: a budget of $m$ active terms attains the accuracy of the best spline space of dimension of order $m$, even though the dictionary itself has the much larger dimension $U_H\asymp2^H$, which Corollary~\ref{cor:anisotropic} takes polynomial in $n$. Its conclusions feed Corollary~\ref{cor:anisotropic} exactly as in the Fourier case, with the support, error, and coefficient bounds becoming $a_n$, $\en$, and $E_n=E$; part~1 supplies the univariate specialization, part~2 the isotropic one, and part~3 the anisotropic one at integer smoothness. Part~2 is stated for cubes, whereas the profile~\eqref{eq:aniso-profile} of Corollary~\ref{cor:anisotropic} is stated for rectangles; for an arbitrary rectangle $1\leq m_k\leq U_H$ in the isotropic setting, apply part~2 with $m=\min_km_k$: since $m^d\leq\prod_km_k$ and $m^{-\alpha}=\max_km_k^{-\alpha}\leq\sum_km_k^{-\alpha}$, the same constants give the rectangular profile.
+
+Before the proof, we note why this statement requires more work than its closest antecedent, the anisotropic tensor-product B-spline approximation result of \citet[Lemma~2]{ShenGhosal2015}. In that random-series setting the number of basis functions per coordinate is itself the tuning parameter: a prior on the model dimension selects it, the approximant may use \emph{every} coefficient of the selected tensor space, and the approximation property is only ever needed at the selected dimension. Here the dictionary is fixed in advance and deliberately oversized, and the effective dimension is selected by the shrinkage prior rather than by a prior on the number of terms. Lemma~\ref{lem:bspline-profile} must therefore deliver, inside one fixed dictionary, a sparse approximant for every admissible budget rectangle simultaneously, with support proportional to the budget, with coefficients bounded uniformly over all budgets and truncation levels, and at arbitrary integer budgets rather than only the dyadic dimensions at which spline spaces naturally occur. None of these requirements arises in \citet{ShenGhosal2015}, and a single-resolution basis does not provide them, by the partition-of-unity obstruction described above. The multiresolution union, the geometric-ladder level selection, and the zero-padding embedding in the proof below exist precisely to satisfy them; the analytic core, one-block spline approximation with bounded coefficients, remains classical and is quoted where it is used.
+
+\begin{proof}[Proof of Lemma~\ref{lem:bspline-profile}]
+The proof first records the bookkeeping of block dimensions and the choice of a level for a given budget, then invokes classical one-block approximation with bounded coefficients, and finally embeds the one-block approximant into the multiresolution dictionary.
+
+We begin with the dimension bookkeeping. The block dimensions $D_\ell=2^\ell+q-1$ are strictly increasing in $\ell$, since $D_{\ell+1}-D_\ell=2^\ell>0$, and consecutive dimensions are within a factor of two of each other:
+\begin{align*}
+D_{\ell+1}=2^{\ell+1}+q-1\leq2\,(2^\ell+q-1)=2D_\ell ,
+\end{align*}
+the inequality because $q-1\leq2(q-1)$ whenever $q\geq1$. Summing the geometric part of $D_\ell$ exactly,
+\begin{align*}
+U_H=\sum_{\ell=0}^HD_\ell
+=(2^{H+1}-1)+(H+1)(q-1),
+\end{align*}
+and since $H+1\leq2^{H+1}$ for every $H\geq0$,
+\begin{align}
+D_H\leq U_H\leq2^{H+1}+(q-1)\,2^{H+1}=2q\cdot2^H\leq2qD_H,
+\qquad\text{so}\qquad U_H\asymp2^H .
+\label{eq:spline-dimension-count}
+\end{align}
+Given an integer budget $1\leq m\leq U_H$, choose the level
+\begin{align*}
+\ell_H(m)=
+\begin{cases}
+0,&m<D_0,\\
+\max\{\ell\leq H:D_\ell\leq m\},&D_0\leq m\leq D_H,\\
+H,&m>D_H,
+\end{cases}
+\end{align*}
+noting that $D_0=2^0+q-1=q$, so the first case reads $m<q$. We claim the explicit two-sided bound
+\begin{align}
+\frac{m}{2q}\leq D_{\ell_H(m)}\leq qm,
+\qquad1\leq m\leq U_H .
+\label{eq:nearest-spline-level}
+\end{align}
+In the first case, $1\leq m<q$ gives $D_0=q\leq qm$ and $D_0=q>m\geq m/(2q)$. In the middle case, $D_{\ell_H(m)}\leq m\leq qm$ holds by construction; for the lower bound, if $\ell_H(m)<H$ then maximality of the chosen level gives $m<D_{\ell_H(m)+1}\leq2D_{\ell_H(m)}$, while if $\ell_H(m)=H$ then $D_H\leq m\leq D_H$ forces $D_{\ell_H(m)}=m$; either way $D_{\ell_H(m)}\geq m/2\geq m/(2q)$. In the last case, $m>D_H$ gives $D_H<m\leq qm$, while $m\leq U_H$ and~\eqref{eq:spline-dimension-count} give $D_H\geq U_H/(2q)\geq m/(2q)$. In words: the dimensions of the available blocks form a geometric ladder, so every integer budget, not only the dyadic values, is within an explicit constant factor of some rung.
+
+We turn to one-block approximation with bounded coefficients. Everything here happens at a single resolution level, or at a single rectangle of levels, where the required approximation statements are classical \citep[Theorem~6.10]{Schumaker2007}; see also \citet[Lemma~2 and Remark~7]{ShenGhosal2015}. We quote them in the exact form used. Fix the order $q\geq1$, the dimension $d\geq1$, and a radius $R<\infty$. There is a constant $C_\star$, depending only on $(q,d,R)$ and on the smoothness parameters below, such that the following hold.
+\begin{enumerate}
+\item If $0<\alpha\leq q$ and $f$ lies in the ball of radius $R$ of $C^\alpha([0,1])$, then for every level $\ell\geq0$ there are coefficients $(\theta_j)_{j=1}^{D_\ell}$ with
+\begin{align*}
+\Big\|f-\sum_{j=1}^{D_\ell}\theta_jB_{\ell,j}\Big\|_\infty\leq C_\star D_\ell^{-\alpha}.
+\end{align*}
+\item If $0<\alpha\leq q$ and $f$ lies in the ball of radius $R$ of $C^\alpha([0,1]^d)$, then for every common level $\ell\geq0$ there are coefficients $(\theta_{j_1\cdots j_d})$ with
+\begin{align*}
+\Big\|f-\sum_{j_1,\ldots,j_d}\theta_{j_1\cdots j_d}\prod_{k=1}^dB_{\ell,j_k}\Big\|_\infty\leq C_\star D_\ell^{-\alpha}.
+\end{align*}
+\item If $\alpha_1,\ldots,\alpha_d$ are positive integers with $\max_k\alpha_k\leq q$ and $f$ lies in the ball of radius $R$ of the anisotropic class $C^{\boldsymbol\alpha}([0,1]^d)$ defined above, then for all levels $\ell_1,\ldots,\ell_d\geq0$ there are coefficients $(\theta_{j_1\cdots j_d})$ with
+\begin{align*}
+\Big\|f-\sum_{j_1,\ldots,j_d}\theta_{j_1\cdots j_d}\prod_{k=1}^dB_{\ell_k,j_k}\Big\|_\infty\leq C_\star\sum_{k=1}^dD_{\ell_k}^{-\alpha_k}.
+\end{align*}
+\end{enumerate}
+
+The coefficients of these one-block approximants are automatically bounded, thanks to the dual functionals described earlier. In the univariate case this is the readout identity~\eqref{eq:dual-readout}. In the tensor case, apply the univariate functionals one coordinate at a time: writing $s=\sum_{j_1,\ldots,j_d}\theta_{j_1\cdots j_d}\prod_kB_{\ell_k,j_k}$ and freezing $x_2,\ldots,x_d$, the section $x_1\mapsto s(x_1,x_2,\ldots,x_d)$ is a univariate spline whose $j_1$th coefficient is
+\begin{align*}
+c_{j_1}(x_2,\ldots,x_d)
+=\sum_{j_2,\ldots,j_d}\theta_{j_1j_2\cdots j_d}\prod_{k=2}^dB_{\ell_k,j_k}(x_k)
+=\gamma_{\ell_1,j_1}\bigl(s(\cdot,x_2,\ldots,x_d)\bigr),
+\end{align*}
+so that $|c_{j_1}(x_2,\ldots,x_d)|\leq C_{\mathrm{dual}}\|s\|_\infty$ uniformly. Each $c_{j_1}$ is itself a tensor spline in the remaining $d-1$ variables, with coefficients $(\theta_{j_1j_2\cdots j_d})_{j_2,\ldots,j_d}$, so iterating through the remaining coordinates multiplies the bound by $C_{\mathrm{dual}}$ at each pass, yielding $\max_{j_1,\ldots,j_d}|\theta_{j_1\cdots j_d}|\leq C_{\mathrm{dual}}^d\|s\|_\infty$. For the specific one-block approximants above, the triangle inequality and $D_{\ell_k}\geq1$ give $\|s\|_\infty\leq\|f_0\|_\infty+C_\star\sum_kD_{\ell_k}^{-\alpha_k}\leq R+C_\star d$, so every approximant used in this proof satisfies
+\begin{align}
+\|\theta\|_\infty\leq E,
+\qquad E=C_{\mathrm{dual}}^d\,(R+C_\star d),
+\label{eq:spline-E}
+\end{align}
+a constant depending only on the fixed H\"older ball, $q$, and $d$; since $C_{\mathrm{dual}}\geq1$, the same $E$ also covers the univariate part. In particular $E$ is independent of the levels, of $\boldsymbol H$, of the budget, and of $n$. This uniform coefficient bound is what the prior conditions consume downstream: Assumption~\ref{ass:prior} requires the marginal prior density to retain mass on the fixed box $[-E,E]$.
+
+Finally, we embed the one-block approximants into the dictionary. The multiresolution dictionary contains every level-$\ell$ block with $\ell\leq H$ as a set of coordinates of its own, so a one-block approximant becomes a dictionary coefficient vector by zero-padding: place its coefficients in the coordinates tagged by its block, and set the coefficients of every other block to zero. Padding changes neither the represented function, nor the values of the nonzero coefficients, nor their number, which is at most the dimension of the block used.
+
+For part~1, given the budget $m$, apply the univariate one-block bound at the level $\ell_H(m)$ chosen in the dimension bookkeeping and zero-pad. The support is at most $D_{\ell_H(m)}\leq qm$ by~\eqref{eq:nearest-spline-level}, so the support bound holds with $C_{\mathrm{sp}}=q$; the error is at most
+\begin{align*}
+C_\star D_{\ell_H(m)}^{-\alpha}
+\leq C_\star\left(\frac{m}{2q}\right)^{-\alpha}
+=C_\star(2q)^{\alpha}\,m^{-\alpha},
+\end{align*}
+again by~\eqref{eq:nearest-spline-level}, so the error bound holds with $C_{\mathrm{app}}=C_\star(2q)^\alpha$; and the coefficient bound holds with the constant $E$ of~\eqref{eq:spline-E}. For part~2, apply the isotropic one-block bound at the common level $\ell_H(m)$ in every coordinate: the approximant uses only the $D_{\ell_H(m)}^d\leq(qm)^d$ tensor atoms of one block, so the support bound holds with $C_{\mathrm{sp}}=q^d$, and the error is at most $C_\star D_{\ell_H(m)}^{-\alpha}\leq C_\star(2q)^\alpha m^{-\alpha}$ as before. For part~3, apply the anisotropic one-block bound at the rectangle of coordinate levels $\ell_{H_1}(m_1),\ldots,\ell_{H_d}(m_d)$: the support is at most $\prod_kD_{\ell_{H_k}(m_k)}\leq q^d\prod_km_k$, and the error is at most
+\begin{align*}
+C_\star\sum_{k=1}^dD_{\ell_{H_k}(m_k)}^{-\alpha_k}
+\leq C_\star\sum_{k=1}^d\left(\frac{m_k}{2q}\right)^{-\alpha_k}
+\leq C_\star(2q)^{\max_k\alpha_k}\sum_{k=1}^dm_k^{-\alpha_k}.
+\end{align*}
+In every case the atoms used lie in the dictionary, because the level of each factor does not exceed the truncation level $H_k$ of its coordinate, and all constants depend only on $(q,d,R,\boldsymbol\alpha)$~--- not on $\boldsymbol H$, the selected levels, $n$, or the design points, as claimed. Finally, every atom takes values in $[0,1]$, so its empirical norm is at most one, and each sup-norm error bound transfers to the empirical norm by~\eqref{eq:sup-to-empirical}. This proves all conclusions of the lemma.
+\end{proof}
+
+
+\paragraph*{Periodicity and finite differences.}
+Throughout, $e_k$ denotes the $k$th standard unit vector of $\R^d$. Write $\mathbb T=\mathbb R/\mathbb Z$ for the unit interval with its two endpoints identified, so that a function on $\mathbb T^d$ is a function on $[0,1]^d$ repeated periodically in every coordinate; arguments of functions on $\mathbb T^d$ are understood modulo one. Smoothness is measured through finite differences rather than derivatives. The first difference of $f$ in direction $k$ with step $h$ is $\Delta_{he_k}f(x)=f(x+he_k)-f(x)$, and iterating $r$ times gives
+\begin{align*}
+\Delta_{he_k}^{r}f(x)
+=\sum_{v=0}^{r}(-1)^{r-v}\binom{r}{v}f(x+vhe_k).
+\end{align*}
+For smooth $f$, a Taylor expansion shows that $\Delta_{he_k}^{r}f(x)\approx h^r\,\partial^rf(x)/\partial x_k^r$: the $r$-fold difference is a derivative-free surrogate for $h^r$ times the $r$th directional derivative. Requiring $|\Delta_{he_k}^{r}f|\lesssim|h|^{\alpha_k}$ for an integer $r>\alpha_k$ therefore expresses ``$\alpha_k$ derivatives' worth of smoothness in direction $k$'' without ever differentiating, and it does so for every real $\alpha_k>0$, integer or not, by one formula.
+
+\paragraph*{The smoothness class.}
+For $\alpha>0$ let $r(\alpha)$ be any fixed integer strictly larger than $\alpha$. For continuous real-valued $f$ on $\mathbb T^d$ and $\boldsymbol\alpha=(\alpha_1,\ldots,\alpha_d)$ define
+\begin{align*}
+\|f\|_{\mathcal H_{\mathrm{per}}^{\boldsymbol\alpha}}
+=\|f\|_\infty+
+\max_{1\leq k\leq d}\sup_{0<|h|\leq1/2}
+|h|^{-\alpha_k}\|\Delta_{he_k}^{r(\alpha_k)}f\|_\infty,
+\end{align*}
+the coordinatewise periodic anisotropic H\"older--Zygmund norm; membership in the class, and in any of its balls, is understood to include continuity of $f$. The $k$th term states that every univariate section of $f$ in direction $k$, obtained by freezing the other $d-1$ coordinates, has smoothness $\alpha_k$, uniformly over the frozen coordinates. Two classical comparisons place this class among familiar ones \citep{Zygmund2002}. For noninteger $\alpha_k$ it coincides, with equivalent norms, with the usual periodic H\"older class: $\lfloor\alpha_k\rfloor$ bounded derivatives, the last one $(\alpha_k-\lfloor\alpha_k\rfloor)$-H\"older continuous. At an integer index $m\geq1$ we use the Lipschitz--H\"older convention $C^m=C^{m-1,1}$, meaning that the $(m-1)$th derivative is Lipschitz, and every ball of $C^{m-1,1}$ is contained in a ball of the H\"older--Zygmund class of order $m$. Stating Lemma~\ref{lem:fourier-profile} for a H\"older--Zygmund ball therefore covers every periodic function a statistician would call $\alpha$-smooth, at every real $\alpha>0$.
+
+\paragraph*{The dictionary.}
+The real trigonometric system on $\mathbb T$ is
+\begin{align*}
+\psi_0(x)&=1,
+&\psi_{2j-1}(x)&=\sqrt{2}\cos(2\pi jx),
+&\psi_{2j}(x)&=\sqrt{2}\sin(2\pi jx),\qquad j\geq1,
+\end{align*}
+so each frequency $j\geq1$ contributes the two atoms indexed $2j-1$ and $2j$. For integers $M_1,\ldots,M_d\geq1$, the tensor dictionary collects all products of one atom per coordinate with frequency at most $M_k$ in coordinate $k$:
+\begin{align*}
+\mathcal F_{\boldsymbol M}
+=\left\{\Psi_{\boldsymbol\nu}(x)=
+\prod_{k=1}^d\psi_{\nu_k}(x_k):
+0\leq\nu_k\leq2M_k,\ 1\leq k\leq d\right\}.
+\end{align*}
+Its coordinate cardinalities are $L_k=2M_k+1$ and its total cardinality is $J_{\boldsymbol M}=\prod_{k=1}^dL_k$. As in Section~\ref{sec:prior-def}, $f_\theta$ denotes the linear combination of dictionary elements with coefficient vector $\theta$, and $\|g\|_{2,n}=\{n^{-1}\sum_{i=1}^ng(x_i)^2\}^{1/2}$ is the empirical norm at the design points.
+
+A \emph{trigonometric polynomial of degree at most $N$} is a linear combination, with real coefficients, of the $2N+1$ univariate atoms $\psi_0,\ldots,\psi_{2N}$; that is, of the constant function and the cosines and sines of frequency at most $N$. The proof below approximates $f_0$, one coordinate at a time, by trigonometric polynomials of controlled degree, so that the resulting coefficient vector activates only a small rectangle of the atoms of $\mathcal F_{\boldsymbol M}$.
+
+\begin{auxlemma}[Sparse approximation by the real Fourier dictionary]
+\label{lem:fourier-profile}
+Let $d$ be fixed, let every $\alpha_k>0$, and suppose that the real-valued function $f_0$ satisfies
+\begin{align*}
+\|f_0\|_{\mathcal H_{\mathrm{per}}^{\boldsymbol\alpha}}\leq R
+\end{align*}
+for a fixed $R<\infty$. For every integer rectangle $\boldsymbol m=(m_1,\ldots,m_d)$ with $1\leq m_k\leq L_k$, there is a coefficient vector $\theta(\boldsymbol m)\in\mathbb R^{J_{\boldsymbol M}}$ such that
+\begin{align}
+\#\operatorname{supp}\theta(\boldsymbol m)
+&\leq\prod_{k=1}^dm_k,\notag\\
+\|f_0-f_{\theta(\boldsymbol m)}\|_\infty
+&\leq CR\sum_{k=1}^dm_k^{-\alpha_k},                       \label{eq:fourier-profile}\\
+\|\theta(\boldsymbol m)\|_\infty&\leq R.\notag
+\end{align}
+Here $C$ depends only on $(d,\boldsymbol\alpha)$. Consequently the same error bound holds in $\|\cdot\|_{2,n}$, and
+\begin{align*}
+\max_{\Psi\in\mathcal F_{\boldsymbol M}}\|\Psi\|_{2,n}
+\leq2^{d/2}.
+\end{align*}
+For $d=1$ this is the univariate sparse profile used in the proof of Corollary~\ref{cor:anisotropic}; taking $\alpha_k=\alpha$ and $m_k=m$ gives the isotropic profile; and the full rectangular conclusion gives the anisotropic profile.
+\end{auxlemma}
+
+Lemma~\ref{lem:fourier-profile} states that, for a smooth periodic function, keeping only the $m_k$ lowest-frequency atoms in coordinate $k$, a rectangle of $\prod_km_k$ atoms out of the $J_{\boldsymbol M}$ available, reproduces $f_0$ up to an error of order $\sum_km_k^{-\alpha_k}$. Its three displayed conclusions are exactly the three inputs that the proof of Corollary~\ref{cor:anisotropic} consumes: the support bound produces the sparsity level $a_n$, the error bound produces the accuracy $\en$, and the coefficient bound supplies the fixed box $[-E,E]$ on which the prior must retain mass, the quantity $E_n$ of Assumption~\ref{ass:sparse}. The only technical care in the proof concerns stability: the truncated Fourier partial sum is not sup-norm stable (its worst-case amplification of a bounded function grows logarithmically in the truncation level), so the approximant is built instead from averaged truncations, which are stable and still reproduce low frequencies exactly.
+
+\begin{proof}[Proof of Lemma~\ref{lem:fourier-profile}]
+The approximant is constructed explicitly. We first build a stable univariate averaging operator and, from it, the de la Vall\'ee Poussin smoother, together with an exact description of which atoms it outputs; we then establish the univariate error bound, tensorize it to $d$ coordinates, and conclude with the support, membership, and coefficient counts.
+
+We begin with the Fej\'er mean and its stability. For a continuous function $g$ on $\mathbb T$, its $j$th Fourier coefficient is the number
+\begin{align*}
+\hat g(j)=\int_{\mathbb T}g(x)e^{-2\pi ijx}\,dx,
+\qquad j\in\mathbb Z,
+\end{align*}
+where $e^{i\phi}=\cos\phi+i\sin\phi$ is the complex exponential, $i=\sqrt{-1}$. For real-valued $g$ these numbers are complex and satisfy $\hat g(-j)=\overline{\hat g(j)}$, the complex conjugate, because replacing $j$ by $-j$ conjugates the exponential inside the integral. The degree-$N$ partial sum and the Fej\'er mean of $g$ are
+\begin{align*}
+S_Ng=\sum_{|j|\leq N}\hat g(j)e^{2\pi ij\cdot},
+\qquad
+\sigma_Ng=\frac1{N+1}\sum_{v=0}^NS_vg
+=\sum_{|j|\leq N}\left(1-\frac{|j|}{N+1}\right)\hat g(j)e^{2\pi ij\cdot},
+\end{align*}
+where the second expression for $\sigma_Ng$ follows by counting, for each fixed $j$, how many of the sums $S_0g,\ldots,S_Ng$ contain the term $\hat g(j)e^{2\pi ij\cdot}$: exactly the $N+1-|j|$ sums $S_vg$ with $|j|\leq v\leq N$.
+
+The property of the Fej\'er mean that drives the whole proof is that it is an average of $g$ against a nonnegative kernel, so it never exceeds the largest value of $|g|$. To see this, define the \emph{Fej\'er kernel}
+\begin{align}
+F_N(t)=\sum_{|j|\leq N}\left(1-\frac{|j|}{N+1}\right)e^{2\pi ijt}
+=\frac1{N+1}\left|\sum_{v=0}^Ne^{2\pi ivt}\right|^2\geq0.
+\label{eq:fejer-kernel}
+\end{align}
+The second equality in~\eqref{eq:fejer-kernel} is verified by expanding the squared modulus, $|z|^2=z\bar z$:
+\begin{align*}
+\left|\sum_{v=0}^Ne^{2\pi ivt}\right|^2
+=\sum_{v=0}^N\sum_{w=0}^Ne^{2\pi i(v-w)t}
+=\sum_{|j|\leq N}(N+1-|j|)e^{2\pi ijt},
+\end{align*}
+because for each $j$ the number of pairs $(v,w)\in\{0,\ldots,N\}^2$ with $v-w=j$ is exactly $N+1-|j|$. Thus $F_N$ is nonnegative, and, integrating~\eqref{eq:fejer-kernel} term by term, it has total mass one, $\int_{\mathbb T}F_N=1$, since $\int_{\mathbb T}e^{2\pi ijt}\,dt$ equals $1$ for $j=0$ and $0$ otherwise. Substituting the definition of $\hat g(j)$ into the second expression for $\sigma_Ng$ and interchanging the finite sum with the integral,
+\begin{align*}
+\sigma_Ng(x)
+=\int_{\mathbb T}g(t)F_N(x-t)\,dt
+=\int_{\mathbb T}F_N(s)g(x-s)\,ds,
+\end{align*}
+the second form by the substitution $s=x-t$ and periodicity. This is a \emph{convolution}: the value $\sigma_Ng(x)$ is a weighted average of the values of $g$ near $x$, with nonnegative weights $F_N(s)\,ds$ of total mass one. Consequently
+\begin{align}
+\|\sigma_Ng\|_\infty
+\leq\|g\|_\infty\int_{\mathbb T}F_N(s)\,ds
+=\|g\|_\infty
+\qquad\text{for every }N\geq0.
+\label{eq:fejer-stable}
+\end{align}
+The partial sum $S_N$ has no such property~--- its worst-case amplification of a bounded function grows logarithmically in $N$~--- which is why plain truncation of the Fourier series is avoided throughout.
+
+We next construct the de la Vall\'ee Poussin smoother and describe the atoms it outputs. Averaging is stable but inexact: the factor $1-|j|/(N+1)$ in $\sigma_N$ damps every retained frequency. The classical remedy recombines two Fej\'er means so that low frequencies pass through undamped. For an integer $G\geq1$ define the de la Vall\'ee Poussin operator
+\begin{align*}
+V_G=2\sigma_{2G-1}-\sigma_{G-1}.
+\end{align*}
+Acting frequency by frequency, $V_Gg=\sum_j\lambda_j\hat g(j)e^{2\pi ij\cdot}$ with
+\begin{align*}
+\lambda_j
+=2\left(1-\frac{|j|}{2G}\right)_+-\left(1-\frac{|j|}{G}\right)_+,
+\qquad(x)_+=\max(x,0),
+\end{align*}
+and a direct check of the three ranges gives
+\begin{align}
+\lambda_j=1\ \ (|j|\leq G),
+\qquad
+\lambda_j=2-\frac{|j|}{G}\in(0,1)\ \ (G<|j|<2G),
+\qquad
+\lambda_j=0\ \ (|j|\geq2G).
+\label{eq:vdp-multipliers}
+\end{align}
+For instance, for $|j|\leq G$ neither truncation $(\,\cdot\,)_+$ is active and $\lambda_j=2-|j|/G-1+|j|/G=1$, and the other two ranges are checked the same way. Three consequences are used repeatedly.
+
+First, stability: by the triangle inequality and~\eqref{eq:fejer-stable},
+\begin{align}
+\|V_Gg\|_\infty
+\leq2\|\sigma_{2G-1}g\|_\infty+\|\sigma_{G-1}g\|_\infty
+\leq3\|g\|_\infty .
+\label{eq:vdp-stable}
+\end{align}
+
+Second, the action on single atoms. By Euler's formula, $\psi_{2j-1}=\sqrt2\cos(2\pi j\cdot)=\sqrt2\,(e^{2\pi ij\cdot}+e^{-2\pi ij\cdot})/2$ has exactly two nonzero Fourier coefficients, both equal to $\sqrt2/2$, at frequencies $j$ and $-j$; the sine atom similarly has its two nonzero coefficients, $\mp i\sqrt2/2$, at frequencies $j$ and $-j$. Since $\lambda_{-j}=\lambda_j$, the multiplier action scales both coefficients by the same factor, so
+\begin{align}
+V_G\psi_\nu=\lambda_{j(\nu)}\psi_\nu
+\qquad\text{for every atom }\psi_\nu ,
+\label{eq:vdp-eigen}
+\end{align}
+where $j(\nu)$ denotes the frequency of atom $\nu$, that is, $j(0)=0$ and $j(2j-1)=j(2j)=j$. By linearity,~\eqref{eq:vdp-eigen} together with $\lambda_j=1$ for $|j|\leq G$ shows that $V_G$ \emph{reproduces} every trigonometric polynomial of degree at most $G$: if $p$ is a combination of atoms of frequency at most $G$, then $V_Gp=p$.
+
+Third, the real form of the output. Write $\langle g,\psi\rangle=\int_{\mathbb T}g(t)\psi(t)\,dt$ for the coefficient integral of $g$ against a real atom $\psi$. By Euler's formula, $\hat g(j)=a_j-ib_j$ with $a_j=\int_{\mathbb T}g(t)\cos(2\pi jt)\,dt$ and $b_j=\int_{\mathbb T}g(t)\sin(2\pi jt)\,dt$. For real $g$ and $j\geq1$, the terms at frequencies $j$ and $-j$ in the multiplier expression are complex conjugates, so their sum is twice the real part of either, and $\operatorname{Re}\{(a_j-ib_j)(\cos\phi+i\sin\phi)\}=a_j\cos\phi+b_j\sin\phi$ gives
+\begin{align*}
+\lambda_j\hat g(j)e^{2\pi ijx}+\lambda_{-j}\hat g(-j)e^{-2\pi ijx}
+&=2\lambda_j\left\{a_j\cos(2\pi jx)+b_j\sin(2\pi jx)\right\}\\
+&=\lambda_j\left\{\langle g,\psi_{2j-1}\rangle\psi_{2j-1}(x)
++\langle g,\psi_{2j}\rangle\psi_{2j}(x)\right\},
+\end{align*}
+the last equality because the factor $\sqrt2$ carried by the atom inside the integral pairs with the factor $\sqrt2$ carried by the same atom outside it, $2a_j\cos(2\pi jx)=\{\sqrt2\,a_j\}\{\sqrt2\cos(2\pi jx)\}=\langle g,\psi_{2j-1}\rangle\psi_{2j-1}(x)$. The frequency-zero term is $\hat g(0)=\langle g,\psi_0\rangle$. Hence, for every real continuous $g$,
+\begin{align}
+V_Gg=\sum_{\nu:\,j(\nu)\leq2G-1}\lambda_{j(\nu)}\,\langle g,\psi_\nu\rangle\,\psi_\nu ,
+\label{eq:vdp-real}
+\end{align}
+a trigonometric polynomial of degree at most $2G-1$ expressed directly in the dictionary's real atoms, with real coefficients $\lambda_{j(\nu)}\langle g,\psi_\nu\rangle$.
+
+Finally, we convert a polynomial degree into an atom budget. For an integer budget $m\geq3$ put
+\begin{align*}
+G_m=\left\lfloor\frac{m+1}{4}\right\rfloor\geq1,
+\qquad Q_m=V_{G_m},
+\end{align*}
+and for $m\in\{1,2\}$ let $Q_m=\sigma_0$, the operator returning the constant function $\hat g(0)=\langle g,\psi_0\rangle$. Write $\Lambda^{(m)}_j$ for the multiplier of $Q_m$ at frequency $j$: for $m\geq3$ this is $\lambda_j$ computed with $G=G_m$, and for $m\leq2$ it is $1$ at $j=0$ and $0$ elsewhere. In every case the multipliers lie in $[0,1]$, the expansion~\eqref{eq:vdp-real} holds with $\lambda_{j(\nu)}$ replaced by $\Lambda^{(m)}_{j(\nu)}$, and $\|Q_mg\|_\infty\leq3\|g\|_\infty$. The output of $Q_m$ contains only atoms of frequency at most $2G_m-1$ when $m\geq3$, hence uses at most
+\begin{align}
+1+2(2G_m-1)=4G_m-1\leq4\cdot\frac{m+1}4-1=m
+\label{eq:atom-count}
+\end{align}
+atoms: the constant atom plus one cosine and one sine at each of the frequencies $1,\ldots,2G_m-1$. For $m\leq2$ the output is one atom, again at most $m$.
+
+We now establish the univariate error bound. The single classical ingredient of this proof is the periodic Jackson inequality \citep{Temlyakov2018}; see also \citet{Zygmund2002}. It quantifies how well trigonometric polynomials of a given degree can approximate a smooth periodic function: for every $\alpha>0$ there is a constant $C_\alpha$, depending only on $\alpha$, with the following property: for every continuous $g:\mathbb T\to\R$ whose univariate H\"older--Zygmund norm of order $\alpha$ is at most $R$, and every integer $G\geq1$, there exists a trigonometric polynomial $p$ of degree at most $G$ such that
+\begin{align}
+\|g-p\|_\infty\leq C_\alpha RG^{-\alpha}.
+\label{eq:jackson}
+\end{align}
+Here the univariate H\"older--Zygmund norm of order $\alpha$ is the case $d=1$ of the norm defined above, $\|g\|_\infty+\sup_{0<|h|\leq1/2}|h|^{-\alpha}\|\Delta_h^{r(\alpha)}g\|_\infty$. Fix such a $g$ and let $p_{G}$ be a polynomial satisfying~\eqref{eq:jackson}. Because $V_G$ is linear and reproduces $p_G$, as established above, the error of $V_Gg$ is controlled by the error of the best polynomial:
+\begin{align*}
+\|g-V_Gg\|_\infty
+=\|(g-p_G)-V_G(g-p_G)\|_\infty
+&\leq\|g-p_G\|_\infty+\|V_G(g-p_G)\|_\infty\\
+&\leq(1+3)\|g-p_G\|_\infty
+\leq4C_\alpha RG^{-\alpha},
+\end{align*}
+using the stability bound~\eqref{eq:vdp-stable} for the middle inequality: the explicit linear operator $V_G$ attains the best-approximation rate up to the factor $4$. To express the rate in the budget $m$ rather than in the degree, note that
+\begin{align*}
+G_m=\left\lfloor\frac{m+1}4\right\rfloor
+\geq\frac{m+1}4-\frac34=\frac{m-2}4\geq\frac m8
+\quad(m\geq4),
+\qquad
+G_3=1\geq\frac38,
+\end{align*}
+so $G_m\geq m/8$ for every $m\geq3$, and therefore $G_m^{-\alpha}\leq8^\alpha m^{-\alpha}$. For $m\in\{1,2\}$ the output of $Q_m$ is the constant $\hat g(0)=\int_{\mathbb T}g$, and
+\begin{align*}
+|g(x)-\hat g(0)|
+=\left|\int_{\mathbb T}\{g(x)-g(t)\}\,dt\right|
+\leq\int_{\mathbb T}|g(x)-g(t)|\,dt
+\leq2\|g\|_\infty\leq2R\leq2^{1+\alpha}Rm^{-\alpha},
+\end{align*}
+using that $\|g\|_\infty\leq R$ (the sup-norm is one of the two terms of the H\"older--Zygmund norm) and that $m^{-\alpha}\geq2^{-\alpha}$ for $m\leq2$. Combining the two cases: with $C_\alpha'=\max\{4\cdot8^\alpha C_\alpha,\;2^{1+\alpha}\}$,
+\begin{align}
+\|g-Q_mg\|_\infty\leq C_\alpha'Rm^{-\alpha}
+\qquad\text{for every integer }m\geq1.
+\label{eq:coordinate-Jackson}
+\end{align}
+
+We next tensorize the univariate bound to $d$ coordinates. Let $Q_{m_k}^{(k)}$ denote $Q_{m_k}$ acting on the $k$th coordinate of a continuous function $f$ on $\mathbb T^d$. Precisely, for $x\in\mathbb T^d$ let
+\begin{align*}
+g_{x,k}(t)=f(x_1,\ldots,x_{k-1},t,x_{k+1},\ldots,x_d)
+\end{align*}
+be the univariate \emph{section} of $f$ through $x$ in direction $k$, obtained by freezing the other $d-1$ coordinates; then $(Q_{m_k}^{(k)}f)(x)=(Q_{m_k}g_{x,k})(x_k)$. Set
+\begin{align*}
+P_{\boldsymbol m}f_0
+=Q_{m_1}^{(1)}\cdots Q_{m_d}^{(d)}f_0,
+\end{align*}
+the operators being applied one after the other, rightmost first. Each application preserves continuity: by~\eqref{eq:vdp-real}, applying $Q_{m_k}^{(k)}$ produces a finite combination of atoms in $x_k$ whose coefficients $\int_{\mathbb T}f(x_1,\ldots,t,\ldots,x_d)\psi_\nu(t)\,dt$ are continuous in the remaining coordinates, by the uniform continuity of $f$. Two observations drive the error bound.
+
+First, a single-coordinate error bound. Fix $k$. Every section $g_{x,k}$ of $f_0$ is continuous with univariate H\"older--Zygmund norm of order $\alpha_k$ at most $R$: its sup-norm is at most $\|f_0\|_\infty$, and its iterated differences are differences of $f_0$ in direction $k$,
+\begin{align*}
+\Delta_h^{r}g_{x,k}(t)
+=\Delta_{he_k}^{r}f_0(x_1,\ldots,t,\ldots,x_d),
+\end{align*}
+so both terms of the section's norm are bounded by the corresponding terms of $\|f_0\|_{\mathcal H_{\mathrm{per}}^{\boldsymbol\alpha}}\leq R$; this is exactly what the $k$th term of the coordinatewise norm asserts. Writing $I$ for the identity operator, $If=f$, and applying~\eqref{eq:coordinate-Jackson} to the section through each point,
+\begin{align*}
+\|(I-Q_{m_k}^{(k)})f_0\|_\infty
+=\sup_x\left|g_{x,k}(x_k)-(Q_{m_k}g_{x,k})(x_k)\right|
+\leq\sup_x\|g_{x,k}-Q_{m_k}g_{x,k}\|_\infty
+\leq C_{\alpha_k}'Rm_k^{-\alpha_k}.
+\end{align*}
+For the same reason the univariate stability bound transfers coordinatewise: $\|Q_{m_k}^{(k)}f\|_\infty\leq3\|f\|_\infty$ for every continuous $f$ on $\mathbb T^d$.
+
+Second, a decomposition of the total error into one term per coordinate. Write $A_0=I$ and $A_k=Q_{m_1}^{(1)}\cdots Q_{m_k}^{(k)}$ for $1\leq k\leq d$, so that $A_d=P_{\boldsymbol m}$ and $A_k=A_{k-1}Q_{m_k}^{(k)}$. Then the sum below telescopes, meaning that consecutive terms cancel in pairs:
+\begin{align*}
+\sum_{k=1}^dA_{k-1}(I-Q_{m_k}^{(k)})
+=\sum_{k=1}^d(A_{k-1}-A_k)
+=A_0-A_d
+=I-P_{\boldsymbol m}.
+\end{align*}
+Applying this identity to $f_0$, using the triangle inequality, and bounding each prefix $A_{k-1}$, a composition of at most $d-1$ operators each of which inflates sup-norms by at most the factor $3$,
+\begin{align*}
+\|f_0-P_{\boldsymbol m}f_0\|_\infty
+\leq\sum_{k=1}^d\|A_{k-1}(I-Q_{m_k}^{(k)})f_0\|_\infty
+&\leq\sum_{k=1}^d3^{\,k-1}\|(I-Q_{m_k}^{(k)})f_0\|_\infty\\
+&\leq3^{\,d-1}\max_kC_{\alpha_k}'\,R\sum_{k=1}^dm_k^{-\alpha_k},
+\end{align*}
+which is the error bound~\eqref{eq:fourier-profile} with $C=3^{\,d-1}\max_kC_{\alpha_k}'$, a constant depending only on $(d,\boldsymbol\alpha)$.
+
+It remains to establish the support, membership, and coefficient bounds. Iterating the real expansion~\eqref{eq:vdp-real} one coordinate at a time exhibits $P_{\boldsymbol m}f_0$ explicitly in the tensor atoms. Applying it in coordinate $d$,
+\begin{align*}
+(Q_{m_d}^{(d)}f_0)(x)
+&=\sum_{\nu_d}\Lambda^{(m_d)}_{j(\nu_d)}\,c_{\nu_d}(x_1,\ldots,x_{d-1})\,\psi_{\nu_d}(x_d),\\
+c_{\nu_d}(x_1,\ldots,x_{d-1})
+&=\int_{\mathbb T}f_0(x_1,\ldots,x_{d-1},t)\,\psi_{\nu_d}(t)\,dt.
+\end{align*}
+The next operator, $Q_{m_{d-1}}^{(d-1)}$, is linear and acts only on the coordinate $x_{d-1}$, so it passes through the finite sum and the fixed factors $\psi_{\nu_d}(x_d)$ and applies to each coefficient function $c_{\nu_d}$ separately; expanding each by~\eqref{eq:vdp-real} again, and continuing through all $d$ coordinates, yields
+\begin{align}
+P_{\boldsymbol m}f_0
+=\sum_{\boldsymbol\nu}\theta_{\boldsymbol\nu}(\boldsymbol m)\,\Psi_{\boldsymbol\nu},
+\qquad
+\theta_{\boldsymbol\nu}(\boldsymbol m)
+=\left\{\prod_{k=1}^d\Lambda^{(m_k)}_{j(\nu_k)}\right\}
+\int_{\mathbb T^d}f_0(x)\Psi_{\boldsymbol\nu}(x)\,dx,
+\label{eq:tensor-coefficients}
+\end{align}
+where the integral over $\mathbb T^d$ is computed as an iterated integral, one coordinate at a time, which is exactly how it arises in the derivation, and the sum runs over the rectangle of multi-indices $\boldsymbol\nu$ whose $k$th entry is an atom of frequency at most $2G_{m_k}-1$ (frequency $0$ when $m_k\leq2$).
+
+For the support bound, note that by the atom count~\eqref{eq:atom-count}, coordinate $k$ contributes at most $m_k$ atoms, so the rectangle contains at most $\prod_{k=1}^dm_k$ tensor atoms, and defining $\theta(\boldsymbol m)$ by~\eqref{eq:tensor-coefficients} on this rectangle and zero outside it gives $\#\operatorname{supp}\theta(\boldsymbol m)\leq\prod_km_k$.
+
+For membership, every atom used belongs to $\mathcal F_{\boldsymbol M}$, because the frequencies appearing in coordinate $k$ do not exceed $M_k$: from $m_k\leq L_k=2M_k+1$,
+\begin{align*}
+2G_{m_k}-1\leq2\cdot\frac{m_k+1}{4}-1=\frac{m_k-1}{2}\leq\frac{L_k-1}{2}=M_k,
+\end{align*}
+and for $m_k\leq2$ the only frequency used is $0\leq M_k$.
+
+For the coefficient bound, estimate the integral in~\eqref{eq:tensor-coefficients} one coordinate at a time: integrating over the $k$th coordinate multiplies the bound by at most $\|\psi_{\nu_k}\|_1=\int_{\mathbb T}|\psi_{\nu_k}(t)|\,dt$, while $|f_0|\leq\|f_0\|_\infty$ throughout, so
+\begin{align*}
+\left|\int_{\mathbb T^d}f_0(x)\Psi_{\boldsymbol\nu}(x)\,dx\right|
+\leq\|f_0\|_\infty\prod_{k=1}^d\|\psi_{\nu_k}\|_1 .
+\end{align*}
+Each factor is at most one: $\|\psi_0\|_1=1$, and for $j\geq1$, substituting $u=2\pi jx$ and using that $|\cos|$ integrates to $4$ over each period of length $2\pi$,
+\begin{align*}
+\|\psi_{2j-1}\|_1
+=\sqrt2\int_0^1|\cos(2\pi jx)|\,dx
+=\sqrt2\cdot\frac{4j}{2\pi j}
+=\frac{2\sqrt2}{\pi}<1,
+\end{align*}
+with the same value for the sine atom. Since every multiplier $\Lambda^{(m_k)}_{j(\nu_k)}$ lies in $[0,1]$, every coefficient obeys $|\theta_{\boldsymbol\nu}(\boldsymbol m)|\leq\|f_0\|_\infty\leq R$, the last inequality because the sup-norm is one of the terms of the H\"older--Zygmund norm bounded by $R$.
+
+Finally, the tensorized sup-norm error bound transfers to the empirical norm by~\eqref{eq:sup-to-empirical}, and $\|\Psi_{\boldsymbol\nu}\|_{2,n}\leq\|\Psi_{\boldsymbol\nu}\|_\infty\leq2^{d/2}$ because each univariate factor of $\Psi_{\boldsymbol\nu}$ is bounded by $\sqrt2$. This proves all conclusions of the lemma.
+\end{proof}
