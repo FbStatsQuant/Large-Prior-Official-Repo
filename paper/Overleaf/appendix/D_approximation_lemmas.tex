@@ -500,13 +500,13 @@ the fold turns each Chebyshev atom into the cosine atom of the same frequency. I
 \end{align}
 
 \paragraph*{The smoothness class and the transfer constant.}
-The class is the univariate case of the isotropic H\"older class $C^\alpha([0,1])$ defined above, at every $\alpha>0$, with the Lipschitz--H\"older convention at integers and no restriction of the form $\alpha\leq q$. Write $s=\lceil\alpha\rceil-1$ and $\beta=\alpha-s\in(0,1]$, so that the ball of radius $R$ consists of the $f\in C^s[0,1]$, with one-sided derivatives at the endpoints, such that $\|f^{(k)}\|_\infty\leq R$ for $0\leq k\leq s$ and $|f^{(s)}(y)-f^{(s)}(z)|\leq R|y-z|^\beta$. Let $S(s,k)$ be the number of partitions of $\{1,\ldots,s\}$ into $k$ nonempty blocks (the Stirling numbers of the second kind), and define
+The class is the univariate case of the isotropic H\"older class $C^\alpha([0,1])$ defined above, at every $\alpha>0$, with the Lipschitz--H\"older convention at integers and no restriction of the form $\alpha\leq q$. Write $s=\lceil\alpha\rceil-1$ and $\beta=\alpha-s\in(0,1]$, so that the ball of radius $R$ consists of the $s$ times continuously differentiable $f$ on $[0,1]$, with one-sided derivatives at the endpoints, such that $\|f^{(k)}\|_\infty\leq R$ for $0\leq k\leq s$ and $|f^{(s)}(y)-f^{(s)}(z)|\leq R|y-z|^\beta$. Let $S(s,k)$ be the number of partitions of $\{1,\ldots,s\}$ into $k$ nonempty blocks (the Stirling numbers of the second kind), and define
 \begin{align}
-\sigma_{0,\beta}=1,
+\kappa_{0,\beta}=1,
 \qquad
-\sigma_{s,\beta}=\sum_{k=1}^s\bigl(1+2k^\beta\bigr)2^{-k}S(s,k)\quad(s\geq1),
+\kappa_{s,\beta}=\sum_{k=1}^s\bigl(1+2k^\beta\bigr)2^{-k}S(s,k)\quad(s\geq1),
 \notag\\
-C_{\mathrm{tr}}(\alpha)=1+2^{\,r(\alpha)-s-1}\,\pi^\beta(2\pi)^s\,\sigma_{s,\beta},
+C_{\mathrm{tr}}(\alpha)=1+2^{\,r(\alpha)-s-1}\,\pi^\beta(2\pi)^s\,\kappa_{s,\beta},
 \label{eq:cheb-Ctr}
 \end{align}
 where $r(\alpha)>\alpha$ is the integer fixed in the definition of the H\"older--Zygmund norm, so that $r(\alpha)-s-1\geq0$. For the smallest choice $r(\alpha)=\lfloor\alpha\rfloor+1$, for example, $C_{\mathrm{tr}}(\tfrac12)=1+\sqrt\pi$, $C_{\mathrm{tr}}(1)=1+2\pi$, $C_{\mathrm{tr}}(2)=1+6\pi^2$, and $C_{\mathrm{tr}}(3)=1+22\pi^3$.
@@ -535,25 +535,25 @@ Lemma~\ref{lem:chebyshev-profile} states that, for a H\"older function on $[0,1]
 \begin{proof}[Proof of Lemma~\ref{lem:chebyshev-profile}]
 We first show that the folded function $g=f_0\circ x$ lies in a H\"older--Zygmund ball of radius $C_{\mathrm{tr}}(\alpha)R$, then approximate $g$ by the de la Vall\'ee Poussin construction of the Fourier proof, and finally fold the approximant back to $[0,1]$.
 
-We begin with the transfer of smoothness. Extend $f_0$ to $F:\mathbb R\to\mathbb R$ by its degree-$s$ Taylor polynomials at $0$ and at $1$ outside $[0,1]$. The derivatives of $F$ up to order $s$ match across the endpoints, so $F\in C^s(\mathbb R)$, $F^{(k)}=f_0^{(k)}$ on $[0,1]$, and $g=F\circ x$ because $x$ takes values in $[0,1]$; this makes the chain rule valid at the turning points $u\in\{0,\tfrac12\}+\mathbb Z$, where $x(u)$ is an endpoint, and only values of $F^{(k)}$ on $[0,1]$ enter below. Thus $g$ is continuous, even and $1$-periodic, and $\|g\|_\infty=\|f_0\|_\infty\leq R$ because $x$ is onto $[0,1]$. If $s=0$, then by~\eqref{eq:cheb-fold-bounds} $|g(u)-g(v)|\leq R|x(u)-x(v)|^\beta\leq R(\pi|u-v|)^\beta$. If $s\geq1$, the formula of Fa\`a di Bruno, in its set-partition form, gives
+We begin with the transfer of smoothness. Extend $f_0$ to $F:\mathbb R\to\mathbb R$ by its degree-$s$ Taylor polynomials at $0$ and at $1$ outside $[0,1]$. The derivatives of $F$ up to order $s$ match across the endpoints, so $F$ is $s$ times continuously differentiable on $\mathbb R$, $F^{(k)}=f_0^{(k)}$ on $[0,1]$, and $g=F\circ x$ because $x$ takes values in $[0,1]$; this makes the chain rule valid at the turning points $u\in\{0,\tfrac12\}+\mathbb Z$, where $x(u)$ is an endpoint, and only values of $F^{(k)}$ on $[0,1]$ enter below. Thus $g$ is continuous, even and $1$-periodic, and $\|g\|_\infty=\|f_0\|_\infty\leq R$ because $x$ is onto $[0,1]$. If $s=0$, then by~\eqref{eq:cheb-fold-bounds} $|g(u)-g(v)|\leq R|x(u)-x(v)|^\beta\leq R(\pi|u-v|)^\beta$. If $s\geq1$, the formula of Fa\`a di Bruno, in its set-partition form, gives
 \begin{align*}
-g^{(s)}(u)=\sum_{k=1}^sf_0^{(k)}(x(u))\,P_k(u),
+g^{(s)}(u)=\sum_{k=1}^sf_0^{(k)}(x(u))\,W_k(u),
 \qquad
-P_k(u)=\sum_{\pi}\prod_{B\in\pi}x^{(|B|)}(u),
+W_k(u)=\sum_{\varpi}\prod_{B\in\varpi}x^{(|B|)}(u),
 \end{align*}
-the inner sum running over the $S(s,k)$ partitions $\pi$ of $\{1,\ldots,s\}$ into $k$ blocks. Each product has $k$ factors whose orders add up to $s$, so by~\eqref{eq:cheb-fold-bounds} $\|P_k\|_\infty\leq A_k:=2^{-k}(2\pi)^sS(s,k)$, and differentiating a product raises the order of one of its $k$ factors by one, so $\|P_k'\|_\infty\leq2\pi kA_k$. Let $t=|u-v|$, and split $g^{(s)}(u)-g^{(s)}(v)$ into the terms $\{f_0^{(k)}(x(u))-f_0^{(k)}(x(v))\}P_k(u)$ and $f_0^{(k)}(x(v))\{P_k(u)-P_k(v)\}$. In the first, for $k<s$ the mean value theorem and $|f_0^{(k+1)}|\leq R$ give $|f_0^{(k)}(x(u))-f_0^{(k)}(x(v))|\leq R\min\{1,\pi t\}\leq R(\pi t)^\beta$, and for $k=s$ the H\"older condition gives the same bound $R(\pi t)^\beta$. In the second, $|P_k(u)-P_k(v)|\leq\min\{2A_k,2\pi kA_kt\}\leq(2A_k)^{1-\beta}(2\pi kA_kt)^\beta=2(\pi k)^\beta A_kt^\beta$. Adding the $2s$ terms,
+the inner sum running over the $S(s,k)$ partitions $\varpi$ of $\{1,\ldots,s\}$ into $k$ blocks. Each product has $k$ factors whose orders add up to $s$, so by~\eqref{eq:cheb-fold-bounds} $\|W_k\|_\infty\leq A_k:=2^{-k}(2\pi)^sS(s,k)$, and differentiating a product raises the order of one of its $k$ factors by one, so $\|W_k'\|_\infty\leq2\pi kA_k$. Let $t=|u-v|$, and split $g^{(s)}(u)-g^{(s)}(v)$ into the terms $\{f_0^{(k)}(x(u))-f_0^{(k)}(x(v))\}W_k(u)$ and $f_0^{(k)}(x(v))\{W_k(u)-W_k(v)\}$. In the first, for $k<s$ the mean value theorem and $|f_0^{(k+1)}|\leq R$ give $|f_0^{(k)}(x(u))-f_0^{(k)}(x(v))|\leq R\min\{1,\pi t\}\leq R(\pi t)^\beta$, and for $k=s$ the H\"older condition gives the same bound $R(\pi t)^\beta$. In the second, $|W_k(u)-W_k(v)|\leq\min\{2A_k,2\pi kA_kt\}\leq(2A_k)^{1-\beta}(2\pi kA_kt)^\beta=2(\pi k)^\beta A_kt^\beta$. Adding the $2s$ terms,
 \begin{align*}
 |g^{(s)}(u)-g^{(s)}(v)|
 \leq R\,t^\beta\pi^\beta\sum_{k=1}^sA_k\bigl(1+2k^\beta\bigr)
-=\pi^\beta(2\pi)^s\sigma_{s,\beta}\,R\,|u-v|^\beta,
+=\pi^\beta(2\pi)^s\kappa_{s,\beta}\,R\,|u-v|^\beta,
 \end{align*}
-and the same bound holds for $s=0$, where $\sigma_{0,\beta}=1$. Next, for $\varphi\in C^s$ and real $h$, $\Delta_h^s\varphi(u)=h^s\int_{[0,1]^s}\varphi^{(s)}(u+h(t_1+\cdots+t_s))\,dt$; applied to $\varphi=\Delta_hg$, whose $s$th derivative is $\Delta_hg^{(s)}$, this gives $\|\Delta_h^{s+1}g\|_\infty\leq\pi^\beta(2\pi)^s\sigma_{s,\beta}R|h|^{s+\beta}$. Each of the remaining $r(\alpha)-s-1$ differences at most doubles the sup-norm, so $|h|^{-\alpha}\|\Delta_h^{r(\alpha)}g\|_\infty\leq2^{r(\alpha)-s-1}\pi^\beta(2\pi)^s\sigma_{s,\beta}R$, and adding $\|g\|_\infty\leq R$,
+and the same bound holds for $s=0$, where $\kappa_{0,\beta}=1$. Next, for $s$ times continuously differentiable $\varphi$ and real $h$, $\Delta_h^s\varphi(u)=h^s\int_{[0,1]^s}\varphi^{(s)}(u+h(t_1+\cdots+t_s))\,dt$; applied to $\varphi=\Delta_hg$, whose $s$th derivative is $\Delta_hg^{(s)}$, this gives $\|\Delta_h^{s+1}g\|_\infty\leq\pi^\beta(2\pi)^s\kappa_{s,\beta}R|h|^{s+\beta}$. Each of the remaining $r(\alpha)-s-1$ differences at most doubles the sup-norm, so $|h|^{-\alpha}\|\Delta_h^{r(\alpha)}g\|_\infty\leq2^{r(\alpha)-s-1}\pi^\beta(2\pi)^s\kappa_{s,\beta}R$, and adding $\|g\|_\infty\leq R$,
 \begin{align}
 \|g\|_{\mathcal H^\alpha_{\mathrm{per}}}\leq C_{\mathrm{tr}}(\alpha)\,R .
 \label{eq:cheb-transfer}
 \end{align}
 
-We next approximate $g$. For $m\geq2$ put $G=\lfloor m/2\rfloor\geq1$ and $P_m=V_G$, and let $P_1=\sigma_0$, the operator returning the constant $\langle g,\psi_0\rangle$; in the notation of the Fourier proof, $P_m=Q_{2m-1}$. Because $g$ is even, every sine coefficient $\langle g,\psi_{2j}\rangle=\sqrt2\int_{\mathbb T}g(t)\sin(2\pi jt)\,dt$ vanishes, the integrand being odd. By the real expansion~\eqref{eq:vdp-real}, therefore,
+We next approximate $g$. For $m\geq2$ put $G=\lfloor m/2\rfloor\geq1$ and $P_m=V_G$, and let $P_1=\sigma_0$, the operator returning the constant $\langle g,\psi_0\rangle$; in the notation of the Fourier proof, $P_m=Q_{2m-1}$, not the operator $P_{\boldsymbol m}$ of that proof. Because $g$ is even, every sine coefficient $\langle g,\psi_{2j}\rangle=\sqrt2\int_{\mathbb T}g(t)\sin(2\pi jt)\,dt$ vanishes, the integrand being odd. By the real expansion~\eqref{eq:vdp-real}, therefore,
 \begin{align*}
 P_mg=\sum_{j=0}^{2G-1}\lambda_j\,c_j\,\psi^{\mathrm c}_j,
 \qquad
