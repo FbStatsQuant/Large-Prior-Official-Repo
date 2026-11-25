@@ -1,6 +1,6 @@
 \subsection*{Sparse approximation lemmas for the B-spline,\\ Fourier, and Chebyshev dictionaries}
 
-This subsection states and proves the three lemmas invoked in Section~\ref{sec:adaptive-rates}. They verify, for the three concrete dictionaries used in this paper, the sparse approximation profile that Corollary~\ref{cor:anisotropic} takes as its only dictionary-specific hypothesis beyond the normalization of Assumption~\ref{ass:basis}. In words, the profile asks that for every term budget one can build an approximant of $f_0$ that (i) activates no more dictionary elements than the budget allows, (ii) has approximation error decaying polynomially in the budget, and (iii) has coefficients bounded by a fixed constant. In the proof of Corollary~\ref{cor:anisotropic} these three properties become, respectively, the sparsity level $a_n$, the approximation accuracy $\en$, and the coefficient bound $E_n=E$ of Assumption~\ref{ass:sparse}, and the profile of the dictionary in use is invoked exactly once there (Lemma~\ref{lem:cor-approximant}), at the balanced budget $m_{n,k}\asymp(n/\log J_n)^{\beta_k}$. Lemma~\ref{lem:bspline-profile} treats the B-spline dictionary, Lemma~\ref{lem:fourier-profile} the Fourier dictionary, and Lemma~\ref{lem:chebyshev-profile} the univariate Chebyshev dictionary. Every object appearing in the statements is defined below, and each proof reduces to a small number of classical results, quoted in full where they are used.
+This subsection states and proves the four lemmas invoked in Section~\ref{sec:adaptive-rates}. They verify, for the three concrete dictionaries used in this paper, the sparse approximation profile that Corollary~\ref{cor:anisotropic} takes as its only dictionary-specific hypothesis beyond the normalization of Assumption~\ref{ass:basis}. In words, the profile asks that for every term budget one can build an approximant of $f_0$ that (i) activates no more dictionary elements than the budget allows, (ii) has approximation error decaying polynomially in the budget, and (iii) has coefficients bounded by a fixed constant. In the proof of Corollary~\ref{cor:anisotropic} these three properties become, respectively, the sparsity level $a_n$, the approximation accuracy $\en$, and the coefficient bound $E_n=E$ of Assumption~\ref{ass:sparse}, and the profile of the dictionary in use is invoked exactly once there (Lemma~\ref{lem:cor-approximant}), at the balanced budget $m_{n,k}\asymp(n/\log J_n)^{\beta_k}$. Lemma~\ref{lem:bspline-profile} treats the B-spline dictionary, Lemma~\ref{lem:fourier-profile} the Fourier dictionary, Lemma~\ref{lem:chebyshev-profile} the univariate Chebyshev dictionary, and Lemma~\ref{lem:chebyshev-aniso-profile} its tensor product on $[0,1]^d$. Every object appearing in the statements is defined below, and each proof reduces to a small number of classical results, quoted in full where they are used.
 
 \paragraph*{Conventions.}
 For a finite set $S$, $\#S$ denotes its number of elements. For a vector $\theta$, $\operatorname{supp}\theta=\{j:\theta_j\neq0\}$ is its \emph{support}, the set of indices of its nonzero coordinates, and $\|\theta\|_\infty=\max_j|\theta_j|$ is its largest coordinate in absolute value. For a bounded function $g$, $\|g\|_\infty=\sup_x|g(x)|$ is the supremum (sup-)norm, the largest absolute value that $g$ attains. For a real number $x$, $\lfloor x\rfloor$ is the greatest integer not exceeding $x$. Because the empirical norm $\|g\|_{2,n}$, introduced in the notation paragraph of Section~\ref{sec-intro}, is an average of squared values of $g$ at the design points, and an average can never exceed a maximum,
@@ -8,7 +8,7 @@ For a finite set $S$, $\#S$ denotes its number of elements. For a vector $\theta
 \|g\|_{2,n}=\left\{\frac1n\sum_{i=1}^ng(x_i)^2\right\}^{1/2}\leq\|g\|_\infty .
 \label{eq:sup-to-empirical}
 \end{align}
-Consequently, every approximation bound proved below in sup-norm holds verbatim in the empirical norm, for every $n$ and every configuration of design points; this is how the empirical-norm conclusions of both lemmas follow from their sup-norm displays. Classical results from approximation theory are quoted in the course of the proofs, each stated with all of its hypotheses, so that nothing requires consulting the references.
+Consequently, every approximation bound proved below in sup-norm holds verbatim in the empirical norm, for every $n$ and every configuration of design points; this is how the empirical-norm conclusions of all the lemmas follow from their sup-norm displays. Classical results from approximation theory are quoted in the course of the proofs, each stated with all of its hypotheses, so that nothing requires consulting the references.
 
 \paragraph*{B-splines.}
 Fix an integer spline order $q\geq1$, independent of $n$; an order-$q$ spline is a piecewise polynomial of degree at most $q-1$. The familiar special cases are $q=1$, piecewise constants; $q=2$, continuous piecewise-linear functions; and $q=4$, cubic splines. At resolution level $\ell\geq0$, divide $[0,1]$ into $K_\ell=2^\ell$ equal subintervals and consider the space of splines of order $q$ on this partition: functions that are polynomials of degree at most $q-1$ on each subinterval, joined so that the function and its first $q-2$ derivatives are continuous at the interior breakpoints (no continuity is imposed when $q=1$). Its dimension is
@@ -479,7 +479,7 @@ Let $T_k$ be the Chebyshev polynomial of the first kind, defined by $T_k(\cos t)
 \qquad
 \phi_k(x)=\sqrt2\,T_k(2x-1),\qquad k\geq1,
 \end{align*}
-and, for an integer $J\geq1$, let $\mathcal C_J=\{\phi_0,\ldots,\phi_{J-1}\}$; in the indexing of Section~\ref{sec-verify}, $\xi_{k+1}=\phi_k$. The atom $\phi_k$ does not depend on $J$, so enlarging the dictionary only appends atoms. The dictionary is univariate, $d=1$, with $L=J$. The link with the Fourier part is the \emph{fold}
+and, for an integer $J\geq1$, let $\mathcal C_J=\{\phi_0,\ldots,\phi_{J-1}\}$; in the indexing of Section~\ref{sec-verify}, $\xi_{k+1}=\phi_k$. The atom $\phi_k$ does not depend on $J$, so enlarging the dictionary only appends atoms. The dictionary is univariate, $d=1$, with $L=J$; its tensor product on $[0,1]^d$ is treated in Lemma~\ref{lem:chebyshev-aniso-profile}. The link with the Fourier part is the \emph{fold}
 \begin{align}
 x(u)=\tfrac12\{1+\cos(2\pi u)\},\qquad u\in\mathbb R,
 \label{eq:cheb-fold}
@@ -530,7 +530,7 @@ where $C_\alpha$ is the constant of the periodic Jackson inequality~\eqref{eq:ja
 for every $n$, every $J$, and every configuration of design points in $[0,1]$, so Assumption~\ref{ass:basis} holds with $K=\sqrt2$. This is the univariate sparse profile used in the proof of Corollary~\ref{cor:anisotropic}, with $C_{\mathrm{sp}}=1$, $C_{\mathrm{app}}=CR$, and $E=R$.
 \end{auxlemma}
 
-Lemma~\ref{lem:chebyshev-profile} states that, for a H\"older function on $[0,1]$, keeping the $m$ lowest-degree Chebyshev atoms, with the de la Vall\'ee Poussin weights of the Fourier proof, reproduces $f_0$ up to an error of order $m^{-\alpha}$. Unlike Lemma~\ref{lem:fourier-profile}, it requires neither periodicity nor any boundary condition, and unlike Lemma~\ref{lem:bspline-profile}, it places no upper limit on $\alpha$. The proof transfers $f_0$ to the even periodic function $f_0\circ x$, applies the de la Vall\'ee Poussin construction of the Fourier proof, and folds back; evenness guarantees that only cosine atoms, and hence only Chebyshev atoms, appear. Its only classical input is the periodic Jackson inequality~\eqref{eq:jackson}, as in the Fourier case; the transfer constant $C_{\mathrm{tr}}(\alpha)$ is explicit. The lemma is univariate. For $d>1$ the tensor-product Chebyshev dictionary satisfies Assumption~\ref{ass:basis} with $K=2^{d/2}$, by the same argument, but a multivariate Chebyshev profile is not established in this paper.
+Lemma~\ref{lem:chebyshev-profile} states that, for a H\"older function on $[0,1]$, keeping the $m$ lowest-degree Chebyshev atoms, with the de la Vall\'ee Poussin weights of the Fourier proof, reproduces $f_0$ up to an error of order $m^{-\alpha}$. Unlike Lemma~\ref{lem:fourier-profile}, it requires neither periodicity nor any boundary condition, and unlike Lemma~\ref{lem:bspline-profile}, it places no upper limit on $\alpha$. The proof transfers $f_0$ to the even periodic function $f_0\circ x$, applies the de la Vall\'ee Poussin construction of the Fourier proof, and folds back; evenness guarantees that only cosine atoms, and hence only Chebyshev atoms, appear. Its only classical input is the periodic Jackson inequality~\eqref{eq:jackson}, as in the Fourier case; the transfer constant $C_{\mathrm{tr}}(\alpha)$ is explicit. The lemma is univariate. Lemma~\ref{lem:chebyshev-aniso-profile} below extends it to the tensor-product Chebyshev dictionary on $[0,1]^d$, for which Assumption~\ref{ass:basis} holds with $K=2^{d/2}$.
 
 \begin{proof}[Proof of Lemma~\ref{lem:chebyshev-profile}]
 We first show that the folded function $g=f_0\circ x$ lies in a H\"older--Zygmund ball of radius $C_{\mathrm{tr}}(\alpha)R$, then approximate $g$ by the de la Vall\'ee Poussin construction of the Fourier proof, and finally fold the approximant back to $[0,1]$.
@@ -576,3 +576,100 @@ so $(f_0-f_{\theta(m)})\circ x=g-P_mg$. As $x$ maps $\mathbb R$ onto $[0,1]$, th
 \end{proof}
 
 The restriction of the design to $[0,1]$ cannot simply be dropped: outside $[-1,1]$, $|T_k(y)|=\cosh(k\operatorname{arccosh}|y|)$ grows exponentially in $k$, so a design concentrated at a fixed point outside $[0,1]$ violates Assumption~\ref{ass:basis} as $J\to\infty$. Data observed on an interval $[a,b]$ are mapped affinely to $[0,1]$ before the dictionary is applied. The constant $K=\sqrt2$ cannot be lowered uniformly over designs, since $\|\phi_k\|_{2,n}=\sqrt2$ for $k\geq1$ when every $x_i=1$.
+
+\paragraph*{The tensor-product Chebyshev dictionary and the sectional class.}
+For integers $L_1,\ldots,L_d\geq1$, the tensor-product Chebyshev dictionary collects all products of one univariate Chebyshev atom per coordinate, of degree at most $L_k-1$ in coordinate $k$:
+\begin{align*}
+\mathcal C_{\boldsymbol L}
+=\left\{\Phi_{\boldsymbol j}(x)=\prod_{k=1}^d\phi_{j_k}(x_k):
+0\leq j_k\leq L_k-1,\ 1\leq k\leq d\right\}.
+\end{align*}
+Its coordinate cardinalities are $L_k$ and its total cardinality is $J_{\boldsymbol L}=\prod_{k=1}^dL_k$; any fixed enumeration of the atoms may serve as the indexing $\xi_1,\ldots,\xi_{J_{\boldsymbol L}}$, and nothing below depends on it. The case $L_k=1$ is allowed, the coordinate then carrying only the constant atom, and for $d=1$ the dictionary is $\mathcal C_J$ with $J=L_1$. Let $X(u)=(x(u_1),\ldots,x(u_d))$ be the fold~\eqref{eq:cheb-fold} applied in every coordinate, a continuous map of $\mathbb R^d$ \emph{onto} $[0,1]^d$ that is even and $1$-periodic in each coordinate separately. With $\psi^{\mathrm c}_0=\psi_0$ and $\psi^{\mathrm c}_j=\psi_{2j-1}$ for $j\geq1$, the constant and cosine atoms, \eqref{eq:cheb-atoms} gives
+\begin{align}
+\Phi_{\boldsymbol j}(X(u))=\prod_{k=1}^d\psi^{\mathrm c}_{j_k}(u_k),
+\qquad u\in\mathbb R^d .
+\label{eq:cheb-aniso-atoms}
+\end{align}
+
+The smoothness class is defined through univariate sections. For $\boldsymbol\alpha=(\alpha_1,\ldots,\alpha_d)$ with every $\alpha_k>0$ and for $0<R<\infty$, let $C^{\boldsymbol\alpha}_{\mathrm{sec}}([0,1]^d;R)$ be the set of continuous functions $f$ on $[0,1]^d$ such that, for every $k$ and every choice of the other $d-1$ coordinates in $[0,1]$, the faces of the cube included, the section
+\begin{align*}
+t\mapsto f(x_1,\ldots,x_{k-1},t,x_{k+1},\ldots,x_d),
+\qquad t\in[0,1],
+\end{align*}
+lies in the ball of radius $R$ of the univariate class $C^{\alpha_k}([0,1])$ described before Lemma~\ref{lem:chebyshev-profile}. The definition involves pure directional derivatives only: no mixed derivative, no relation between different directions, and no condition linking opposite faces. It applies to every real $\alpha_k>0$, with the Lipschitz--H\"older convention at integers. Continuity need not be assumed separately, because moving one coordinate at a time gives $|f(x)-f(y)|\leq R\sum_k|x_k-y_k|^{\min(1,\alpha_k)}$. The class contains, with the same radius $R$, the two nonperiodic classes of Lemma~\ref{lem:bspline-profile}. First, the ball of radius $R$ of the isotropic class $C^\alpha([0,1]^d)$ lies in $C^{(\alpha,\ldots,\alpha)}_{\mathrm{sec}}([0,1]^d;R)$: along a line parallel to the $k$th axis, the derivatives of the section are the pure partial derivatives of $f$ in direction $k$, which are among the derivatives controlled by the isotropic ball, and two points of such a line are at Euclidean distance $|t-t'|$. Second, for positive integers $\alpha_k$, the ball of radius $R$ of the anisotropic class for splines lies in $C^{\boldsymbol\alpha}_{\mathrm{sec}}([0,1]^d;R)$: the pure derivatives in direction $k$ of order at most $\alpha_k$ are among the derivatives required there to be continuous and bounded by $R$, so by the mean value theorem the derivative of order $\alpha_k-1$ is $R$-Lipschitz along every such line; the restriction $\max_k\alpha_k\leq q$ plays no role.
+
+\begin{auxlemma}[Sparse approximation by the tensor-product Chebyshev dictionary]
+\label{lem:chebyshev-aniso-profile}
+Let $d\geq1$ be fixed, let every $\alpha_k>0$, and let $f_0\in C^{\boldsymbol\alpha}_{\mathrm{sec}}([0,1]^d;R)$ for a fixed $0<R<\infty$. For all integers $L_1,\ldots,L_d\geq1$ and every integer rectangle $\boldsymbol m=(m_1,\ldots,m_d)$ with $1\leq m_k\leq L_k$, there is a coefficient vector $\theta(\boldsymbol m)\in\mathbb R^{J_{\boldsymbol L}}$ such that
+\begin{align}
+\#\operatorname{supp}\theta(\boldsymbol m)
+&\leq\prod_{k=1}^dm_k,\notag\\
+\|f_0-f_{\theta(\boldsymbol m)}\|_\infty
+&\leq C_{\mathrm{app}}\sum_{k=1}^dm_k^{-\alpha_k},
+\qquad C_{\mathrm{app}}=3^{\,d-1}\max_{1\leq k\leq d}c_k,
+\label{eq:chebyshev-aniso-profile}\\
+\|\theta(\boldsymbol m)\|_\infty&\leq R,\notag
+\end{align}
+where
+\begin{align*}
+c_k=R\max\bigl\{2,\;4\cdot3^{\alpha_k}C_{\alpha_k}C_{\mathrm{tr}}(\alpha_k)\bigr\}
+\end{align*}
+is the constant $CR$ of~\eqref{eq:chebyshev-profile} at smoothness $\alpha_k$, with $C_{\alpha_k}$ the constant of the periodic Jackson inequality~\eqref{eq:jackson} and $C_{\mathrm{tr}}(\alpha_k)$ given by~\eqref{eq:cheb-Ctr}. The support of $\theta(\boldsymbol m)$ lies in the rectangle of indices $\boldsymbol j$ with $0\leq j_k\leq m_k-1$, so $f_{\theta(\boldsymbol m)}$ is a polynomial of degree at most $m_k-1$ in $x_k$ (constant in $x_k$ when $m_k=1$); since $m_k\leq L_k$, no truncation is needed, for any rectangle, and the coefficient of a given atom $\Phi_{\boldsymbol j}$ does not depend on $\boldsymbol L$. Consequently the same error bound holds in $\|\cdot\|_{2,n}$, and
+\begin{align*}
+\max_{\Phi\in\mathcal C_{\boldsymbol L}}\|\Phi\|_{2,n}\leq2^{d/2}
+\end{align*}
+for every $n$, every $\boldsymbol L$, and every configuration of design points in $[0,1]^d$, so Assumption~\ref{ass:basis} holds with $K=2^{d/2}$. This is the profile~\eqref{eq:aniso-profile} of Corollary~\ref{cor:anisotropic}, with $C_{\mathrm{sp}}=1$, $C_{\mathrm{app}}$ as displayed, and $E=R$; for $d=1$ it is Lemma~\ref{lem:chebyshev-profile}.
+\end{auxlemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:chebyshev-aniso-profile}]
+Let $g=f_0\circ X$. We bound the approximation error of every univariate section of $g$ by the univariate lemma, combine the coordinates by the telescoping of the Fourier proof, show that only cosine products appear, and fold back to $[0,1]^d$.
+
+We begin with the transfer, one coordinate at a time. The function $g$ is continuous on $\mathbb R^d$, and it is $1$-periodic and even in each coordinate separately, because $x$ is; moreover $\|g\|_\infty=\|f_0\|_\infty\leq R$, because $X$ is onto $[0,1]^d$ and every point of the cube lies on a section. Fix $k$ and $u\in\mathbb R^d$, and let $g_{u,k}$ be the section of $g$ through $u$ in direction $k$. Then
+\begin{align*}
+g_{u,k}(v)&=\varphi(x(v)),\\
+\varphi(t)&=f_0\bigl(x(u_1),\ldots,x(u_{k-1}),t,x(u_{k+1}),\ldots,x(u_d)\bigr),
+\end{align*}
+so $g_{u,k}=\varphi\circ x$ for a section $\varphi$ of $f_0$ in direction $k$. The frozen coordinates $x(u_i)$ range over all of $[0,1]$, the endpoints included, which is why the definition of the class includes the faces. By that definition, $\varphi$ lies in the ball of radius $R$ of $C^{\alpha_k}([0,1])$, so $g_{u,k}$ is exactly the function treated in the proof of Lemma~\ref{lem:chebyshev-profile} with $\alpha=\alpha_k$, and the second step of that proof gives, with the operators $P_m=Q_{2m-1}$ defined there,
+\begin{align}
+\|g_{u,k}-P_mg_{u,k}\|_\infty\leq c_k\,m^{-\alpha_k}
+\qquad\text{for every integer }m\geq1,
+\label{eq:cheb-aniso-section}
+\end{align}
+uniformly in $u$. The univariate argument is applied to one section at a time, so no mixed derivative of $f_0$ and no joint extension of $f_0$ beyond the cube is involved. Its only classical input is the Jackson inequality~\eqref{eq:jackson}, at smoothness $\alpha_k$.
+
+We next combine the coordinates. Let $P^{(k)}_m$ denote $P_m$ acting on the $k$th coordinate of a continuous function on $\mathbb T^d$, and set
+\begin{align*}
+\mathcal P_{\boldsymbol m}g=P^{(1)}_{m_1}\cdots P^{(d)}_{m_d}g .
+\end{align*}
+Since $P^{(k)}_{m_k}=Q^{(k)}_{2m_k-1}$, this is the operator of the proof of Lemma~\ref{lem:fourier-profile} with the budgets $2m_k-1$, applied to $g$. The telescoping identity of that proof and the stability bound $\|Q^{(k)}_mf\|_\infty\leq3\|f\|_\infty$ hold for every continuous function on $\mathbb T^d$ and every budget, since they use no smoothness. They give
+\begin{align*}
+\|g-\mathcal P_{\boldsymbol m}g\|_\infty
+&\leq\sum_{k=1}^d3^{\,k-1}\|(I-P^{(k)}_{m_k})g\|_\infty
+\leq\sum_{k=1}^d3^{\,k-1}c_k\,m_k^{-\alpha_k}\\
+&\leq3^{\,d-1}\max_kc_k\sum_{k=1}^dm_k^{-\alpha_k},
+\end{align*}
+where the middle inequality is~\eqref{eq:cheb-aniso-section}, because $\|(I-P^{(k)}_{m_k})g\|_\infty=\sup_u|g_{u,k}(u_k)-(P_{m_k}g_{u,k})(u_k)|$. In the telescoping sum every difference $I-P^{(k)}_{m_k}$ acts on $g$ itself, so the section bound is needed only for the sections of $g$, never for those of a smoothed function.
+
+We now show that only cosine products appear. The expansion~\eqref{eq:tensor-coefficients}, whose derivation uses only the real expansion~\eqref{eq:vdp-real} and the continuity of the function, gives
+\begin{align*}
+\mathcal P_{\boldsymbol m}g
+=\sum_{\boldsymbol\nu}\left\{\prod_{k=1}^d\Lambda^{(2m_k-1)}_{j(\nu_k)}\right\}
+\left\{\int_{\mathbb T^d}g(u)\Psi_{\boldsymbol\nu}(u)\,du\right\}\Psi_{\boldsymbol\nu},
+\end{align*}
+the sum running over the multi-indices $\boldsymbol\nu$ whose $k$th entry is an atom of frequency at most $2\lfloor m_k/2\rfloor-1$ (frequency $0$ when $m_k=1$). Suppose that $\nu_i$ is a sine index for some $i$. The reflection $u_i\mapsto-u_i$ preserves the Lebesgue measure of $\mathbb T^d$, leaves $g$ unchanged, and changes the sign of $\Psi_{\boldsymbol\nu}$, so $\int g\Psi_{\boldsymbol\nu}=-\int g\Psi_{\boldsymbol\nu}=0$. Only the products of constant and cosine atoms remain, that is, the functions $\prod_k\psi^{\mathrm c}_{j_k}(u_k)$ with $0\leq j_k\leq\max\{0,2\lfloor m_k/2\rfloor-1\}\leq m_k-1$, and coordinate $k$ contributes at most $\max\{1,2\lfloor m_k/2\rfloor\}\leq m_k$ of them. Evenness in each coordinate separately is needed here. Invariance under the single inversion $u\mapsto-u$ would not be enough: the function $\sin(2\pi u_1)\sin(2\pi u_2)$ has it, is reproduced by $\mathcal P_{\boldsymbol m}$ when $m_1,m_2\geq2$, and is not a function of $X(u)$.
+
+Finally, we fold back. For $0\leq j_k\leq m_k-1$ define
+\begin{align*}
+\theta_{\boldsymbol j}(\boldsymbol m)
+=\left\{\prod_{k=1}^d\Lambda^{(2m_k-1)}_{j_k}\right\}
+\int_{\mathbb T^d}g(u)\prod_{k=1}^d\psi^{\mathrm c}_{j_k}(u_k)\,du,
+\end{align*}
+and let $\theta_{\boldsymbol j}(\boldsymbol m)=0$ for the remaining $\boldsymbol j$. Since $m_k\leq L_k$, every index used has $j_k\leq L_k-1$, so every atom used belongs to $\mathcal C_{\boldsymbol L}$ and nothing is truncated. By~\eqref{eq:cheb-aniso-atoms}, $\mathcal P_{\boldsymbol m}g=f_{\theta(\boldsymbol m)}\circ X$, so $(f_0-f_{\theta(\boldsymbol m)})\circ X=g-\mathcal P_{\boldsymbol m}g$. As $X$ maps $\mathbb R^d$ onto $[0,1]^d$, the sup-norm of $f_0-f_{\theta(\boldsymbol m)}$ over $[0,1]^d$ equals that of $g-\mathcal P_{\boldsymbol m}g$ over $\mathbb T^d$, which gives the error bound in~\eqref{eq:chebyshev-aniso-profile}. The support bound is the count of cosine products above. The coefficient bound of the Fourier proof holds for every continuous function on $\mathbb T^d$, and gives $|\theta_{\boldsymbol j}(\boldsymbol m)|\leq\|g\|_\infty=\|f_0\|_\infty\leq R$. The coefficients are the tensor-product Chebyshev coefficients of $f_0$, damped by the multipliers: the univariate substitution $x_k=x(u_k)$ in each coordinate gives
+\begin{align*}
+\int_{\mathbb T^d}g(u)\prod_{k=1}^d\psi^{\mathrm c}_{j_k}(u_k)\,du
+=\int_{[0,1]^d}f_0(x)\,\Phi_{\boldsymbol j}(x)\prod_{k=1}^d\frac{dx_k}{\pi\sqrt{x_k(1-x_k)}},
+\end{align*}
+an integral against the product of arcsine distributions, and none of them depends on $\boldsymbol L$. The sup-norm bound transfers to the empirical norm by~\eqref{eq:sup-to-empirical}. Last, $\phi_0=1$ and $|\phi_j|\leq\sqrt2$ on $[0,1]$, so $|\Phi_{\boldsymbol j}|\leq2^{d/2}$ on $[0,1]^d$ and $\|\Phi_{\boldsymbol j}\|_{2,n}\leq2^{d/2}$ for every design in $[0,1]^d$; repeated design points are allowed. This proves all conclusions of the lemma.
+\end{proof}
+
+Lemma~\ref{lem:chebyshev-aniso-profile} shows what the absence of periodicity costs in several dimensions. The rate exponents, the sparsity constant $C_{\mathrm{sp}}=1$, the coefficient bound $E=R$, and the dimensional factors $3^{\,d-1}$ and $2^{d/2}$ are those of the Fourier dictionary, and the class carries no periodicity requirement and no boundary matching or additional boundary regularity condition. The cost lies in the constant alone: each $c_k$ contains the transfer factor $C_{\mathrm{tr}}(\alpha_k)$ of its own direction, and $C_{\mathrm{app}}$ takes the maximum of the $c_k$ over the directions, not a product over them. A function of the sectional class need not be periodic. Conversely, if some $\alpha_k$ is an integer, the restriction to $[0,1]^d$ of a periodic H\"older--Zygmund ball of Lemma~\ref{lem:fourier-profile} of positive radius need not lie in any ball of the sectional class, because the Zygmund condition of integer order $\alpha_k$ does not make the derivative of order $\alpha_k-1$ Lipschitz.
