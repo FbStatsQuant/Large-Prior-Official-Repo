@@ -1,6 +1,6 @@
-\subsection*{Sparse approximation lemmas for the B-spline\\ and Fourier dictionaries}
+\subsection*{Sparse approximation lemmas for the B-spline,\\ Fourier, and Chebyshev dictionaries}
 
-This subsection states and proves the two lemmas invoked in Section~\ref{sec:adaptive-rates}. They verify, for the two concrete dictionaries used in this paper, the sparse approximation profile that Corollary~\ref{cor:anisotropic} takes as its only dictionary-specific hypothesis beyond the normalization of Assumption~\ref{ass:basis}. In words, the profile asks that for every term budget one can build an approximant of $f_0$ that (i) activates no more dictionary elements than the budget allows, (ii) has approximation error decaying polynomially in the budget, and (iii) has coefficients bounded by a fixed constant. In the proof of Corollary~\ref{cor:anisotropic} these three properties become, respectively, the sparsity level $a_n$, the approximation accuracy $\en$, and the coefficient bound $E_n=E$ of Assumption~\ref{ass:sparse}, and the profile of the dictionary in use is invoked exactly once there (Lemma~\ref{lem:cor-approximant}), at the balanced budget $m_{n,k}\asymp(n/\log J_n)^{\beta_k}$. Lemma~\ref{lem:bspline-profile} treats the B-spline dictionary and Lemma~\ref{lem:fourier-profile} the Fourier dictionary. Every object appearing in the statements is defined below, and each proof reduces to a small number of classical results, quoted in full where they are used.
+This subsection states and proves the three lemmas invoked in Section~\ref{sec:adaptive-rates}. They verify, for the three concrete dictionaries used in this paper, the sparse approximation profile that Corollary~\ref{cor:anisotropic} takes as its only dictionary-specific hypothesis beyond the normalization of Assumption~\ref{ass:basis}. In words, the profile asks that for every term budget one can build an approximant of $f_0$ that (i) activates no more dictionary elements than the budget allows, (ii) has approximation error decaying polynomially in the budget, and (iii) has coefficients bounded by a fixed constant. In the proof of Corollary~\ref{cor:anisotropic} these three properties become, respectively, the sparsity level $a_n$, the approximation accuracy $\en$, and the coefficient bound $E_n=E$ of Assumption~\ref{ass:sparse}, and the profile of the dictionary in use is invoked exactly once there (Lemma~\ref{lem:cor-approximant}), at the balanced budget $m_{n,k}\asymp(n/\log J_n)^{\beta_k}$. Lemma~\ref{lem:bspline-profile} treats the B-spline dictionary, Lemma~\ref{lem:fourier-profile} the Fourier dictionary, and Lemma~\ref{lem:chebyshev-profile} the univariate Chebyshev dictionary. Every object appearing in the statements is defined below, and each proof reduces to a small number of classical results, quoted in full where they are used.
 
 \paragraph*{Conventions.}
 For a finite set $S$, $\#S$ denotes its number of elements. For a vector $\theta$, $\operatorname{supp}\theta=\{j:\theta_j\neq0\}$ is its \emph{support}, the set of indices of its nonzero coordinates, and $\|\theta\|_\infty=\max_j|\theta_j|$ is its largest coordinate in absolute value. For a bounded function $g$, $\|g\|_\infty=\sup_x|g(x)|$ is the supremum (sup-)norm, the largest absolute value that $g$ attains. For a real number $x$, $\lfloor x\rfloor$ is the greatest integer not exceeding $x$. Because the empirical norm $\|g\|_{2,n}$, introduced in the notation paragraph of Section~\ref{sec-intro}, is an average of squared values of $g$ at the design points, and an average can never exceed a maximum,
@@ -471,3 +471,108 @@ with the same value for the sine atom. Since every multiplier $\Lambda^{(m_k)}_{
 
 Finally, the tensorized sup-norm error bound transfers to the empirical norm by~\eqref{eq:sup-to-empirical}, and $\|\Psi_{\boldsymbol\nu}\|_{2,n}\leq\|\Psi_{\boldsymbol\nu}\|_\infty\leq2^{d/2}$ because each univariate factor of $\Psi_{\boldsymbol\nu}$ is bounded by $\sqrt2$. This proves all conclusions of the lemma.
 \end{proof}
+
+\paragraph*{The Chebyshev dictionary.}
+Let $T_k$ be the Chebyshev polynomial of the first kind, defined by $T_k(\cos t)=\cos(kt)$, so that $|T_k(y)|\leq1$ for $y\in[-1,1]$. On $[0,1]$ put
+\begin{align*}
+\phi_0(x)=1,
+\qquad
+\phi_k(x)=\sqrt2\,T_k(2x-1),\qquad k\geq1,
+\end{align*}
+and, for an integer $J\geq1$, let $\mathcal C_J=\{\phi_0,\ldots,\phi_{J-1}\}$; in the indexing of Section~\ref{sec-verify}, $\xi_{k+1}=\phi_k$. The atom $\phi_k$ does not depend on $J$, so enlarging the dictionary only appends atoms. The dictionary is univariate, $d=1$, with $L=J$. The link with the Fourier part is the \emph{fold}
+\begin{align}
+x(u)=\tfrac12\{1+\cos(2\pi u)\},\qquad u\in\mathbb R,
+\label{eq:cheb-fold}
+\end{align}
+a smooth, even, $1$-periodic map of $\mathbb R$ \emph{onto} $[0,1]$. Since $2x(u)-1=\cos(2\pi u)$,
+\begin{align}
+\phi_0(x(u))=\psi_0(u),
+\qquad
+\phi_k(x(u))=\sqrt2\cos(2\pi ku)=\psi_{2k-1}(u),\quad k\geq1:
+\label{eq:cheb-atoms}
+\end{align}
+the fold turns each Chebyshev atom into the cosine atom of the same frequency. Its derivatives are $x^{(j)}(u)=\tfrac12(2\pi)^j\cos(2\pi u+j\pi/2)$, so
+\begin{align}
+|x^{(j)}(u)|\leq\tfrac12(2\pi)^j\quad(j\geq1),
+\qquad
+|x(u)-x(v)|\leq\min\{1,\pi|u-v|\}.
+\label{eq:cheb-fold-bounds}
+\end{align}
+
+\paragraph*{The smoothness class and the transfer constant.}
+The class is the univariate case of the isotropic H\"older class $C^\alpha([0,1])$ defined above, at every $\alpha>0$, with the Lipschitz--H\"older convention at integers and no restriction of the form $\alpha\leq q$. Write $s=\lceil\alpha\rceil-1$ and $\beta=\alpha-s\in(0,1]$, so that the ball of radius $R$ consists of the $f\in C^s[0,1]$, with one-sided derivatives at the endpoints, such that $\|f^{(k)}\|_\infty\leq R$ for $0\leq k\leq s$ and $|f^{(s)}(y)-f^{(s)}(z)|\leq R|y-z|^\beta$. Let $S(s,k)$ be the number of partitions of $\{1,\ldots,s\}$ into $k$ nonempty blocks (the Stirling numbers of the second kind), and define
+\begin{align}
+\sigma_{0,\beta}=1,
+\qquad
+\sigma_{s,\beta}=\sum_{k=1}^s\bigl(1+2k^\beta\bigr)2^{-k}S(s,k)\quad(s\geq1),
+\notag\\
+C_{\mathrm{tr}}(\alpha)=1+2^{\,r(\alpha)-s-1}\,\pi^\beta(2\pi)^s\,\sigma_{s,\beta},
+\label{eq:cheb-Ctr}
+\end{align}
+where $r(\alpha)>\alpha$ is the integer fixed in the definition of the H\"older--Zygmund norm, so that $r(\alpha)-s-1\geq0$. For the smallest choice $r(\alpha)=\lfloor\alpha\rfloor+1$, for example, $C_{\mathrm{tr}}(\tfrac12)=1+\sqrt\pi$, $C_{\mathrm{tr}}(1)=1+2\pi$, $C_{\mathrm{tr}}(2)=1+6\pi^2$, and $C_{\mathrm{tr}}(3)=1+22\pi^3$.
+
+\begin{auxlemma}[Sparse approximation by the Chebyshev dictionary]
+\label{lem:chebyshev-profile}
+Let $\alpha>0$ and let $f_0$ lie in the ball of radius $R<\infty$ of $C^\alpha([0,1])$. For every $J\geq1$ and every integer $1\leq m\leq J$ there is a coefficient vector $\theta(m)\in\mathbb R^J$ such that
+\begin{align}
+\#\operatorname{supp}\theta(m)
+&\leq m,\notag\\
+\|f_0-f_{\theta(m)}\|_\infty
+&\leq CRm^{-\alpha},
+\qquad C=\max\bigl\{2,\;4\cdot3^\alpha C_\alpha C_{\mathrm{tr}}(\alpha)\bigr\},
+\label{eq:chebyshev-profile}\\
+\|\theta(m)\|_\infty&\leq R,\notag
+\end{align}
+where $C_\alpha$ is the constant of the periodic Jackson inequality~\eqref{eq:jackson} and $C_{\mathrm{tr}}(\alpha)$ is given by~\eqref{eq:cheb-Ctr}. The support of $\theta(m)$ lies in $\{0,\ldots,m-1\}$, so $f_{\theta(m)}$ is a polynomial of degree at most $m-1$ (a constant when $m=1$); the nonzero entries of $\theta(m)$ do not depend on $J$, and increasing $J$ appends zeros without changing $f_{\theta(m)}$. Consequently the same error bound holds in $\|\cdot\|_{2,n}$, and
+\begin{align*}
+\max_{0\leq k\leq J-1}\|\phi_k\|_{2,n}\leq\sqrt2
+\end{align*}
+for every $n$, every $J$, and every configuration of design points in $[0,1]$, so Assumption~\ref{ass:basis} holds with $K=\sqrt2$. This is the univariate sparse profile used in the proof of Corollary~\ref{cor:anisotropic}, with $C_{\mathrm{sp}}=1$, $C_{\mathrm{app}}=CR$, and $E=R$.
+\end{auxlemma}
+
+Lemma~\ref{lem:chebyshev-profile} states that, for a H\"older function on $[0,1]$, keeping the $m$ lowest-degree Chebyshev atoms, with the de la Vall\'ee Poussin weights of the Fourier proof, reproduces $f_0$ up to an error of order $m^{-\alpha}$. Unlike Lemma~\ref{lem:fourier-profile}, it requires neither periodicity nor any boundary condition, and unlike Lemma~\ref{lem:bspline-profile}, it places no upper limit on $\alpha$. The proof transfers $f_0$ to the even periodic function $f_0\circ x$, applies the de la Vall\'ee Poussin construction of the Fourier proof, and folds back; evenness guarantees that only cosine atoms, and hence only Chebyshev atoms, appear. Its only classical input is the periodic Jackson inequality~\eqref{eq:jackson}, as in the Fourier case; the transfer constant $C_{\mathrm{tr}}(\alpha)$ is explicit. The lemma is univariate. For $d>1$ the tensor-product Chebyshev dictionary satisfies Assumption~\ref{ass:basis} with $K=2^{d/2}$, by the same argument, but a multivariate Chebyshev profile is not established in this paper.
+
+\begin{proof}[Proof of Lemma~\ref{lem:chebyshev-profile}]
+We first show that the folded function $g=f_0\circ x$ lies in a H\"older--Zygmund ball of radius $C_{\mathrm{tr}}(\alpha)R$, then approximate $g$ by the de la Vall\'ee Poussin construction of the Fourier proof, and finally fold the approximant back to $[0,1]$.
+
+We begin with the transfer of smoothness. Extend $f_0$ to $F:\mathbb R\to\mathbb R$ by its degree-$s$ Taylor polynomials at $0$ and at $1$ outside $[0,1]$. The derivatives of $F$ up to order $s$ match across the endpoints, so $F\in C^s(\mathbb R)$, $F^{(k)}=f_0^{(k)}$ on $[0,1]$, and $g=F\circ x$ because $x$ takes values in $[0,1]$; this makes the chain rule valid at the turning points $u\in\{0,\tfrac12\}+\mathbb Z$, where $x(u)$ is an endpoint, and only values of $F^{(k)}$ on $[0,1]$ enter below. Thus $g$ is continuous, even and $1$-periodic, and $\|g\|_\infty=\|f_0\|_\infty\leq R$ because $x$ is onto $[0,1]$. If $s=0$, then by~\eqref{eq:cheb-fold-bounds} $|g(u)-g(v)|\leq R|x(u)-x(v)|^\beta\leq R(\pi|u-v|)^\beta$. If $s\geq1$, the formula of Fa\`a di Bruno, in its set-partition form, gives
+\begin{align*}
+g^{(s)}(u)=\sum_{k=1}^sf_0^{(k)}(x(u))\,P_k(u),
+\qquad
+P_k(u)=\sum_{\pi}\prod_{B\in\pi}x^{(|B|)}(u),
+\end{align*}
+the inner sum running over the $S(s,k)$ partitions $\pi$ of $\{1,\ldots,s\}$ into $k$ blocks. Each product has $k$ factors whose orders add up to $s$, so by~\eqref{eq:cheb-fold-bounds} $\|P_k\|_\infty\leq A_k:=2^{-k}(2\pi)^sS(s,k)$, and differentiating a product raises the order of one of its $k$ factors by one, so $\|P_k'\|_\infty\leq2\pi kA_k$. Let $t=|u-v|$, and split $g^{(s)}(u)-g^{(s)}(v)$ into the terms $\{f_0^{(k)}(x(u))-f_0^{(k)}(x(v))\}P_k(u)$ and $f_0^{(k)}(x(v))\{P_k(u)-P_k(v)\}$. In the first, for $k<s$ the mean value theorem and $|f_0^{(k+1)}|\leq R$ give $|f_0^{(k)}(x(u))-f_0^{(k)}(x(v))|\leq R\min\{1,\pi t\}\leq R(\pi t)^\beta$, and for $k=s$ the H\"older condition gives the same bound $R(\pi t)^\beta$. In the second, $|P_k(u)-P_k(v)|\leq\min\{2A_k,2\pi kA_kt\}\leq(2A_k)^{1-\beta}(2\pi kA_kt)^\beta=2(\pi k)^\beta A_kt^\beta$. Adding the $2s$ terms,
+\begin{align*}
+|g^{(s)}(u)-g^{(s)}(v)|
+\leq R\,t^\beta\pi^\beta\sum_{k=1}^sA_k\bigl(1+2k^\beta\bigr)
+=\pi^\beta(2\pi)^s\sigma_{s,\beta}\,R\,|u-v|^\beta,
+\end{align*}
+and the same bound holds for $s=0$, where $\sigma_{0,\beta}=1$. Next, for $\varphi\in C^s$ and real $h$, $\Delta_h^s\varphi(u)=h^s\int_{[0,1]^s}\varphi^{(s)}(u+h(t_1+\cdots+t_s))\,dt$; applied to $\varphi=\Delta_hg$, whose $s$th derivative is $\Delta_hg^{(s)}$, this gives $\|\Delta_h^{s+1}g\|_\infty\leq\pi^\beta(2\pi)^s\sigma_{s,\beta}R|h|^{s+\beta}$. Each of the remaining $r(\alpha)-s-1$ differences at most doubles the sup-norm, so $|h|^{-\alpha}\|\Delta_h^{r(\alpha)}g\|_\infty\leq2^{r(\alpha)-s-1}\pi^\beta(2\pi)^s\sigma_{s,\beta}R$, and adding $\|g\|_\infty\leq R$,
+\begin{align}
+\|g\|_{\mathcal H^\alpha_{\mathrm{per}}}\leq C_{\mathrm{tr}}(\alpha)\,R .
+\label{eq:cheb-transfer}
+\end{align}
+
+We next approximate $g$. For $m\geq2$ put $G=\lfloor m/2\rfloor\geq1$ and $P_m=V_G$, and let $P_1=\sigma_0$, the operator returning the constant $\langle g,\psi_0\rangle$; in the notation of the Fourier proof, $P_m=Q_{2m-1}$. Because $g$ is even, every sine coefficient $\langle g,\psi_{2j}\rangle=\sqrt2\int_{\mathbb T}g(t)\sin(2\pi jt)\,dt$ vanishes, the integrand being odd. By the real expansion~\eqref{eq:vdp-real}, therefore,
+\begin{align*}
+P_mg=\sum_{j=0}^{2G-1}\lambda_j\,c_j\,\psi^{\mathrm c}_j,
+\qquad
+c_j=\langle g,\psi^{\mathrm c}_j\rangle,
+\qquad
+\psi^{\mathrm c}_0=\psi_0,\ \ \psi^{\mathrm c}_j=\psi_{2j-1}\ (j\geq1),
+\end{align*}
+with the multipliers $\lambda_j\in[0,1]$ of~\eqref{eq:vdp-multipliers}; for $m=1$ the output is the single term $c_0\psi_0$. The output thus uses only the constant and cosine atoms of frequency at most $2G-1\leq m-1$, at most $2G\leq m$ of them. For $m\geq2$, let $p$ be a trigonometric polynomial of degree at most $G$ given by~\eqref{eq:jackson} for $g$, whose H\"older--Zygmund norm is at most $C_{\mathrm{tr}}(\alpha)R$ by~\eqref{eq:cheb-transfer}. Since $V_G$ reproduces $p$ by~\eqref{eq:vdp-eigen} and $\|V_G\|\leq3$ by~\eqref{eq:vdp-stable}, exactly as in the Fourier proof,
+\begin{align*}
+\|g-P_mg\|_\infty\leq4\|g-p\|_\infty\leq4C_\alpha C_{\mathrm{tr}}(\alpha)RG^{-\alpha}\leq4\cdot3^\alpha C_\alpha C_{\mathrm{tr}}(\alpha)Rm^{-\alpha},
+\end{align*}
+because $G\geq m/3$ for every $m\geq2$ ($G=1$ when $m=2$, and $\lfloor m/2\rfloor\geq(m-1)/2\geq m/3$ when $m\geq3$). For $m=1$, $|g(u)-\langle g,\psi_0\rangle|\leq\int_{\mathbb T}|g(u)-g(t)|\,dt\leq2\|g\|_\infty\leq2R=2Rm^{-\alpha}$. In both cases $\|g-P_mg\|_\infty\leq CRm^{-\alpha}$.
+
+Finally, we fold back. Define $\theta_j(m)=\lambda_jc_j$ for $0\leq j\leq2G-1$ (for $m=1$, $\theta_0(1)=c_0$) and $\theta_j(m)=0$ for the remaining $j\leq J-1$. Since $2G-1\leq m-1\leq J-1$, every atom used belongs to $\mathcal C_J$, and by~\eqref{eq:cheb-atoms}
+\begin{align*}
+P_mg(u)=\sum_{j=0}^{m-1}\theta_j(m)\,\phi_j(x(u))=f_{\theta(m)}(x(u)),
+\qquad u\in\mathbb R,
+\end{align*}
+so $(f_0-f_{\theta(m)})\circ x=g-P_mg$. As $x$ maps $\mathbb R$ onto $[0,1]$, the sup-norm of $f_0-f_{\theta(m)}$ over $[0,1]$ equals that of $g-P_mg$ over $\mathbb T$, which gives the error bound in~\eqref{eq:chebyshev-profile}. The support bound is the atom count above. For the coefficients, $|c_j|\leq\|g\|_\infty\|\psi^{\mathrm c}_j\|_1\leq\|f_0\|_\infty\leq R$, by the bound $\|\psi_\nu\|_1\leq1$ of the Fourier proof, and $\lambda_j\in[0,1]$. The coefficients are the Chebyshev coefficients of $f_0$, damped by $\lambda_j$: the substitution $x=x(u)$ on each half-period gives $c_j=\int_0^1f_0(x)\phi_j(x)\,\{\pi\sqrt{x(1-x)}\}^{-1}dx$, and none of them depends on $J$. The sup-norm bound transfers to the empirical norm by~\eqref{eq:sup-to-empirical}. Last, for $x\in[0,1]$ we have $2x-1\in[-1,1]$, so $|\phi_k(x)|\leq\sqrt2$ and $\|\phi_k\|_{2,n}\leq\|\phi_k\|_\infty\leq\sqrt2$ for every design in $[0,1]$; repeated design points are allowed. This proves all conclusions of the lemma.
+\end{proof}
+
+The restriction of the design to $[0,1]$ cannot simply be dropped: outside $[-1,1]$, $|T_k(y)|=\cosh(k\operatorname{arccosh}|y|)$ grows exponentially in $k$, so a design concentrated at a fixed point outside $[0,1]$ violates Assumption~\ref{ass:basis} as $J\to\infty$. Data observed on an interval $[a,b]$ are mapped affinely to $[0,1]$ before the dictionary is applied. The constant $K=\sqrt2$ cannot be lowered uniformly over designs, since $\|\phi_k\|_{2,n}=\sqrt2$ for $k\geq1$ when every $x_i=1$.
