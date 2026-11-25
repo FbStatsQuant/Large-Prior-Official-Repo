@@ -1,0 +1,61 @@
+\subsection*{Exact Gibbs sampling for fixed dictionaries}
+
+This subsection describes the sampler used for the Horseshoe fits of Sections~\ref{sec:recovery}--\ref{sec:convergence}: its target, its updates, how the fixed design is exploited, its cost, the checks it was validated by, and timings. Throughout, $X\in\mathbb{R}^{n\times J}$ is the design matrix of a fixed dictionary with $J=J_n$ columns, $G=X^\top X$, and $Y\in\mathbb{R}^n$ is the response.
+
+\paragraph*{Target.} The model is $Y=X\theta+\varepsilon$ with $\varepsilon\sim N_n(0,\sigma^2I)$, and the prior is
+\begin{align*}
+\theta_j\mid\lambda_j,\tau,\sigma^2\sim N(0,\sigma^2\tau^2\lambda_j^2),\qquad \lambda_j\overset{\mathrm{iid}}{\sim}C^+(0,1),\qquad j=1,\ldots,J,
+\end{align*}
+with either $\tau\sim C^+(0,1)$ or $\tau$ fixed, and either $\sigma^2$ fixed or $p(\sigma^2)\propto\sigma^{-2}$. This is the parameterization of the \texttt{horseshoe} package, version 0.2.0 \citep{HorseshoeR}: the noise variance multiplies the prior variance of every coefficient. The simulations of Section~\ref{sec-verify} use the half-Cauchy global scale with $\sigma^2$ fixed at its true value.
+
+\paragraph*{Updates.} Write $w_j=1/(\tau\lambda_j)^2$ and $A=G+\operatorname{diag}(w)$. One sweep performs the following four updates in this order, which are those of the package.
+\begin{enumerate}[label=(\roman*)]
+\item Coefficients: $\theta\mid\cdot\sim N(A^{-1}X^\top Y,\ \sigma^2A^{-1})$. With the Cholesky factorization $A=LL^\top$ and $z\sim N_J(0,I)$, the draw is $\theta=L^{-\top}L^{-1}X^\top Y+\sigma L^{-\top}z$.
+\item Local scales: with $\eta_j=\lambda_j^{-2}$, the full conditional is $p(\eta_j\mid\cdot)\propto(1+\eta_j)^{-1}\exp(-m_j\eta_j)$, where $m_j=\theta_j^2/(2\sigma^2\tau^2)$. The slice update draws $u_j\sim U\{0,1/(1+\eta_j)\}$ and then $\eta_j$ from the exponential distribution with rate $m_j$ truncated to $(0,(1-u_j)/u_j)$. The $J$ updates are conditionally independent.
+\item Global scale, if half-Cauchy: with $\zeta=\tau^{-2}$, the full conditional is $p(\zeta\mid\cdot)\propto\zeta^{(J+1)/2-1}(1+\zeta)^{-1}\exp(-t\zeta)$, where $t=\sum_j\theta_j^2/(2\sigma^2\lambda_j^2)$. The slice update draws $u\sim U\{0,1/(1+\zeta)\}$ and then $\zeta$ from the gamma distribution with shape $(J+1)/2$ and rate $t$ truncated to $(0,(1-u)/u)$.
+\item Noise variance, if not fixed: $\sigma^2\mid\cdot\sim\mathrm{IG}\bigl((n+J)/2,\ \{\|Y-X\theta\|_2^2+\sum_j\theta_j^2/(\tau^2\lambda_j^2)\}/2\bigr)$.
+\end{enumerate}
+The slice updates in (ii) and (iii) are those of \citet{PolsonScottWindle2014}, which the package implements; the truncated draws are by inversion of the distribution function.
+
+\paragraph*{Numerical floors.} The package bounds three quantities away from zero: the exponential distribution function at the truncation point in (ii), at $10^{-4}$; the gamma distribution function at the truncation point in (iii), at $10^{-8}$; and the two terms of the inverse-gamma rate in (iv), at $10^{-8}$. When one of these floors binds, the draw can fall outside its slice, and the stationary distribution of the chain is no longer the posterior. Our implementation removes the floors and evaluates the truncated draws in a numerically stable form (on the log scale for the gamma distribution function), so that every update samples its full conditional. Nothing else differs from the package.
+
+\paragraph*{Exploiting the fixed design.} Only $w$ changes from sweep to sweep; $G$ and $X^\top Y$ are computed once. The factor $L$ of $A=G+\operatorname{diag}(w)$ is computed from a structured form of $G$ whenever one is available. For the dictionaries of Section~\ref{sec-verify} the structure follows from discrete orthogonality.
+\begin{itemize}
+\item Chebyshev dictionary at the Gauss--Chebyshev nodes: $G=nI$. Then $A$ is diagonal, and factorization and solves cost $O(J)$.
+\item Real Fourier dictionary on the equally spaced design $x_i=(i-1)/(n-1)$: the first and last design points coincide modulo one, and the columns are orthogonal on the remaining $n-1$ equally spaced points, so $G=D+uu^\top$ with $D$ diagonal and $u$ the last row of $X$. The Cholesky factor of $D+\operatorname{diag}(w)+uu^\top$ is obtained from that of the diagonal part by one positive rank-one update and is stored as the diagonal plus the strictly lower triangle of a rank-one matrix; forming it and solving with it cost $O(J)$. This is the Cholesky factor of $A$ itself, not a Woodbury-type identity, so the map $z\mapsto\sigma L^{-\top}z$ in (i) is the same as with a dense factorization.
+\item Cubic B-splines: $G_{jk}=0$ for $|j-k|>3$, so $A$ is banded with bandwidth $3$, and banded Cholesky factorization and solves cost $O(J)$.
+\end{itemize}
+Any other design, for example the Chebyshev dictionary on an equally spaced grid, uses a dense Cholesky factorization of $A$ in every sweep. At setup, the structured form is compared with the computed $X^\top X$, entrywise and on the correlation scale with relative tolerance $10^{-10}$, and through a bound on the perturbation of the precision matrix relative to its smallest eigenvalue; if a check fails, the dense factorization is used. For the diagonal and rank-one forms, and for B-spline bands that agree exactly, this check bounds the perturbation of the conditional precision in every sweep; for other designs it is a safeguard rather than a guarantee. In the dense case the sampler also checks, in every sweep, the backward error of the factorization on the drawn vector and the residual of the mean solve, and stops if either exceeds $10^{-8}$.
+
+\paragraph*{Cost.} The package, for $J\leq n$, factorizes the dense $J\times J$ precision matrix in every sweep and recomputes $X^\top Y$, so a sweep costs $O(J^3+nJ)$ operations. With a structured $G$ and $\sigma^2$ fixed, every update above costs $O(J)$, so a sweep costs $O(J)$; when $\sigma^2$ is sampled, the residual sum of squares in (iv) adds $O(nJ)$. Forming $G$ costs $O(nJ^2)$ once, for both implementations. In the dense case our sweep costs $O(J^3)$, like the package.
+
+\paragraph*{Validation.} The implementation was checked on ten designs, all with $J\leq n$: the Fourier, Chebyshev, and B-spline dictionaries of Section~\ref{sec-verify}, the Chebyshev dictionary also on an equally spaced grid, cosine dictionaries on equally spaced grids, including one with $n=30{,}000$ and $J=1362$, and the dictionaries of the sunspot and buoy series of Section~\ref{sec:applications}.
+\begin{itemize}
+\item Linear algebra: on all ten designs, the structured Gram matrix, the posterior mean $A^{-1}X^\top Y$, and the factor $L$ agree with dense computations to a relative error of at most $1.9\times10^{-13}$.
+\item Coefficient draw: at a fixed state, $10^5$ draws of (i), whitened, pass tests of mean, marginal distribution, and covariance on all ten designs.
+\item Agreement with the package: with the floors restored, the sampler run from the same random seed reproduces the package's series of $\theta$, $\tau$, and $\sigma^2$ over $100$ sweeps on all ten designs, with discrepancies of at most $9.4\times10^{-10}$ over the first $70$ sweeps, and the state of the random number generator after $100$ sweeps is identical. Without the floors, it agrees within $1.1\times10^{-13}$ with a copy of the package in which only the floors are removed.
+\item Joint-distribution tests: per-block tests in the sense of \citet{Geweke2004}, on a small design with a diagonal-plus-low-rank Gram matrix, under a half-Cauchy global scale with fixed or random noise variance, give a largest absolute $z$-statistic of $2.56$, below the Bonferroni cutoff of $4.06$. Deliberately introduced errors in the local-scale and global-scale updates are detected with absolute $z$-statistics of $74$ and more.
+\item Reproduction: for $100$ data sets with $n=20{,}000$ and $J=1024$ fitted earlier with the package on a cosine dictionary, the sampler with floors restored reproduces the root mean squared error of every data set to a relative difference of at most $2\times10^{-14}$.
+\end{itemize}
+These checks establish that the chain targets the posterior; they say nothing about how fast it mixes, which is that of the package. In particular, the global scale mixes slowly, as reported in Sections~\ref{sec:recovery} and~\ref{sec:convergence}.
+
+\paragraph*{Timing.} Table~\ref{tab:timing} reports timings at the largest size of Section~\ref{sec:convergence}, $n=20{,}000$ and $J=1024$, on one core of a shared machine, for $1000$ sweeps with a half-Cauchy global scale and fixed noise variance. With a structured Gram matrix, $1000$ sweeps take about a quarter of a second, and the setup takes longer than the sampling. The dense factorization, needed for the Chebyshev dictionary on an equally spaced grid, makes the same sweeps between $180$ and $250$ times slower. No timing of the package itself is available at this size. In the production runs of Section~\ref{sec:convergence}, on one core of a computing cluster, the median wall time of a complete fit of $7{,}000$ sweeps, setup and posterior summaries included, ranged over the four dictionary and design pairs from $0.30$ to $0.35$ seconds at $n=1000$ ($J=125$), from $0.81$ to $1.06$ seconds at $n=10{,}000$ ($J=630$), and from $1.57$ to $1.95$ seconds at $n=20{,}000$ ($J=1024$).
+
+\begin{table}[ht]
+\centering
+\caption{Seconds for $1000$ sweeps of the sampler at $n=20{,}000$ and $J=1024$, on one core of a shared machine; nodes are the Gauss--Chebyshev nodes, and B-splines are cubic. The wall time is that of the whole call, including setup and posterior summaries. The dense case was timed without the per-sweep accuracy check, which adds $O(J^2)$ operations per sweep; with it, the whole call took $59.5$ seconds.}
+\label{tab:timing}
+\begin{tabular}{llrrr}
+\toprule
+Dictionary and design & Form of $G$ & Setup & Sampler & Wall \\
+\midrule
+Fourier, equally spaced grid & diagonal + rank one & 1.52 & 0.26 & 2.55 \\
+Chebyshev, nodes & diagonal & 0.75 & 0.19 & 1.59 \\
+Chebyshev, equally spaced grid & dense & 0.99 & 46.8 & 48.4 \\
+B-spline, equally spaced grid & banded & 0.84 & 0.26 & 1.70 \\
+B-spline, nodes & banded & 0.82 & 0.26 & 1.63 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph*{Scope.} The validated settings are the designs above, a half-Cauchy or fixed global scale, and fixed or Jeffreys noise variance. The truncated half-Cauchy option of the package is not supported. For other designs, in particular numerically collinear or badly scaled ones, the setup checks and the dense accuracy check are safeguards and not a certificate of correctness.

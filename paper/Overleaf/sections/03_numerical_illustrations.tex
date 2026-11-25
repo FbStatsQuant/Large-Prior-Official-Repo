@@ -1,8 +1,34 @@
 \section{Numerical illustrations}\label{sec-verify}
 
-This section illustrates large fixed dictionaries with Horseshoe shrinkage in finite samples. It addresses three questions: how Horseshoe shrinkage compares with least squares and with dense Gaussian shrinkage on the same dictionary (Section~\ref{sec:benchmarks}), whether the empirical error decay reflects the sparsity-driven rates of Section~\ref{sec:method} (Section~\ref{sec:convergence}), and how one fixed rule for the dictionary and the prior performs on real series of very different complexity (Section~\ref{sec:applications}). In every example, once $n$, the dictionary size $J_n$, and the basis are fixed, the dictionary evaluated at the design points is a fixed design matrix with $n$ rows and one column per dictionary element, and posterior computation is that of a Bayesian linear regression under a Horseshoe prior.
+This section illustrates large fixed dictionaries with Horseshoe shrinkage in finite samples. It addresses four questions: how the posterior treats an approximately sparse coefficient vector, with a few large coefficients and many tiny ones (Section~\ref{sec:recovery}), how Horseshoe shrinkage compares with least squares and with dense Gaussian shrinkage on the same dictionary (Section~\ref{sec:benchmarks}), whether the empirical error decay reflects the sparsity-driven rates of Section~\ref{sec:method} (Section~\ref{sec:convergence}), and how one fixed rule for the dictionary and the prior performs on real series of very different complexity (Section~\ref{sec:applications}). In every example, once $n$, the dictionary size $J_n$, and the basis are fixed, the dictionary evaluated at the design points is a fixed design matrix with $n$ rows and one column per dictionary element, and posterior computation is that of a Bayesian linear regression under a Horseshoe prior. Because this matrix does not change during sampling, the Gibbs sampler can exploit its structure; Section~\ref{sec:computation} describes the sampler used in Sections~\ref{sec:recovery}--\ref{sec:convergence}.
 
-The Horseshoe fits of Sections~\ref{sec:benchmarks} and~\ref{sec:convergence} use our implementation of the Gibbs sampler of the \texttt{horseshoe} package in \texttt{R} \citep{HorseshoeR}. It runs the same updates, with a half-Cauchy prior on the global scale and the noise variance fixed at its true value, and differs from the package in two respects. First, the coefficient draw exploits the structure of $X^\top X$, which is diagonal for the Chebyshev dictionary at Gauss--Chebyshev nodes, diagonal plus a rank-one term for the Fourier dictionary on an equally spaced grid, and banded for cubic B-splines, so that a sweep costs $O(J_n)$ operations after a one-time setup instead of a dense $J_n\times J_n$ solve. Second, the package's numerical floors on the local scales, the global scale, and the noise variance are removed, so that the chain targets the exact posterior. With the floors restored, the implementation reproduces the package draw for draw from the same random seed, up to floating-point round-off, and Geweke tests of the joint distribution pass without them. Section~\ref{sec:applications} uses the package itself.
+\subsection{Recovery of an approximately sparse coefficient vector}\label{sec:recovery}
+
+Several of the examples below use the Chebyshev dictionary
+\begin{align*}
+\xi_1(x)=1,\qquad \xi_{k+1}(x)=\sqrt2\,T_k(2x-1),\quad k=1,\ldots,J_n-1,
+\end{align*}
+where $T_k$ is the Chebyshev polynomial of the first kind, $T_k(\cos t)=\cos(kt)$. Under the change of variables $x=\{1+\cos(2\pi u)\}/2$ the Chebyshev functions become $\sqrt2\cos(2\pi ku)$, so this dictionary is the non-periodic counterpart of the Fourier dictionary. On the Gauss--Chebyshev nodes $x_i=\{1+\cos(\pi(i-\tfrac12)/n)\}/2$, $i=1,\ldots,n$, the Chebyshev columns are orthonormal in $\langle\cdot,\cdot\rangle_n$ for $J_n\leq n$, so that $X^\top X=nI$.
+
+We first take a regression function in the span of the dictionary. With $n=2000$ nodes and $J_n=1000$ Chebyshev functions, let $f_0=\sum_{j=1}^{J_n}\theta_{0j}\xi_j$, where the first twenty coefficients are
+\begin{align*}
+&1.2,\ 2.1,\ 0.8,\ 1.5,\ 2.4,\ 0.6,\ 1.9,\ 1.1,\ 2.3,\ 0.9,\\
+&1.7,\ 0.5,\ 2.0,\ 1.4,\ 0.7,\ 2.5,\ 1.0,\ 1.8,\ 1.3,\ 1.6,
+\end{align*}
+and the remaining $980$ all equal $0.001$. Observations follow model~\eqref{eq:model} with $\sigma=0.2$. Because $X^\top X=nI$, the least-squares estimate of each coefficient has standard deviation $\sigma/\sqrt n\approx0.0045$: every large coefficient exceeds it by a factor of more than $100$, and each tail coefficient is about a fifth of it. The coefficient vector is therefore approximately, but not exactly, sparse: no tail coefficient is detectable on its own, yet none is zero. This is the situation that Assumption~\ref{ass:sparse} formalizes, with a few coefficients above the negligibility threshold and the rest small but not zero.
+
+We compare the coefficientwise posterior mean under the Horseshoe, with a half-Cauchy global scale, $\sigma^2$ known, and $5{,}000$ draws after $2{,}000$ burn-in iterations, with ordinary least squares, the estimate without a prior.
+
+Figure~\ref{fig:recovery} shows both estimates for one simulated data set, and all numbers below refer to this data set. On the twenty large coefficients the two estimates nearly coincide: the Horseshoe leaves them essentially unshrunk, and the $\ell_2$ error over these coefficients is $0.0168$ for both. The estimates differ on the tail. Least squares estimates each tail coefficient with noise more than four times its size, so its tail estimates reach $0.0145$ in absolute value and have mean absolute value $0.0038$, against the true $0.001$. The Horseshoe shrinks them toward zero, to a mean absolute value of $0.00037$ and a maximum of $0.0073$. The $\ell_2$ error over the tail is $0.0345$ for the Horseshoe and $0.1435$ for least squares, and over all coefficients it is $0.0383$ and $0.1445$. Because $X^\top X=nI$, the squared $\ell_2$ coefficient error equals the design-point mean squared error, which is $1.47\times10^{-3}$ for the Horseshoe and $20.9\times10^{-3}$ for least squares, about $14$ times larger. For reference, an estimator told which coefficients form the tail and setting them to zero would have tail error $\sqrt{980}\times0.001\approx0.031$; the Horseshoe comes close to this without that information.
+
+The $95\%$ equal-tailed marginal credible intervals of the Horseshoe cover all twenty large coefficients, as do the least-squares $t$-intervals, and the mean widths are similar, $0.0176$ and $0.0185$. On the tail the Horseshoe intervals are three times narrower, with mean width $0.0061$; they contain the true value for $970$ of the $980$ tail coefficients and contain zero for all of them, while the $t$-intervals contain the true value for $937$. The tail is therefore shrunk collectively rather than detected coefficient by coefficient, as its size relative to the noise suggests. The coefficients mix well, with effective sample sizes of at least $4{,}556$ for each of the twenty large coefficients; the global scale mixes slowly, with an effective sample size of $48$ for $\log\tau$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{recovery/coef_recovery.pdf}
+\caption{Coefficient recovery with the Chebyshev dictionary, $n=2000$, $J_n=1000$, $\sigma=0.2$, one simulated data set. (a) All $1000$ coefficients. (b) The first $60$. (c) Tail coefficients $k=21,\ldots,120$, whose true value is $0.001$ (horizontal line). Open circles: true coefficients; blue: Horseshoe posterior means with $95\%$ credible intervals; orange: least squares.}
+\label{fig:recovery}
+\end{figure}
 
 \subsection{Finite-sample comparison with least squares and ridge regression}\label{sec:benchmarks}
 
@@ -13,11 +39,7 @@ f_2(x)&=|\sin(1.3\pi(x-0.35))|^3.
 \end{align*}
 The factor $|\sin(c\pi(x-x_0))|$, with $c=1$ for $f_1$ and $c=1.3$ for $f_2$, is smooth on $[0,1]$ except for a cusp at $x=x_0$, and raising it to an odd power $p$ makes the function $C^{p-1,1}$ at the cusp and $C^\infty$ elsewhere. Under the integer Lipschitz--H\"older convention $C^m=C^{m-1,1}$, $f_1$ has regularity $\alpha=1$ and $f_2$ has regularity $\alpha=3$. The target $f_1$ is $1$-periodic. The frequency $1.3\pi$ makes $f_2$ non-periodic: $f_2(0)\approx0.97$ and $f_2(1)\approx0.10$, so its periodic extension is discontinuous.
 
-Each target is paired with a global dictionary that matches its boundary behavior. For $f_1$ we use the real Fourier dictionary of period one, consisting of the constant and the pairs $\cos(2\pi kx)$, $\sin(2\pi kx)$, $k=1,2,\ldots$, truncated to $J_n$ columns, on the equally spaced design $x_i=(i-1)/(n-1)$. For $f_2$ we use the Chebyshev dictionary
-\begin{align*}
-\xi_1(x)=1,\qquad \xi_{k+1}(x)=\sqrt2\,T_k(2x-1),\quad k=1,\ldots,J_n-1,
-\end{align*}
-where $T_k$ is the Chebyshev polynomial of the first kind, $T_k(\cos t)=\cos(kt)$. Under the change of variables $x=\{1+\cos(2\pi u)\}/2$ the Chebyshev functions become $\sqrt2\cos(2\pi ku)$, so this dictionary is the non-periodic counterpart of the Fourier dictionary. The design for $f_2$ consists of the Gauss--Chebyshev nodes $x_i=\{1+\cos(\pi(i-\tfrac12)/n)\}/2$, $i=1,\ldots,n$, at which the Chebyshev columns are orthonormal in $\langle\cdot,\cdot\rangle_n$ for $J_n\leq n$. Observations follow the Gaussian regression model~\eqref{eq:model} with noise standard deviations $\sigma=0.15$ for $f_1$ and $\sigma=0.20$ for $f_2$, and the noise variance is treated as known.
+Each target is paired with a global dictionary that matches its boundary behavior. For $f_1$ we use the real Fourier dictionary of period one, consisting of the constant and the pairs $\cos(2\pi kx)$, $\sin(2\pi kx)$, $k=1,2,\ldots$, truncated to $J_n$ columns, on the equally spaced design $x_i=(i-1)/(n-1)$. For $f_2$ we use the Chebyshev dictionary of Section~\ref{sec:recovery} on the Gauss--Chebyshev nodes. Observations follow the Gaussian regression model~\eqref{eq:model} with noise standard deviations $\sigma=0.15$ for $f_1$ and $\sigma=0.20$ for $f_2$, and the noise variance is treated as known.
 
 We compare three estimators on the same dictionary and the same data. The first is ordinary least squares, $\widehat\theta_{\mathrm{OLS}}=(X^\top X)^{-1}X^\top Y$, with $X\in\mathbb{R}^{n\times J_n}$ the design matrix: it uses no prior and no shrinkage, and it is the Bayesian answer under a flat prior. The second is ridge regression,
 \[
@@ -75,7 +97,6 @@ On the $10^3\times\operatorname{MSE}$ scale of Table~\ref{tab:mse}, the least-sq
 \end{figure}
 
 Figure~\ref{fig:hs-fits} shows the Horseshoe fits at $J_n=\lfloor n^{0.7}\rfloor=125$ for one data set, with design-point MSE values, multiplied by $10^3$, of $0.247$ for $f_1$ and $0.512$ for $f_2$. Both posterior means follow the targets closely; the visible departures are small oscillations and, for $f_1$, a rounded cusp.
-
 
 \subsection{Empirical scaling of point estimators}\label{sec:convergence}
 
@@ -171,4 +192,10 @@ Figure~\ref{fig:applications} shows the three fits. In each case the posterior m
 \end{itemize}
 No series required its own choice of the number of terms: the dictionary size and the global scale follow the same rule throughout, and the shrinkage prior selects the effective complexity of each fit.
 
+\subsection{Computation}\label{sec:computation}
 
+The Horseshoe fits of Sections~\ref{sec:recovery}--\ref{sec:convergence} use our implementation of the Gibbs sampler of the \texttt{horseshoe} package in \texttt{R} \citep{HorseshoeR}, with a half-Cauchy prior on the global scale and the noise variance fixed at its true value. Each sweep draws the coefficients from their Gaussian full conditional and then updates the local and global scales. The coefficient draw dominates the cost: its precision matrix is $X^\top X$ plus a diagonal matrix that depends on the current scales, so a generic implementation factorizes a dense $J_n\times J_n$ matrix in every sweep, at a cost of order $J_n^3$ operations.
+
+Under a large series prior, the dictionary and the design are fixed, so $X^\top X$ is computed once, and for the dictionaries of this section it has a simple structure: it is diagonal for the Chebyshev dictionary at Gauss--Chebyshev nodes, diagonal plus a rank-one term for the Fourier dictionary on an equally spaced grid, and banded for cubic B-splines. Only the diagonal prior term changes from sweep to sweep, so the precision matrix keeps the same structure, and the coefficient draw costs $O(J_n)$ operations after a one-time setup. At the largest size of Section~\ref{sec:convergence}, $n=20{,}000$ and $J_n=1024$, a complete fit of $7{,}000$ sweeps took a median of under $2$ seconds of wall time, setup included, for each of the four dictionary and design pairs. The structure is verified numerically against $X^\top X$ at setup, and the sampler falls back to the dense computation when the check fails.
+
+The implementation runs the same updates as the package and differs from it only in the linear algebra and in one further respect: the package's numerical floors on the local scales, the global scale, and the noise variance are removed, so that the chain targets the exact posterior. With the floors restored, it reproduces the package draw for draw from the same random seed, up to floating-point round-off; without them, per-block Geweke tests of the joint distribution pass. The algorithm, its cost, the validation, and timings are given in the appendix section on exact Gibbs sampling for fixed dictionaries. The fits of Section~\ref{sec:applications} use the package itself.
