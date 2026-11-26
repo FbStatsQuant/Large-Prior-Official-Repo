@@ -1,6 +1,6 @@
 # The model behind the applications
 
-This is the exact model that `code/` fits in the three real-data examples (Section 3.3). All three use the same model. They differ only in the data and in the choice between two dictionaries.
+This is the exact model that `code/` fits in the three real-data examples (Section 3.4). All three use the same model. They differ only in the data and in the choice between two dictionaries.
 
 ## 1. Model
 

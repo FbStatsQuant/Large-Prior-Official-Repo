@@ -1,6 +1,6 @@
 # Real-data applications
 
-*Section 3.3 · Figure 2*
+*Section 3.4 · Figure 4*
 
 This folder applies the same large series prior to three noisy public series.
 
@@ -41,12 +41,12 @@ applications/
 │   ├── prep_*.R           download / verify raw data, write data/<name>.csv
 │   ├── fourier_hs.R       the two dictionaries and the Horseshoe fit
 │   ├── run_applications.R fit, summarize, write output/
-│   ├── make_figure.R      Figure 2
+│   ├── make_figure.R      Figure 4
 │   └── common.R           paths and checksum helpers
 ├── data/
 │   ├── buoy.csv           prepared wave-height series
 │   └── raw/               NOAA buoy files, plus SHA256SUMS.txt for all three sources
-└── reference_outputs/     summaries of the paper run, the full buoy fit, and Figure 2
+└── reference_outputs/     summaries of the paper run, the full buoy fit, and Figure 4
 ```
 
 The reference summaries record n, the number of columns, τ, E[σ | y], the active frequencies and the input hash. A rerun of the buoy example reproduces `reference_outputs/buoy_fit.csv` byte for byte.
