@@ -18,7 +18,7 @@ On the computing side, a fixed dictionary means a fixed design matrix, and for t
 
 *Figure 4 of the paper: posterior means (navy) and 95% bands for the three real-data examples, all fitted with the same rules.*
 
-## What's here
+## Our work
 
 Every figure and table of the paper comes from a script in this repository.
 
