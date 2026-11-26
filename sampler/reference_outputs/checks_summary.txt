@@ -1,0 +1,35 @@
+Results of the default runs of the four checks in ../checks/ (Rscript <script>, run from checks/, one core).
+R 4.6.0, Rcpp 1.1.2, RcppArmadillo 15.6.0.1, horseshoe 0.2.0.
+
+check_linear_algebra.R                                                                            PASS
+  Six designs, n = 1500, J = 167: Fourier, equispaced (diagonal + rank one); Chebyshev, Gauss-Chebyshev nodes (diagonal);
+  Chebyshev, equispaced (dense); cubic B-splines, equispaced and nodes (banded); cosine, equispaced (diagonal + rank two).
+  Gram form found = expected on all six.
+  Largest relative error (Gram form vs crossprod(X), posterior mean vs solve(), Cholesky factor vs chol()): 3.3e-14 (rule <= 1e-10).
+  Coefficient draw, 1e5 whitened draws at a fixed state, on each design:
+    max_j |mean z_j| sqrt(M) 3.83 (Bonferroni cutoff 4.53); Kolmogorov-Smirnov p-value 0.53 (rule > 0.001);
+    ||cov(z) - I||_F / sqrt(J(J+1)/M) 0.995 (rule <= 1.1); max_ij |cov(z) - I|_ij / sd_ij 3.73 (Bonferroni cutoff 5.39).
+
+check_package_agreement.R                                                                         PASS
+  hs_fast(floor = "package") vs horseshoe::horseshoe() 0.2.0, the same six designs, 100 sweeps from set.seed(606),
+  half-Cauchy global scale, Sigma2 = 0.01 fixed.
+  Largest relative difference of the theta, tau and sigma^2 series over the first 70 sweeps: 2.7e-9 (rule <= 1e-8).
+  Over all 100 sweeps: 4.1e-8 (reported, no rule). Final RNG state identical on 6 of 6 designs.
+
+check_geweke.R (the paper's run: 1e6 replicates per clean case, 5e5 for 5 sweeps, 2e5 per introduced error)    PASS
+  Cosine design, n = 40, J = 8 (diagonal + rank two). Cutoff 4.06 (Bonferroni, family-wise 1%, N = 203 test functions).
+  case                                     M        max|z|
+  random sigma^2, sigma^2 block            1000000    1.80
+  random sigma^2, tau block                1000000    0.27
+  random sigma^2, full sweep               1000000    2.09
+  random sigma^2, 5 full sweeps             500000    2.41
+  fixed sigma^2, tau block                 1000000    1.35
+  fixed sigma^2, full sweep                1000000    2.56
+  local-scale error, full sweep             200000  124.65   detected
+  global-scale error, full sweep            200000   74.05   detected
+  global-scale error, fixed sigma^2         200000   75.29   detected
+  Clean cases: largest |z| 2.56, 6 of 6 pass. Introduced errors: smallest |z| 74.05, 3 of 3 detected.
+
+check_reproduction.R (seeds 1-5; --seeds=100 runs all 100)                                        PASS
+  n = 20,000, cosine dictionary with 1024 frequencies, floor = "package", against the package's earlier RMSEs.
+  Largest relative difference of the RMSE over seeds 1-5: 1.8e-14 (rule <= 1e-6).

@@ -1,0 +1,7 @@
+dictionary,design,n,J,sweeps,gram_form,accuracy_check,setup_s,sampler_s,wall_s,note
+Fourier,equispaced grid,20000,1024,1000,diagonal + rank one,not applicable,1.52,0.26,2.55,"Table 3 of the paper; one core of a shared machine; timings depend on the machine and its load"
+Chebyshev,Gauss-Chebyshev nodes,20000,1024,1000,diagonal,not applicable,0.75,0.19,1.59,"Table 3 of the paper; one core of a shared machine; timings depend on the machine and its load"
+Chebyshev,equispaced grid,20000,1024,1000,dense,off,0.99,46.8,48.4,"Table 3 of the paper, timed without the per-sweep accuracy check; one core of a shared machine; timings depend on the machine and its load"
+Chebyshev,equispaced grid,20000,1024,1000,dense,on,NA,NA,59.5,"caption of Table 3: the whole call with the per-sweep accuracy check on (a separate run, set.seed(606); only the wall time is reported); one core of a shared machine; timings depend on the machine and its load"
+B-spline,equispaced grid,20000,1024,1000,banded,not applicable,0.84,0.26,1.70,"Table 3 of the paper; one core of a shared machine; timings depend on the machine and its load"
+B-spline,Gauss-Chebyshev nodes,20000,1024,1000,banded,not applicable,0.82,0.26,1.63,"Table 3 of the paper; one core of a shared machine; timings depend on the machine and its load"
