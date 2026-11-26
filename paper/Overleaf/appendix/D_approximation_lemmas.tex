@@ -491,7 +491,7 @@ a smooth, even, $1$-periodic map of $\mathbb R$ \emph{onto} $[0,1]$. Since $2x(u
 \phi_k(x(u))=\sqrt2\cos(2\pi ku)=\psi_{2k-1}(u),\quad k\geq1:
 \label{eq:cheb-atoms}
 \end{align}
-the fold turns each Chebyshev atom into the cosine atom of the same frequency. Its derivatives are $x^{(j)}(u)=\tfrac12(2\pi)^j\cos(2\pi u+j\pi/2)$, so
+the fold turns each Chebyshev atom into the cosine atom of the same frequency. Its derivatives of order $j\geq1$ are $x^{(j)}(u)=\tfrac12(2\pi)^j\cos(2\pi u+j\pi/2)$, so
 \begin{align}
 |x^{(j)}(u)|\leq\tfrac12(2\pi)^j\quad(j\geq1),
 \qquad
@@ -656,7 +656,7 @@ We now show that only cosine products appear. The expansion~\eqref{eq:tensor-coe
 =\sum_{\boldsymbol\nu}\left\{\prod_{k=1}^d\Lambda^{(2m_k-1)}_{j(\nu_k)}\right\}
 \left\{\int_{\mathbb T^d}g(u)\Psi_{\boldsymbol\nu}(u)\,du\right\}\Psi_{\boldsymbol\nu},
 \end{align*}
-the sum running over the multi-indices $\boldsymbol\nu$ whose $k$th entry is an atom of frequency at most $2\lfloor m_k/2\rfloor-1$ (frequency $0$ when $m_k=1$). Suppose that $\nu_i$ is a sine index for some $i$. The reflection $u_i\mapsto-u_i$ preserves the Lebesgue measure of $\mathbb T^d$, leaves $g$ unchanged, and changes the sign of $\Psi_{\boldsymbol\nu}$, so $\int g\Psi_{\boldsymbol\nu}=-\int g\Psi_{\boldsymbol\nu}=0$. Only the products of constant and cosine atoms remain, that is, the functions $\prod_k\psi^{\mathrm c}_{j_k}(u_k)$ with $0\leq j_k\leq\max\{0,2\lfloor m_k/2\rfloor-1\}\leq m_k-1$, and coordinate $k$ contributes at most $\max\{1,2\lfloor m_k/2\rfloor\}\leq m_k$ of them. Evenness in each coordinate separately is needed here. Invariance under the single inversion $u\mapsto-u$ would not be enough: the function $\sin(2\pi u_1)\sin(2\pi u_2)$ has it, is reproduced by $\mathcal P_{\boldsymbol m}$ when $m_1,m_2\geq2$, and is not a function of $X(u)$.
+the sum running over the multi-indices $\boldsymbol\nu$ whose $k$th entry is an atom of frequency at most $2\lfloor m_k/2\rfloor-1$ (frequency $0$ when $m_k=1$). Suppose that $\nu_i$ is a sine index for some $i$. The reflection $u_i\mapsto-u_i$ preserves the Lebesgue measure of $\mathbb T^d$, leaves $g$ unchanged, and changes the sign of $\Psi_{\boldsymbol\nu}$, so $\int g\Psi_{\boldsymbol\nu}=-\int g\Psi_{\boldsymbol\nu}=0$ (by Fubini, the iterated integral equals the integral over $\mathbb T^d$). Only the products of constant and cosine atoms remain, that is, the functions $\prod_k\psi^{\mathrm c}_{j_k}(u_k)$ with $0\leq j_k\leq\max\{0,2\lfloor m_k/2\rfloor-1\}\leq m_k-1$, and coordinate $k$ contributes at most $\max\{1,2\lfloor m_k/2\rfloor\}\leq m_k$ of them. Evenness in each coordinate separately is needed here. Invariance under the single inversion $u\mapsto-u$ would not be enough: the function $\sin(2\pi u_1)\sin(2\pi u_2)$ has it, is reproduced by $\mathcal P_{\boldsymbol m}$ when $m_1,m_2\geq2$, and is not a function of $X(u)$.
 
 Finally, we fold back. For $0\leq j_k\leq m_k-1$ define
 \begin{align*}
