@@ -1,55 +1,65 @@
-# Benchmarks: Horseshoe vs. ridge
+# Benchmarks: least squares, ridge and the Horseshoe
 
-*Section 3.1 · Figure 1 · Table 1*
+*Section 3.2 · Table 1 · Figure 2*
 
-We fit the same Fourier dictionary two ways, with a Horseshoe prior and with cross-validated ridge, on three periodic test functions. Both fits see the same basis, so any difference comes from the regularization alone.
+This folder compares three estimators on the same dictionary and the same data: ordinary least squares (OLS), ridge regression with the penalty chosen by cross-validation, and the Horseshoe posterior mean. Every estimator sees the same design matrix, so any difference comes from the prior alone. The script reproduces Table 1 (design-point MSE for J = 140, 160, …, 300) and the two fits of Figure 2 (J = ⌊n^0.7⌋ = 125).
 
-| | Target | Noise sd |
-|---|---|---|
-| f1 | 0.5 \|sin(π(x − 0.5))\| | 0.15 |
-| f2 | \|sin(π(x − 0.3))\|³ + 0.7 \|sin(π(x − 0.7))\|³ | 0.07 |
-| f3 | \|sin(π(x − 0.2))\|⁵ + \|sin(π(x − 0.5))\|⁵ + 0.6 \|sin(π(x − 0.9))\|⁵ | 0.10 |
+| | Target | Dictionary | Design | Noise sd |
+|---|---|---|---|---|
+| f1 | ½ \|sin(π(x − 0.5))\| | real Fourier, period 1 | equally spaced, xᵢ = (i − 1)/(n − 1) | 0.15 |
+| f2 | \|sin(1.3π(x − 0.35))\|³ | Chebyshev | Gauss–Chebyshev nodes | 0.20 |
+
+The estimators:
+
+- **OLS**: QR least squares on the J columns (full column rank is asserted).
+- **Ridge**: minimizes ‖y − Xθ‖² + λ‖θ‖² with the constant coefficient penalized too. λ is chosen by 20-fold cross-validation over 160 values.
+- **Horseshoe**: half-Cauchy global scale, noise variance known, posterior mean, computed with the exact sampler `hs_fast()` of [`../../sampler/`](../../sampler).
+
+## Running it
+
+From this folder:
+
+```sh
+Rscript benchmarks.R                            # the paper's run: results/
+Rscript make_figure.R                           # Figure 2 from results/: figures/hs_fits.{pdf,png}
+Rscript make_figure.R --from=reference_outputs  # the same figure from the shipped reference run, no fitting
+Rscript benchmarks.R --quick                    # smoke test, writes quick_results/
+```
+
+The paper's run takes about 30 seconds (18 Horseshoe fits and two display fits); the first run also compiles the C++ sampler, which takes a few seconds more. `--quick` takes a few seconds. `--out=DIR` writes to `DIR` instead. The scripts need R with Rcpp, RcppArmadillo, digest and a C++ compiler (see [`../../sampler/`](../../sampler)), and cairo graphics for the figure.
+
+## Settings, as in the paper
+
+- n = 1000; J = 140, 160, …, 300 for Table 1; J = 125 for Figure 2.
+- One simulated response per target, `set.seed(1); z <- rnorm(n)`, and y = f(x) + σz. The same z serves both targets, every J and every method.
+- Horseshoe: 2000 burn-in sweeps, 5000 saved sweeps, exact floor, `set.seed(1001)` just before every `hs_fast()` call.
+- Ridge folds: `make_cv_folds(n, 20, 2001)`, shared by both targets and every J.
+- Error: the design-point MSE, (1/n) Σᵢ (f̂(xᵢ) − f(xᵢ))². The tables show MSE × 1000.
+
+`--quick` uses only J = 140 and 160, 200 burn-in and 500 saved sweeps. Its numbers are not those of the paper.
 
 ## Files
 
 ```
 benchmarks/
-├── function_1.R  function_2.R  function_3.R   one target each: simulate, fit, write results
-├── run_all.R                                  runs the three in turn
-├── trend_plots.R                              draws Figure 1 from saved results (no MCMC)
-├── _ridge_hs_common.R                         shared code: dictionary, both fits, tables, plots
-└── reference_outputs/                         outputs of the paper run (see below)
+├── benchmarks.R         the three fits for both targets, Table 1, and the display fits
+├── ridge.R              the cross-validated ridge (make_cv_folds(), fit_ridge_fourier())
+├── make_figure.R        Figure 2 from display_points.csv and display_metrics.csv only
+└── reference_outputs/   a run at the paper's settings (see below)
 ```
 
-## Running it
-
-```sh
-Rscript run_all.R          # writes results/function_{1,2,3}/   (30–60 min per function)
-Rscript trend_plots.R      # writes trend_plots/                (seconds)
-```
-
-To redraw Figure 1 without the MCMC, copy `reference_outputs/` to `results/` and run `trend_plots.R`. The paper's figure is `trend_plots/ridge_hs_trend_comparison_paper.jpg`, and it comes out byte-identical to the one in the manuscript.
-
-`Rscript run_all.R --quick` is a fast smoke test with a short chain and small dictionaries. It writes to `quick_results/` so it never overwrites the full run. A single target can be run with `Rscript function_2.R`. Other options:
-
-```
---nmc=2000  --burn=500  --fit-J=125  --J-grid=140,160,180  --skip-grid  --output-root=/path/to/results
-```
-
-## Settings (as in the paper)
-
-- n = 1000 equally spaced points, with one simulated response per target (seed 1991). That response is reused for every J.
-- Figure 1 uses J = ⌊n^0.7⌋ = 125. Table 1 uses J = 140, 160, …, 300. J is the number of columns of the real Fourier dictionary: the constant, sine–cosine pairs, and one extra cosine when J is even.
-- Horseshoe: σ known, half-Cauchy global scale, 1000 burn-in iterations and then 5000 draws. The estimate is the coefficientwise posterior mean.
-- Ridge: minimizes RSS + λ‖θ‖², with the constant term also penalized. λ is chosen by 20-fold CV over 160 values.
+Running the scripts creates `results/` (or `quick_results/`) and `figures/` next to them. These are not tracked by git.
 
 ## Outputs
 
-Each `results/function_k/` ends up with:
+- `mse_long.csv`: one row per target, dictionary, J and method (OLS, Ridge, Horseshoe): `mse` and `mse_x1000`. 54 rows.
+- `mse_table.csv`: the layout of Table 1. One row per target and method, one column per J, in MSE × 1000.
+- `table_rows.tex`: the rows of Table 1 as LaTeX, with three decimals and the lowest value in each column of each target in bold.
+- `display_points.csv`: the 1000 design points of each panel of Figure 2: `panel` (`a` is f1 with the Fourier dictionary, `b` is f2 with the Chebyshev dictionary), `x`, `truth` and `fitted`, the Horseshoe posterior mean.
+- `display_metrics.csv`: the MSE of the two display fits (`mse` and `mse_x1000`), the numbers printed inside Figure 2.
+- `summary.txt`: the settings and seeds, the rows of Table 1, the ridge penalty chosen in each fit, the Horseshoe diagnostics of each fit (the Gram form found by `hs_fast()`, effective sample sizes, split R-hat, Monte Carlo error) and the R session.
+- `figures/hs_fits.pdf` and `.png`: Figure 2.
 
-- the fitted curves: `f*_predictions.csv`, with the plots as JPG and PDF;
-- the error tables: `f*_display_metrics.csv` (Figure 1's MSE values), `f*_mse_long.csv` and `f*_mse_table.csv`;
-- `f*_table_rows.tex`: Table 1's rows, ready to paste into LaTeX;
-- `f*_summary.txt`: the exact settings and `sessionInfo()`.
+## Reference outputs
 
-`reference_outputs/` holds these files from the paper run. All 54 entries of Table 1 and the six MSE values quoted under Figure 1 match them. `reference_outputs/paper_figure_data/` combines the three functions in one place.
+`reference_outputs/` holds the outputs of `Rscript benchmarks.R` at the paper's settings: the five CSV and LaTeX files and `summary.txt` above, and the figure as `hs_fits.png`. They agree with the run reported in the paper to rounding error (relative differences below 1e-13, on a different machine and R version); all 54 entries of Table 1 and the two values in Figure 2 match as printed. `SHA256SUMS.txt` lists their hashes (`sha256sum -c SHA256SUMS.txt` inside that folder). A rerun gives the same MSE values to rounding error; the timings and the R session lines in `summary.txt` differ. To redraw Figure 2 without fitting anything, run `Rscript make_figure.R --from=reference_outputs`. It writes to `figures/`, so the reference folder is never overwritten.

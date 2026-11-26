@@ -1,0 +1,88 @@
+Benchmark of OLS, cross-validated ridge and the Horseshoe (paper Section 3.2, Table 1 and Figure 2)
+
+Settings
+  n = 1000; J = 140, 160, 180, 200, 220, 240, 260, 280, 300; display fits at J = floor(n^0.7) = 125
+  f1: Fourier dictionary, equispaced design, noise sd 0.15;  f2: Chebyshev dictionary, Gauss-Chebyshev nodes, noise sd 0.20
+  data: z = {set.seed(1); rnorm(n)}, shared by both targets, every J and every method; y = f(x) + sigma z
+  Horseshoe: half-Cauchy scale (start 1), sigma known, 2000 burn-in and 5000 saved sweeps, floor exact, structure auto; set.seed(1001) just before every hs_fast()
+  ridge: minimizes ||y - X b||^2 + lambda ||b||^2 (constant penalized); 20-fold CV over 160 penalties; folds from make_cv_folds(n, 20, 2001)
+  OLS: QR, full column rank asserted
+  error: design-point MSE, (1/n) sum_i (f_hat(x_i) - f(x_i))^2; tables show MSE x 1000
+  mode: paper settings
+
+MSE x 1000 (rows of Table 1)
+  f1  OLS          2.582   2.986   3.584   3.930   4.606   5.034   5.646   6.327   6.840
+  f1  Ridge        2.419   2.770   3.292   3.585   4.158   4.508   5.012   5.551   5.957
+  f1  Horseshoe    0.261   0.264   0.305   0.282   0.307   0.317   0.326   0.325   0.339
+  f2  OLS          4.325   5.368   6.313   6.953   8.233   9.084  10.088  10.989  12.128
+  f2  Ridge        4.258   5.263   6.176   6.795   8.011   8.820   9.773  10.615  11.686
+  f2  Horseshoe    0.532   0.655   0.709   0.703   0.757   0.810   0.848   0.835   0.882
+  columns: J = 140 160 180 200 220 240 260 280 300
+
+Figure 2: Horseshoe fits at J = 125, MSE x 1000
+  f1 (fourier): 0.247
+  f2 (chebyshev): 0.512
+
+Ridge penalties chosen
+  f1  J=140  lambda (on the RSS scale) 36.8161, per observation 0.0368161; CV mean squared error 0.0290602; at an end of the penalty grid: no
+  f1  J=160  lambda (on the RSS scale) 36.8161, per observation 0.0368161; CV mean squared error 0.0299033; at an end of the penalty grid: no
+  f1  J=180  lambda (on the RSS scale) 43.8036, per observation 0.0438036; CV mean squared error 0.0304197; at an end of the penalty grid: no
+  f1  J=200  lambda (on the RSS scale) 43.8036, per observation 0.0438036; CV mean squared error 0.0313689; at an end of the penalty grid: no
+  f1  J=220  lambda (on the RSS scale) 52.1172, per observation 0.0521172; CV mean squared error 0.0318143; at an end of the penalty grid: no
+  f1  J=240  lambda (on the RSS scale) 52.1172, per observation 0.0521172; CV mean squared error 0.0323993; at an end of the penalty grid: no
+  f1  J=260  lambda (on the RSS scale) 62.0087, per observation 0.0620087; CV mean squared error 0.0327623; at an end of the penalty grid: no
+  f1  J=280  lambda (on the RSS scale) 62.0087, per observation 0.0620087; CV mean squared error 0.0333689; at an end of the penalty grid: no
+  f1  J=300  lambda (on the RSS scale) 62.0087, per observation 0.0620087; CV mean squared error 0.0339936; at an end of the penalty grid: no
+  f2  J=140  lambda (on the RSS scale) 18.3718, per observation 0.0183718; CV mean squared error 0.0524044; at an end of the penalty grid: no
+  f2  J=160  lambda (on the RSS scale) 18.3718, per observation 0.0183718; CV mean squared error 0.0536193; at an end of the penalty grid: no
+  f2  J=180  lambda (on the RSS scale) 21.8586, per observation 0.0218586; CV mean squared error 0.0548586; at an end of the penalty grid: no
+  f2  J=200  lambda (on the RSS scale) 26.0072, per observation 0.0260072; CV mean squared error 0.0567688; at an end of the penalty grid: no
+  f2  J=220  lambda (on the RSS scale) 26.0072, per observation 0.0260072; CV mean squared error 0.057702; at an end of the penalty grid: no
+  f2  J=240  lambda (on the RSS scale) 26.0072, per observation 0.0260072; CV mean squared error 0.058657; at an end of the penalty grid: no
+  f2  J=260  lambda (on the RSS scale) 26.0072, per observation 0.0260072; CV mean squared error 0.0598937; at an end of the penalty grid: no
+  f2  J=280  lambda (on the RSS scale) 30.9433, per observation 0.0309433; CV mean squared error 0.0618764; at an end of the penalty grid: no
+  f2  J=300  lambda (on the RSS scale) 30.9433, per observation 0.0309433; CV mean squared error 0.0629799; at an end of the penalty grid: no
+
+Horseshoe diagnostics per fit (design-point MSE; ESS = effective sample size; Rhat = single-chain split R-hat of the fitted value at five design points)
+  f1  J=140  Horseshoe: Gram form lowrank tau_hat 0.0041227  ESS(log tau)    22  min ESS(f at 5 points)   551  max split-Rhat 1.0190  MCSE/RMSE 0.0398  seconds 0.7
+  f1  J=160  Horseshoe: Gram form lowrank tau_hat 0.0041326  ESS(log tau)    39  min ESS(f at 5 points)   576  max split-Rhat 1.0093  MCSE/RMSE 0.0436  seconds 0.4
+  f1  J=180  Horseshoe: Gram form lowrank tau_hat 0.0046447  ESS(log tau)    32  min ESS(f at 5 points)   425  max split-Rhat 1.0014  MCSE/RMSE 0.0481  seconds 0.5
+  f1  J=200  Horseshoe: Gram form lowrank tau_hat 0.0035918  ESS(log tau)    18  min ESS(f at 5 points)   523  max split-Rhat 1.0132  MCSE/RMSE 0.0464  seconds 0.6
+  f1  J=220  Horseshoe: Gram form lowrank tau_hat 0.0035643  ESS(log tau)    21  min ESS(f at 5 points)   241  max split-Rhat 1.0069  MCSE/RMSE 0.0523  seconds 0.6
+  f1  J=240  Horseshoe: Gram form lowrank tau_hat 0.003632  ESS(log tau)    24  min ESS(f at 5 points)   217  max split-Rhat 1.0055  MCSE/RMSE 0.0540  seconds 0.7
+  f1  J=260  Horseshoe: Gram form lowrank tau_hat 0.0039841  ESS(log tau)    36  min ESS(f at 5 points)   536  max split-Rhat 1.0056  MCSE/RMSE 0.0562  seconds 0.8
+  f1  J=280  Horseshoe: Gram form lowrank tau_hat 0.0035358  ESS(log tau)    25  min ESS(f at 5 points)   511  max split-Rhat 1.0030  MCSE/RMSE 0.0569  seconds 0.8
+  f1  J=300  Horseshoe: Gram form lowrank tau_hat 0.0035528  ESS(log tau)    32  min ESS(f at 5 points)   454  max split-Rhat 1.0012  MCSE/RMSE 0.0571  seconds 0.9
+  f2  J=140  Horseshoe: Gram form diag    tau_hat 0.0065488  ESS(log tau)    46  min ESS(f at 5 points)  1154  max split-Rhat 1.0025  MCSE/RMSE 0.0477  seconds 0.3
+  f2  J=160  Horseshoe: Gram form diag    tau_hat 0.0064656  ESS(log tau)    71  min ESS(f at 5 points)  1084  max split-Rhat 1.0033  MCSE/RMSE 0.0442  seconds 0.4
+  f2  J=180  Horseshoe: Gram form diag    tau_hat 0.0062111  ESS(log tau)    87  min ESS(f at 5 points)   998  max split-Rhat 1.0058  MCSE/RMSE 0.0488  seconds 0.5
+  f2  J=200  Horseshoe: Gram form diag    tau_hat 0.0052195  ESS(log tau)    39  min ESS(f at 5 points)   606  max split-Rhat 1.0048  MCSE/RMSE 0.0497  seconds 0.4
+  f2  J=220  Horseshoe: Gram form diag    tau_hat 0.0052668  ESS(log tau)    41  min ESS(f at 5 points)   653  max split-Rhat 1.0011  MCSE/RMSE 0.0497  seconds 0.5
+  f2  J=240  Horseshoe: Gram form diag    tau_hat 0.005079  ESS(log tau)    60  min ESS(f at 5 points)   627  max split-Rhat 1.0037  MCSE/RMSE 0.0510  seconds 0.5
+  f2  J=260  Horseshoe: Gram form diag    tau_hat 0.0051129  ESS(log tau)    60  min ESS(f at 5 points)   719  max split-Rhat 1.0095  MCSE/RMSE 0.0516  seconds 0.6
+  f2  J=280  Horseshoe: Gram form diag    tau_hat 0.0047023  ESS(log tau)    59  min ESS(f at 5 points)   909  max split-Rhat 1.0033  MCSE/RMSE 0.0541  seconds 0.7
+  f2  J=300  Horseshoe: Gram form diag    tau_hat 0.0046924  ESS(log tau)    51  min ESS(f at 5 points)   879  max split-Rhat 1.0032  MCSE/RMSE 0.0542  seconds 0.7
+
+R session
+R version 4.6.0 (2026-04-24)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.7 (Plow)
+
+Matrix products: default
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: CST6CDT
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_4.6.0 tools_4.6.0    Rcpp_1.1.2     digest_0.6.39 

@@ -1,0 +1,63 @@
+Coefficient recovery (paper Section 3.1, Figure 1)
+
+Settings
+  dictionary: Chebyshev, J = 1000 columns (first column 1, then sqrt(2) T_k(2x - 1)); design: n = 2000 Gauss-Chebyshev nodes
+  truth: theta0[1:20] = 1.2, 2.1, 0.8, 1.5, 2.4, 0.6, 1.9, 1.1, 2.3, 0.9, 1.7, 0.5, 2, 1.4, 0.7, 2.5, 1, 1.8, 1.3, 1.6; theta0[21:1000] = 0.001
+  noise sd sigma = 0.20 (known to the sampler); y = X theta0 + sigma z, z = {set.seed(1); rnorm(n)}
+  Horseshoe: half-Cauchy scale, tau start 1, sigma fixed, 2000 burn-in and 5000 saved sweeps, floor exact, structure auto; set.seed(1001) just before hs_fast()
+  OLS: QR; classical t-intervals with s^2 = RSS/(n - J), df = n - J; known-sigma z-intervals for reference
+  mode: paper settings
+  Gram form found by hs_fast: diag
+  Gram check max|X'X - nI|/n: 1.47e-13
+  OLS t-interval variance estimate s^2 = 0.044264 (s = 0.21039), df = 1000, t quantile 1.96234
+  noise sd of one OLS coefficient, sigma/sqrt(n): 0.00447
+
+Errors (l2 norms of the coefficient error; on this design the squared l2 error over all coefficients equals the design-point MSE)
+l2 error, twenty large coefficients:                       Horseshoe 0.0167545    OLS 0.0167854
+l2 error, tail (k = 21..J):                                Horseshoe 0.0344793    OLS 0.143539
+l2 error, all coefficients:                                Horseshoe 0.0383345    OLS 0.144517
+design-point MSE x 1e3:                                    Horseshoe 1.46954      OLS 20.8852
+
+Tail estimates
+max |estimate| over the tail:                              Horseshoe 0.0072548    OLS 0.014529
+mean |estimate| over the tail:                             Horseshoe 0.00036508   OLS 0.00375212
+
+95% intervals (Horseshoe: equal-tailed credible intervals; OLS: t-intervals)
+intervals containing the truth, twenty large:              Horseshoe 20           OLS 20
+intervals containing the truth, tail:                      Horseshoe 970          OLS 937
+tail intervals containing zero:                            Horseshoe 980          OLS 918
+mean interval width, twenty large:                         Horseshoe 0.0175714    OLS 0.0184635
+mean interval width, tail:                                 Horseshoe 0.00608782   OLS 0.0184635
+  number of tail coefficients: 980
+  OLS known-sigma z-intervals: containing the truth, twenty large 20, tail 923; tail intervals containing zero 908; mean width 0.0175305
+
+Sampler
+  minimum effective sample size over the twenty large coefficients: 4556
+  minimum batch-means effective sample size over all coefficients: 312
+  effective sample size of log(tau): 48
+  posterior mean of tau (tau_hat): 0.0023093
+  sampler seconds (setup and 7000 sweeps): 4.0
+
+R session
+R version 4.6.0 (2026-04-24)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.7 (Plow)
+
+Matrix products: default
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: CST6CDT
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_4.6.0 tools_4.6.0    Rcpp_1.1.2     digest_0.6.39 
