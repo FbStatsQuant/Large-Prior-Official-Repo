@@ -26,10 +26,11 @@ Rscript code/make_figure.R        # output/applications_fig.{png,pdf}
 
 The sunspot fit takes about half an hour, and the bike and buoy fits take 5–8 minutes each. You can also fit a subset, as in `Rscript code/run_applications.R bike buoy`. Adding `--nmc=500 --burn=100` gives a quick check, which writes to `output/_quick/`.
 
-SILSO revises its sunspot file every month, so a fresh download usually won't match the paper's hash. `prep_sunspots.R --refresh` accepts the current file. For reference, the paper's prepared `data/sunspots.csv` has SHA-256
+SILSO revises its sunspot files every month, so the raw files of a fresh download differ from those of the paper's run (files as of October 2026). The paper's prepared series, `data/sunspots.csv`, is shipped. `Rscript code/prep_sunspots.R` downloads the current files, prepares the 1900–2024 series and leaves `data/sunspots.csv` unchanged unless the result is identical to the paper's input. `Rscript code/prep_sunspots.R --refresh` writes the prepared current data instead, which may differ from the paper. For reference, the paper's prepared series has SHA-256
 
 ```
-bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb
+4d8d3be7fa14a1e81c7c74c425bd0c9e7ea2513eb57e5b6b344505b5f6e4884e   (LF line endings)
+bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb   (CRLF line endings, as printed in reference_outputs/sunspots_summary.txt)
 ```
 
 ## Files
@@ -61,7 +62,7 @@ applications/
 ## Data sources
 
 - **NOAA NDBC buoy 46001**, standard meteorological data. This is US Government data in the public domain. The raw files are included.
-- **SILSO** monthly and daily total sunspot number V2.0, Royal Observatory of Belgium. Not redistributed here. Please cite SILSO (doi:10.24414/qnza-ac80) and Clette et al. (2014).
-- **UCI Bike Sharing** (Capital Bikeshare). Not redistributed here. Please cite Fanaee-T and Gama (2014), doi:10.24432/C5W894.
+- **SILSO** monthly and daily total sunspot number V2.0, WDC-SILSO, Royal Observatory of Belgium, Brussels, distributed under CC BY-NC 4.0. The raw files are not included; the prepared 1900–2024 series (`data/sunspots.csv`) and the observed values in `reference_outputs/sunspots_fit.csv` are shipped under the same terms. Please cite SILSO (doi:10.24414/qnza-ac80) and Clette et al. (2014).
+- **UCI Bike Sharing** (Capital Bikeshare), distributed under CC BY 4.0. The raw files are not included; `reference_outputs/bike_fit.csv` contains the daily counts divided by 1,000, a transformation of the original data, shipped under the same terms. Please cite Fanaee-T and Gama (2014), doi:10.24432/C5W894.
 
 These data stay under their providers' terms. The repository's MIT license covers only the code.
