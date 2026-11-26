@@ -6,7 +6,7 @@
 
 This repository has the code, the paper and the Lean proofs for **Large series priors for adaptive and optimal Bayesian nonparametric regression**, by Felipe Bedoya and Meng Li (Department of Statistics, Rice University).
 
-## The idea
+## The main idea behind this project 
 
 A random series prior usually needs a prior on the number of terms, and that forces the sampler to move between models of different dimension. We skip that step. We expand the regression function in a **large, fixed** dictionary of J_n ≍ n^b functions and let a **Horseshoe prior** on the coefficients decide which terms matter. The paper works with three dictionaries: Fourier, B-splines, and tensor-product Chebyshev polynomials. With the dictionary fixed, the posterior is that of an ordinary Bayesian linear regression.
 
