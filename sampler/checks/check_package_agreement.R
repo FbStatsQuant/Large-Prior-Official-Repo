@@ -11,7 +11,8 @@
 # and its own order of operations), and in a slowly mixing chain such round-off differences can grow over the sweeps.
 # Usage (from this folder): Rscript check_package_agreement.R [--quick]
 #   --quick: n = 500 (J = 77). Output: output/package_agreement.csv. Exit status 0 if PASS, 1 if FAIL.
-# Needs the package horseshoe, version 0.2.0 exactly (install.packages("horseshoe") gives it; other versions are not supported).
+# Needs the package horseshoe, version 0.2.0 exactly. It is archived on CRAN; install it with
+#   install.packages("https://cran.r-project.org/src/contrib/Archive/horseshoe/horseshoe_0.2.0.tar.gz", repos = NULL, type = "source")
 f <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
 HERE <- if (!is.na(f)) dirname(normalizePath(f)) else getwd()
 if (!requireNamespace("horseshoe", quietly = TRUE) || as.character(utils::packageVersion("horseshoe")) != "0.2.0")

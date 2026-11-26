@@ -23,6 +23,8 @@ From this folder:
 Rscript benchmarks.R                            # the paper's run: results/
 Rscript make_figure.R                           # Figure 2 from results/: figures/hs_fits.{pdf,png}
 Rscript make_figure.R --from=reference_outputs  # the same figure from the shipped reference run, no fitting
+Rscript make_table.R --from=reference_outputs   # Table 1 from the shipped reference run, no fitting: tables/table1_rows.tex
+Rscript make_table.R                            # Table 1 from results/
 Rscript benchmarks.R --quick                    # smoke test, writes quick_results/
 ```
 
@@ -45,10 +47,11 @@ benchmarks/
 ├── benchmarks.R         the three fits for both targets, Table 1, and the display fits
 ├── ridge.R              the cross-validated ridge (make_cv_folds(), fit_ridge_fourier())
 ├── make_figure.R        Figure 2 from display_points.csv and display_metrics.csv only
+├── make_table.R         Table 1 in the paper's format from mse_long.csv only
 └── reference_outputs/   a run at the paper's settings (see below)
 ```
 
-Running the scripts creates `results/` (or `quick_results/`) and `figures/` next to them. These are not tracked by git.
+Running the scripts creates `results/` (or `quick_results/`), `figures/` and `tables/` next to them. These are not tracked by git.
 
 ## Outputs
 

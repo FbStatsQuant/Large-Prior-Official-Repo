@@ -13,6 +13,6 @@ The three simulation studies of Section 3 of the paper. All Horseshoe fits here 
 | f1 | 0.5 \|sin(π(x − 0.5))\| | α = 1 | 0.15 | Fourier | equally spaced |
 | f2 | \|sin(1.3π(x − 0.35))\|³ | α = 3 | 0.20 | Chebyshev | Gauss–Chebyshev nodes |
 
-Each script runs from its own folder with plain `Rscript`, writes next to itself, and accepts `--quick` for a fast smoke test. Each folder ships `reference_outputs/` to compare against: for `scaling/` the per-fit results of the paper's run, for the other two a rerun at the paper's settings that agrees with the paper's run to rounding error.
+Each script runs from its own folder with plain `Rscript` and writes next to itself. The scripts that fit a model (`recovery.R`, `benchmarks.R`, `scaling/worker.R`) accept `--quick` for a fast smoke test; the scripts that only summarize, tabulate or draw read saved results and take `--from=reference_outputs` instead. Each folder ships `reference_outputs/` to compare against: for `scaling/` the per-fit results of the paper's run, for the other two a rerun at the paper's settings that agrees with the paper's run to rounding error.
 
 The scripts of the earlier version of the paper (three periodic targets with a cosine dictionary) are no longer part of the tree; they remain in the repository's history.

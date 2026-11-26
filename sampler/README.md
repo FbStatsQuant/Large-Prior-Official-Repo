@@ -105,11 +105,18 @@ of a shared machine (from [`reference_outputs/timing_paper.csv`](reference_outpu
 | B-spline, equally spaced grid | banded | 0.84 | 0.26 | 1.70 |
 | B-spline, nodes | banded | 0.82 | 0.26 | 1.63 |
 
-To rerun it (about 2 minutes on one core; timings depend on the machine and its load):
+To print this table from the shipped numbers, without timing anything, and write its LaTeX rows to `output/table3_rows.tex`:
+
+```sh
+Rscript make_table.R                 # from reference_outputs/timing_paper.csv
+```
+
+To rerun the timings (about 2 minutes on one core; they depend on the machine and its load):
 
 ```sh
 Rscript timing.R            # output/timing.csv and a printed table
 Rscript timing.R --quick    # n = 2000, J = 204, 200 sweeps: a few seconds
+Rscript make_table.R --from=output   # the table in the paper's format from your own run
 ```
 
 **The dense design is reported twice.** The paper's row was timed without the per-sweep accuracy check of the dense draw; the
@@ -160,7 +167,8 @@ sampler/
 ├── hsfast.R                     defines hs_fast(); source() it
 ├── hs_fast.cpp                  the Gibbs kernel (Rcpp / RcppArmadillo), compiled on first source()
 ├── dictionaries.R               design points; Fourier, Chebyshev and cubic B-spline dictionaries
-├── timing.R                     Table 3
+├── timing.R                     Table 3: the timings
+├── make_table.R                 Table 3 in the paper's format, from a saved timing CSV
 ├── checks/
 │   ├── common.R                 shared code of the four checks
 │   ├── check_linear_algebra.R
@@ -177,7 +185,8 @@ sampler/
 ```
 
 **Requirements.** R with a C++ compiler and the packages `Rcpp`, `RcppArmadillo` and `digest` (`splines` ships with R); the
-package `horseshoe` 0.2.0 only for `check_package_agreement.R`. On first `source()`, `hsfast.R` compiles `hs_fast.cpp` into
+package `horseshoe` 0.2.0 only for `check_package_agreement.R`. That package is archived on CRAN; install it with
+`install.packages("https://cran.r-project.org/src/contrib/Archive/horseshoe/horseshoe_0.2.0.tar.gz", repos = NULL, type = "source")`. On first `source()`, `hsfast.R` compiles `hs_fast.cpp` into
 `.cache/` (keyed by the file's content); the folder is safe to delete. `check_geweke.R` keeps its own compiled versions in
 `checks/output/cache/`. To verify the source files, run `sha256sum -c SHA256SUMS.txt` in this folder.
 
