@@ -1,7 +1,7 @@
 import LargePrior.Spec
 
 /-!
-# (WG4) depends on the active set only through its size (cor_v2, W7)
+# (WG4) depends on the active set only through its size
 
 The coefficient prior is an iid product, so permuting coordinates preserves it. Hence the
 probability in (WG4), `Π(∑_{j∉S} |θ_j| ≤ η ε̃)`, is the same for all sets `S` of a given size.

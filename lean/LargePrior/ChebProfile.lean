@@ -5,8 +5,8 @@ import LargePrior.ChebBasis
 # Chebyshev sparse approximation profiles (Lemmas `chebyshev-profile` and `chebyshev-aniso-profile`)
 
 Combines `ChebTensor` and `ChebBasis` against a smoothness-transfer premise to prove:
-* `chebyshev_profile_core` / `chebyshev_profile_of` (D:514–531);
-* `chebyshev_aniso_profile_core` / `chebyshev_aniso_profile_of` (D:601–622);
+* `chebyshev_profile_core` / `chebyshev_profile_of` (lem:chebyshev-profile);
+* `chebyshev_aniso_profile_core` / `chebyshev_aniso_profile_of` (lem:chebyshev-aniso-profile);
 * `chebyshev_profile_at_core` / `chebyshev_profile_at_of` (empirical-norm `ProfileAt` bridge for
   Corollary 1).
 
@@ -39,7 +39,7 @@ lemma chebCapp_pos {d : ℕ} (hd : 0 < d) {α : Fin d → ℝ} {r : Fin d → �
   exact mul_pos (by positivity)
     (lt_of_lt_of_le hk0 (Finset.le_sup' (fun k => chebCk (α k) (r k) (CJ k) R) (mem_univ ⟨0, hd⟩)))
 
-/-! ## Univariate profile (D:514–531) -/
+/-! ## Univariate profile (lem:chebyshev-profile) -/
 
 /-- Core univariate Chebyshev profile taking a per-order transfer premise; the coefficient map `ϑ`
 is chosen before `r`, `CJ`, and `L`. -/
@@ -76,7 +76,7 @@ lemma chebyshev_profile_core {α R : ℝ} {f : ℝ → ℝ} {m : ℕ}
 theorem chebyshev_profile_of (hT : ChebTransferStatement) : ChebyshevProfileStatement :=
   fun α _ _ _ hα hR hf hm => chebyshev_profile_core (fun r hr => hT α r hα hr) hα hR hf hm
 
-/-! ## Sectional anisotropic profile (D:601–622) -/
+/-! ## Sectional anisotropic profile (lem:chebyshev-aniso-profile) -/
 
 /-- Coordinatewise fold `X(u) = (x(u_1), …, x(u_d))` mapping `ℝ^d` onto `[0,1]^d`. -/
 private def chebFoldVec {d : ℕ} (u : Fin d → ℝ) : Fin d → ℝ := fun k => chebFold (u k)

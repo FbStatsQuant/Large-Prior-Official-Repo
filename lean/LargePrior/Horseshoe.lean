@@ -1,7 +1,7 @@
 import LargePrior.Posterior
 
 /-!
-# The horseshoe density: probability density, tail bound, lower bound (blueprint Part P)
+# The horseshoe density: probability density, tail bound, lower bound
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -14,7 +14,7 @@ namespace LargePrior
 /-- `c_HS = e^{−1/2} / (2π √(2π))`, the constant of the lower bound. -/
 def hsConst : ℝ := Real.exp (-(1 / 2)) / (2 * Real.pi * Real.sqrt (2 * Real.pi))
 
-/-- Pointwise domination `φ_s(t) ≤ e^{−1/2} / (√(2π) |t|)` (blueprint `lem:phi-dom`). -/
+/-- Pointwise domination `φ_s(t) ≤ e^{−1/2} / (√(2π) |t|)`. -/
 lemma gaussianPDFReal_le_inv_abs {v : ℝ≥0} (hv : v ≠ 0) {t : ℝ} (ht : t ≠ 0) :
     gaussianPDFReal 0 v t ≤ Real.exp (-(1 / 2)) / (Real.sqrt (2 * Real.pi) * |t|) := by
   have hv0 : (0 : ℝ) < v := NNReal.coe_pos.mpr (pos_iff_ne_zero.mpr hv)
@@ -63,7 +63,7 @@ private lemma integrable_halfCauchyPDF : Integrable halfCauchyPDF := by
     measurable_halfCauchyPDF.aestronglyMeasurable (Eventually.of_forall fun l => ?_)
   rw [Real.norm_of_nonneg (halfCauchyPDF_nonneg l)]; exact halfCauchyPDF_le l
 
-/-- `∫₀^∞ f_{C⁺} = 1` (blueprint `lem:halfcauchy`(a)). -/
+/-- `∫₀^∞ f_{C⁺} = 1`. -/
 lemma halfCauchy_lintegral_eq_one :
     ∫⁻ l in Set.Ioi (0 : ℝ), ENNReal.ofReal (halfCauchyPDF l) = 1 := by
   rw [← ofReal_integral_eq_lintegral_ofReal integrable_halfCauchyPDF.integrableOn
@@ -72,7 +72,7 @@ lemma halfCauchy_lintegral_eq_one :
   rw [integral_const_mul, integral_Ioi_inv_one_add_sq, Real.arctan_zero, ENNReal.ofReal_eq_one]
   field_simp; ring
 
-/-- `∫_T^∞ f_{C⁺} ≤ 2/(πT)` (blueprint `lem:halfcauchy`(b)). -/
+/-- `∫_T^∞ f_{C⁺} ≤ 2/(πT)`. -/
 lemma halfCauchy_tail_le {T : ℝ} (hT : 0 < T) :
     ∫⁻ l in Set.Ioi T, ENNReal.ofReal (halfCauchyPDF l) ≤ ENNReal.ofReal (2 / (Real.pi * T)) := by
   have hint : IntegrableOn (fun l : ℝ => 2 / Real.pi * l ^ (-2 : ℝ)) (Set.Ioi T) :=
@@ -117,8 +117,7 @@ private lemma measurable_hsKernel (τ : ℝ) :
   simp_rw [gpdf_eq]
   exact Measurable.mul (by fun_prop) (measurable_halfCauchyPDF.comp measurable_fst)
 
-/-- For `t ≠ 0` the horseshoe integrand is integrable on `(0, ∞)` (blueprint
-`lem:hs-integrable`). -/
+/-- For `t ≠ 0` the horseshoe integrand is integrable on `(0, ∞)`. -/
 lemma horseshoe_integrand_integrable {τ : ℝ} (hτ : 0 < τ) {t : ℝ} (ht : t ≠ 0) :
     IntegrableOn (fun l => gaussianPDFReal 0 (Real.toNNReal (l ^ 2 * τ ^ 2)) t * halfCauchyPDF l)
       (Set.Ioi 0) := by
@@ -167,7 +166,7 @@ private lemma setLIntegral_horseshoePDF {τ : ℝ} (hτ : 0 < τ) (S : Set ℝ) 
   · exact (ENNReal.measurable_ofReal.comp
       ((measurable_hsKernel τ).comp measurable_swap)).aemeasurable
 
-/-- **The horseshoe density is a probability density** (blueprint `prop:hs-density`). -/
+/-- **The horseshoe density is a probability density**. -/
 theorem horseshoe_isProbDensity : HorseshoeDensityStatement := by
   intro τ hτ
   refine ⟨measurable_horseshoePDF τ, horseshoePDF_nonneg τ, ?_⟩
@@ -188,7 +187,7 @@ private lemma gauss_tail_small {τ δ T l : ℝ} (hτ : 0 < τ) (hδ : 0 < δ) (
   have : l ^ 2 ≤ T ^ 2 := pow_le_pow_left₀ hl0.le hlT 2
   nlinarith [sq_nonneg τ]
 
-/-- **Tail bound** (blueprint `prop:hs-tail`). -/
+/-- **Tail bound**. -/
 theorem horseshoe_tail {τ δ T : ℝ} (hτ : 0 < τ) (hδ : 0 < δ) (hT : 0 < T) :
     coordPrior (horseshoePDF τ) {t | δ < |t|} ≤
       ENNReal.ofReal (2 * Real.exp (-(δ ^ 2 / (2 * T ^ 2 * τ ^ 2))) + 2 / (Real.pi * T)) := by
@@ -217,7 +216,7 @@ theorem horseshoe_tail {τ δ T : ℝ} (hτ : 0 < τ) (hδ : 0 < δ) (hT : 0 < T
             _ = _ := mul_one _
       _ ≤ _ := halfCauchy_tail_le hT
 
-/-- **Tail at a polynomial level** (blueprint `cor:hs-tail-J`). -/
+/-- **Tail at a polynomial level**. -/
 theorem horseshoe_tail_le_J {τ u μ : ℝ} {J : ℕ} (hτ : 0 < τ) (hu : 0 < u) (hJ : 2 ≤ J)
     (hμ : 0 < μ)
     (hτu : τ ≤ Real.pi / 4 * (u * (J : ℝ) ^ (-(1 + μ))) /
@@ -303,7 +302,7 @@ private lemma hs_lower_pointwise {τ t m l : ℝ} (hτ : 0 < τ) (hm : |t| ≤ m
           (2 / Real.pi * (1 + l ^ 2)⁻¹) := by
         gcongr
 
-/-- **Lower bound** (blueprint `prop:hs-lower`). -/
+/-- **Lower bound**. -/
 theorem horseshoe_lower {τ E t : ℝ} (hτ : 0 < τ) (hE : 0 < E) (ht0 : t ≠ 0) (htE : |t| ≤ E) :
     hsConst * τ / max E τ ^ 2 ≤ horseshoePDF τ t := by
   set m := max E τ with hm

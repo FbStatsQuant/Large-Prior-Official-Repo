@@ -1,7 +1,7 @@
 import LargePrior.Posterior
 
 /-!
-# Lemma 3: prior mass of the sieve complement (blueprint `lem:sieve`)
+# Lemma 3: prior mass of the sieve complement (`lem:sieve`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset

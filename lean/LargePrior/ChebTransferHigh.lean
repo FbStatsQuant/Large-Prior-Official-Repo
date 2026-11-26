@@ -1,23 +1,23 @@
 import LargePrior.ChebTransfer
 
 /-!
-# LargePrior: the smoothness transfer for the Chebyshev fold, general `α` (L-02, Lane A)
+# LargePrior: the smoothness transfer for the Chebyshev fold, general `α`
 
 `cheb_transfer`: for `0 < α < r`, `f ∈ C^α([0,1])` with radius `R` gives `f ∘ x` in the periodic
-Hölder–Zygmund ball of radius `C_tr(α) R` (eq:cheb-transfer, D:538–554).
+Hölder–Zygmund ball of radius `C_tr(α) R` (eq:cheb-transfer, proof of Lemma chebyshev-profile).
 
-* T2: `iteratedDeriv_fwdDiff_tr` (differences commute with derivatives) and
+* Differences: `iteratedDeriv_fwdDiff_tr` (differences commute with derivatives) and
   `abs_fwdDiff_iter_le_of_iteratedDeriv` (`|Δ_h^m ψ| ≤ |h|^m sup|ψ^{(m)}|`).
-* T3: the representation `(f ∘ x)^{(t)} = Σ_k f^{(k)}(x) W_{t,k}` with within-derivatives on
+* Representation: `(f ∘ x)^{(t)} = Σ_k f^{(k)}(x) W_{t,k}` with within-derivatives on
   `[0,1]`, the Bell recurrence for `W_{t,k}` and the bound
-  `|W_{t,k}^{(j)}| ≤ 2^{-k} (2π)^{t+j} k^j S(t,k)` (route of spike S2).
-* T4: the Hölder bound of `(f ∘ x)^{(s)}` and the assembly.
+  `|W_{t,k}^{(j)}| ≤ 2^{-k} (2π)^{t+j} k^j S(t,k)`.
+* Assembly: the Hölder bound of `(f ∘ x)^{(s)}` and the transfer.
 
-Departures from the paper (PLAN §9.7). The paper extends `f₀` by Taylor polynomials (D:538) and
-uses the set-partition form of Faà di Bruno (D:540–544): here the chain rule is applied with
+Departures from the paper's proof. The paper extends `f₀` by Taylor polynomials and uses the
+set-partition form of Faà di Bruno: here the chain rule is applied with
 derivatives within `[0,1]` (the fold maps into `[0,1]`), and the `W_{t,k}` are defined by the
 recurrence `W_{t+1,k} = W_{t,k}' + x' W_{t,k-1}`, whose bound gives the same `A_k`. The s-fold
-integral (D:550) is replaced by `s` applications of the mean value theorem.
+integral for `Δ_h^s` is replaced by `s` applications of the mean value theorem.
 -/
 
 open Real
@@ -27,7 +27,7 @@ noncomputable section
 
 namespace LargePrior
 
-/-! ## Fold derivatives (spike S2) -/
+/-! ## Fold derivatives -/
 
 private theorem hasDerivAt_chebFold (u : ℝ) :
     HasDerivAt chebFold (-(π * Real.sin (2 * π * u))) u := by
@@ -48,8 +48,8 @@ private theorem hasDerivAt_mul_cos (c a φ u : ℝ) :
   rw [Real.cos_add_pi_div_two]
   ring
 
-/-- `x^{(j+1)}(u) = ½ (2π)^{j+1} cos(2πu + (j+1)π/2)` (D:494–496; positive orders only, the
-order-zero value keeps the constant `½`). -/
+/-- `x^{(j+1)}(u) = ½ (2π)^{j+1} cos(2πu + (j+1)π/2)` (see eq:cheb-fold-bounds; positive orders only,
+the order-zero value keeps the constant `½`). -/
 private theorem iteratedDeriv_succ_chebFold (j : ℕ) :
     iteratedDeriv (j + 1) chebFold =
       fun u => (2 * π) ^ (j + 1) / 2 * Real.cos (2 * π * u + ((j : ℝ) + 1) * (π / 2)) := by
@@ -94,7 +94,7 @@ private theorem differentiable_of_smooth {f : ℝ → ℝ} (hf : ContDiff ℝ �
     Differentiable ℝ f :=
   (contDiff_infty.mp hf 1).differentiable (by simp)
 
-/-! ## The Bell-recurrence bound (spike S2) -/
+/-! ## The Bell-recurrence bound -/
 
 /-- Bell step for one `k = m + 1`: `A = W_{s,m+1}` and `B = W_{s,m}` bounded at order `s` give
 `A' + x' B = W_{s+1,m+1}` bounded at order `s + 1`. -/
@@ -175,7 +175,7 @@ private theorem bellBound_zero (W : ℕ → ℕ → ℝ → ℝ) (h00 : W 0 0 = 
   · rw [h0k]
     simp
 
-/-! ## T2: forward differences and derivatives -/
+/-! ## Forward differences and derivatives -/
 
 theorem differentiable_fwdDiff_tr {φ : ℝ → ℝ} (h : ℝ) (hφ : Differentiable ℝ φ) :
     Differentiable ℝ (fwdDiff h φ) := by
@@ -208,8 +208,8 @@ theorem iteratedDeriv_fwdDiff_tr {ψ : ℝ → ℝ} (h : ℝ) (j : ℕ)
       HasDerivAt.comp_add_const y h (hd (y + h)).hasDerivAt
     exact (h1.sub (hd y).hasDerivAt).deriv
 
-/-- **T2.** `|Δ_h^m ψ| ≤ |h|^m M` if `|ψ^{(m)}| ≤ M` and `ψ^{(i)}` is differentiable for `i < m`
-(replaces the `m`-fold integral of D:550 by `m` applications of the mean value theorem). -/
+/-- `|Δ_h^m ψ| ≤ |h|^m M` if `|ψ^{(m)}| ≤ M` and `ψ^{(i)}` is differentiable for `i < m`
+(replaces the paper's `m`-fold integral by `m` applications of the mean value theorem). -/
 theorem abs_fwdDiff_iter_le_of_iteratedDeriv (h : ℝ) (m : ℕ) :
     ∀ (ψ : ℝ → ℝ) (M : ℝ), (∀ i < m, Differentiable ℝ (iteratedDeriv i ψ)) →
       (∀ y, |iteratedDeriv m ψ y| ≤ M) → ∀ y, |(fwdDiff h)^[m] ψ y| ≤ |h| ^ m * M := by
@@ -233,7 +233,7 @@ theorem abs_fwdDiff_iter_le_of_iteratedDeriv (h : ℝ) (m : ℕ) :
       _ ≤ |h| ^ m * (|h| * M) := ih _ _ hd' hM' y
       _ = |h| ^ (m + 1) * M := by ring
 
-/-! ## T3: the representation of `(f ∘ x)^{(t)}` -/
+/-! ## The representation of `(f ∘ x)^{(t)}` -/
 
 /-- The Bell family: `W_{0,0} = 1`, `W_{0,k+1} = 0`, `W_{t+1,0} = 0`,
 `W_{t+1,k+1} = W_{t,k+1}' + x' W_{t,k}`. -/
@@ -338,7 +338,7 @@ private theorem hasDerivAt_rep {f : ℝ → ℝ} {n : ℕ} (hf : ContDiffOn ℝ 
     (by rw [chebW_eq_zero_of_lt t (t + 1) (by omega)]; simp) (by simp only [chebW])
     (fun k => by simp only [chebW])
 
-/-- **T3.** `(f ∘ x)^{(t)}(u) = Σ_{k ≤ t} f^{(k)}(x(u)) W_{t,k}(u)` for `t ≤ n`, with
+/-- `(f ∘ x)^{(t)}(u) = Σ_{k ≤ t} f^{(k)}(x(u)) W_{t,k}(u)` for `t ≤ n`, with
 derivatives of `f` within `[0,1]`. -/
 private theorem iteratedDeriv_comp_chebFold {f : ℝ → ℝ} {n : ℕ}
     (hf : ContDiffOn ℝ n f (Set.Icc 0 1)) :
@@ -362,14 +362,14 @@ private theorem differentiable_iteratedDeriv_comp {f : ℝ → ℝ} {n : ℕ}
   rw [iteratedDeriv_comp_chebFold hf t ht.le]
   exact fun u => (hasDerivAt_rep hf t ht u).differentiableAt
 
-/-! ## T4: the Hölder bound of the top derivative and the assembly -/
+/-! ## The Hölder bound of the top derivative and the assembly -/
 
 private theorem self_le_rpow_tr {a β : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤ 1) (hβ0 : 0 < β)
     (hβ1 : β ≤ 1) : a ≤ a ^ β :=
   calc a = a ^ (1 : ℝ) := (Real.rpow_one a).symm
     _ ≤ a ^ β := Real.rpow_le_rpow_of_exponent_ge' ha0 ha1 hβ0.le hβ1
 
-/-- `min{a, a c} ≤ a^{1-β} (a c)^β = a c^β` (the interpolation of D:546). -/
+/-- `min{a, a c} ≤ a^{1-β} (a c)^β = a c^β` (the interpolation in the proof of eq:cheb-transfer). -/
 private theorem le_mul_rpow_of_le_of_le {X a c β : ℝ} (hX : 0 ≤ X) (ha0 : 0 ≤ a) (hc0 : 0 ≤ c)
     (h1 : X ≤ a) (h2 : X ≤ a * c) (hβ0 : 0 < β) (hβ1 : β ≤ 1) : X ≤ a * c ^ β := by
   have hne : (1 - β) + β ≠ 0 := by rw [sub_add_cancel]; exact one_ne_zero
@@ -408,7 +408,7 @@ private theorem chebKappa_nonneg (s : ℕ) (β : ℝ) : 0 ≤ chebKappa s β := 
   · norm_num
   · exact Finset.sum_nonneg fun k _ => by positivity
 
-/-- **Hölder bound of `(f ∘ x)^{(s)}`** (D:540–548):
+/-- **Hölder bound of `(f ∘ x)^{(s)}`** (the display before eq:cheb-transfer):
 `|g^{(s)}(u) − g^{(s)}(v)| ≤ π^β (2π)^s κ_{s,β} R |u − v|^β`. -/
 private theorem holder_top {f : ℝ → ℝ} {s : ℕ} {β R : ℝ} (hs1 : 1 ≤ s) (hβ0 : 0 < β)
     (hβ1 : β ≤ 1) (hR : 0 ≤ R) (hcont : ContDiffOn ℝ s f (Set.Icc 0 1))
@@ -514,7 +514,7 @@ private theorem chebS_facts {α : ℝ} {r : ℕ} (hα1 : 1 < α) (hr : α < r) :
     rw [hcast]
     linarith
 
-/-- The case `s ≥ 1` of the transfer, with `r = q + s + 1` (D:549–553). -/
+/-- The case `s ≥ 1` of the transfer, with `r = q + s + 1` (eq:cheb-transfer). -/
 private theorem transfer_core {f : ℝ → ℝ} {s q : ℕ} {α β R : ℝ} (hs1 : 1 ≤ s) (hβ0 : 0 < β)
     (hβ1 : β ≤ 1) (hαsβ : α = s + β) (hcont : ContDiffOn ℝ s f (Set.Icc 0 1))
     (hbd : ∀ j ≤ s, ∀ y ∈ Set.Icc (0 : ℝ) 1, |iteratedDerivWithin j f (Set.Icc 0 1) y| ≤ R)
@@ -558,7 +558,7 @@ private theorem transfer_core {f : ℝ → ℝ} {s q : ℕ} {α β R : ℝ} (hs1
         rw [hαsβ, Real.rpow_add hh0, Real.rpow_natCast]
         ring
 
-/-- **The smoothness transfer** (eq:cheb-transfer, D:538–554), for every `0 < α < r`. -/
+/-- **The smoothness transfer** (eq:cheb-transfer), for every `0 < α < r`. -/
 theorem cheb_transfer {α : ℝ} {r : ℕ} (hα : 0 < α) (hr : α < r) : ChebTransferPremise α r := by
   by_cases hα1 : α ≤ 1
   · exact cheb_transfer_le_one hα hα1 hr
@@ -572,7 +572,7 @@ theorem cheb_transfer {α : ℝ} {r : ℕ} (hα : 0 < α) (hr : α < r) : ChebTr
   rw [hC, hq]
   exact transfer_core hs1 hβ0 hβ1 hαsβ hcont hbd hhol
 
-/-- `ChebTransferStatement`, with the frozen type. -/
+/-- `ChebTransferStatement`, with the type stated in `ChebSpec`. -/
 theorem cheb_transfer_statement : ChebTransferStatement :=
   fun _ _ hα hr => cheb_transfer hα hr
 

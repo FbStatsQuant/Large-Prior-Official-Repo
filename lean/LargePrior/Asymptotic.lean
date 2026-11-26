@@ -1,7 +1,7 @@
 import LargePrior.Master
 
 /-!
-# Theorem 1 as stated in the paper (blueprint `thm:asymptotic`)
+# Theorem 1 as stated in the paper (`thm:main`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -69,8 +69,7 @@ private lemma eventually_M_facts {M : ℕ → ℝ} (hM : Tendsto M atTop atTop) 
     have b2 : r3 ≤ M n := (le_max_right _ _).trans c
     nlinarith
 
-/-- The hypotheses of the master theorem hold for all sufficiently large `n`
-(blueprint `lem:eventually`). -/
+/-- The hypotheses of the master theorem hold for all sufficiently large `n`. -/
 theorem eventually_masterHyp {J : ℕ → ℕ} {X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ}
     {f₀ : ∀ n : ℕ, Fin n → ℝ} {σ : ℝ} {pdf : ℕ → ℝ → ℝ} {εt δ E M : ℕ → ℝ} {a : ℕ → ℕ}
     {K η μ c4 c5 : ℝ} (h : AsymptoticHyp J X f₀ σ pdf εt δ E M a K η μ c4 c5) :
@@ -89,7 +88,7 @@ theorem eventually_masterHyp {J : ℕ → ℕ} {X : ∀ n : ℕ, Matrix (Fin n) 
   exact ⟨hn, hJ2, h.hσ, hpdf, hεt, hδ, hE, ha.1, ha.2, h.hK, h.hη, h.hμ, h.hc4, h.hc5, hδεt,
     hbasis, hA2, h3, h5, hηn hn hJ2 hεt, hJμ, hl, hJl, hM5, hM6, hM7⟩
 
-/-- Markov's inequality along a sequence (blueprint `lem:markov`). -/
+/-- Markov's inequality along a sequence. -/
 lemma tendsto_measure_gt_of_lintegral_le {Z : ∀ n : ℕ, (Fin n → ℝ) → ℝ≥0∞}
     {P : ∀ n : ℕ, Measure (Fin n → ℝ)} (hZ : ∀ᶠ n in atTop, Measurable (Z n)) {b : ℕ → ℝ}
     (hb : Tendsto b atTop (𝓝 0))

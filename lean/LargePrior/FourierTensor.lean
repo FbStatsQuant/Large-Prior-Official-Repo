@@ -1,7 +1,7 @@
 import LargePrior.VdP
 
 /-!
-# Tensorization of the univariate smoother: error bound (blueprint §F.4)
+# Tensorization of the univariate smoother: error bound
 
 `Qcoord m k` applies `Q_m` to the `k`-th coordinate; `Pop m = Q^{(0)}_{m_0} ∘ ⋯ ∘ Q^{(d−1)}_{m_{d−1}}`
 (rightmost first). The error of `Pop m` telescopes into one univariate error per coordinate.

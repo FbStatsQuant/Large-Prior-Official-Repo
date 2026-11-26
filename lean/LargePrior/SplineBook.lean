@@ -1,7 +1,7 @@
 import LargePrior.CorSpec
 
 /-!
-# Spline dimension bookkeeping and level choice (blueprint §S.1)
+# Spline levels (`eq:nearest-spline-level`)
 -/
 
 open Finset

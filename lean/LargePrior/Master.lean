@@ -3,7 +3,7 @@ import LargePrior.Evidence
 import LargePrior.Sieve
 
 /-!
-# Theorem 1 at a fixed sample size (blueprint `thm:master`)
+# Theorem 1 at a fixed sample size (`thm:main`)
 
 The proof assembles Lemmas 1–4 through the posterior decomposition.
 -/

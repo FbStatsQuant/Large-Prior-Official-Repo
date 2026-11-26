@@ -1,7 +1,7 @@
 import LargePrior.CorSpec
 
 /-!
-# Tensor coefficient readout (blueprint §S.2)
+# Tensor coefficient readout (`eq:dual-readout`)
 
 The univariate stability `BSplineReadout q C_dual` gives, one coordinate at a time, the tensor
 bound `|θ_j| ≤ C_dual^d · sup_{[0,1]^d} |s|` for a one-block tensor spline `s`.
@@ -34,7 +34,7 @@ private lemma blockSeries_succ {d : ℕ} (q : ℕ) (ℓ : Fin (d + 1) → ℕ)
   simp only [hc, Fin.prod_univ_succ, Fin.cons_zero, Fin.cons_succ, Fin.tail]
   ring
 
-/-- **Tensor readout** (blueprint S.2): if `|∑_j θ_j ∏_k B_{ℓ_k,j_k}(x_k)| ≤ S` on `[0,1]^d`, then
+/-- **Tensor readout** (`eq:dual-readout`): if `|∑_j θ_j ∏_k B_{ℓ_k,j_k}(x_k)| ≤ S` on `[0,1]^d`, then
 `|θ_j| ≤ C_dual^d S` for every `j`. -/
 lemma tensor_readout {d q : ℕ} {Cdual : ℝ} (hq : 1 ≤ q) (hC : 1 ≤ Cdual)
     (hR : BSplineReadout q Cdual) (ℓ : Fin d → ℕ)

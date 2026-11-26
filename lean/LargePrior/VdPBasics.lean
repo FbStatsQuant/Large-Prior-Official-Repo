@@ -1,7 +1,7 @@
 import LargePrior.TrigBasics
 
 /-!
-# The de la Vallée Poussin smoother: definitions and algebra (blueprint §F.2)
+# The de la Vallée Poussin smoother: definitions and algebra (`eq:vdp-real`)
 
 `Qop m` is the budget-`m` smoother: for `m ≤ 2` it returns the mean `⟨g, ψ₀⟩`; for `m ≥ 3` it is
 `V_q = 2σ_{2q−1} − σ_{q−1}` with `q = ⌊(m+1)/4⌋`, written directly in the real atoms (eq:vdp-real).

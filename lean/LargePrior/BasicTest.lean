@@ -1,7 +1,7 @@
 import LargePrior.Gaussian
 
 /-!
-# Lemma 5: the basic Gaussian test (blueprint `lem:test`)
+# Lemma 5: the basic Gaussian test (`lem:test`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset

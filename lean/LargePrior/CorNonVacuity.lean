@@ -1,7 +1,7 @@
 import LargePrior.EndToEnd
 
 /-!
-# Non-vacuity, Fourier side (blueprint §N)
+# Non-vacuity, Fourier side
 
 Concrete instances (`d = 1`, `α = 1`, `b = 1`, design `x_i = i/n`):
 * `CorHorseshoeHyp` (hence `CorHyp`) for the Fourier dictionary and `f₀ = ψ₁`;

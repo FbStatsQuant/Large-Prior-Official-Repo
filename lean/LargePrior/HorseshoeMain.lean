@@ -2,7 +2,7 @@ import LargePrior.Asymptotic
 import LargePrior.HorseshoeAsymptotic
 
 /-!
-# Theorem 1 for the horseshoe prior (blueprint `cor:main-hs`)
+# Theorem 1 for the horseshoe prior
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset

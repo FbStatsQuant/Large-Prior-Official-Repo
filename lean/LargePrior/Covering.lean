@@ -1,7 +1,7 @@
 import LargePrior.Packing
 
 /-!
-# Lemma 7: covering of the shells, indexed by coefficient vectors (blueprint `lem:covering`)
+# Lemma 7: covering of the shells, indexed by coefficient vectors (`lem:covering`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -195,7 +195,7 @@ theorem covering (hn : 0 < n) (hJ : 2 ≤ J) {X : Matrix (Fin n) (Fin J) ℝ} {f
         empNorm (X *ᵥ θ - f₀) ≤ (ℓ + 1) * M * ε →
           ∃ g ∈ G, empNorm (X *ᵥ θ - g) ≤ ℓ * M * ε / 8 := by
   classical
-  -- `hm` (part of the frozen statement) is not needed: the construction works for every `m`.
+  -- `hm` (part of the statement) is not needed: the construction works for every `m`.
   have _ := hm
   have hJpos : 0 < J := by omega
   have hε : 0 < ε := lt_of_lt_of_le hεt hεtε

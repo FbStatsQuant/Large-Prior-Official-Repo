@@ -1,26 +1,26 @@
 import LargePrior.CorSpec
 
 /-!
-# LargePrior: specification of the Chebyshev dictionary (L-02, frozen at gate G0)
+# LargePrior: specification of the Chebyshev dictionary
 
 Definitions and statements (as `Prop`s) for the Chebyshev part of Corollary 1 of the paper:
-the dictionary (App. D, D:475–500), the univariate Hölder class `C^α([0,1])` and the transfer
-constant `C_tr(α)` (D:502–512), Lemma `chebyshev-profile` (D:514–531), the tensor-product
-dictionary and the sectional class `C^α_sec([0,1]^d; R)` (D:580–599), Lemma
-`chebyshev-aniso-profile` (D:601–622), and the end-to-end Corollary 1 for this dictionary with the
-horseshoe prior (S:143–204).
+the dictionary (Appendix D, eq:cheb-fold, eq:cheb-atoms), the univariate Hölder class `C^α([0,1])`
+and the transfer constant `C_tr(α)` (eq:cheb-Ctr), Lemma `chebyshev-profile`
+(lem:chebyshev-profile), the tensor-product dictionary and the sectional class
+`C^α_sec([0,1]^d; R)`, Lemma `chebyshev-aniso-profile` (lem:chebyshev-aniso-profile), and the
+end-to-end Corollary 1 (cor:anisotropic) for this dictionary with the horseshoe prior.
 
 This file contains definitions only. Proofs live in `ChebBasis`, `ChebTransfer`,
 `ChebTransferHigh`, `ChebTensor`, `ChebProfile`, `ChebEndToEnd`, `ChebMain` and `ChebChecks`.
 
-Conventions fixed here (see `L02/PLAN.md` §1.1 and HQ rulings H3, H4, P1):
+Conventions fixed here:
 * the radius is `R ≥ 0` in the lemmas and `R > 0` in the corollaries;
-* the sectional class contains `ContinuousOn f₀ (unitCube d)` (H3);
+* the sectional class contains `ContinuousOn f₀ (unitCube d)` as an explicit conjunct;
 * the difference order `r` of the Hölder–Zygmund norm is an explicit argument, always with
-  `α < r` (D:196, D:512); the side condition guards the error and transfer bounds;
+  `α < r`, as for the paper's `r(α) > α`; the side condition guards the error and transfer bounds;
 * the coefficient map is chosen before the dictionary size `L`, which expresses "the nonzero
-  entries do not depend on `J`" (D:526, D:617), and before `r` and the Jackson constant, which
-  the construction does not use (D:526, D:556–570, D:617, D:661–667).
+  entries do not depend on `J`" (both Chebyshev lemmas), and before `r` and the Jackson constant,
+  which the constructions in the two proofs do not use.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -30,14 +30,14 @@ noncomputable section
 
 namespace LargePrior
 
-/-! ## The fold and the Chebyshev dictionary (D:475–498) -/
+/-! ## The fold and the Chebyshev dictionary (eq:cheb-fold, eq:cheb-atoms) -/
 
 /-- The fold `x(u) = (1 + cos 2πu)/2` (eq:cheb-fold), a smooth, even, 1-periodic map of `ℝ`
 onto `[0,1]`. -/
 def chebFold (u : ℝ) : ℝ := (1 + Real.cos (2 * Real.pi * u)) / 2
 
 /-- The univariate Chebyshev atom on `[0,1]`: `φ₀ = 1` and `φ_j(x) = √2 T_j(2x − 1)` for `j ≥ 1`
-(D:477–481). -/
+(Appendix D, "The Chebyshev dictionary"). -/
 def chebAtom (j : ℕ) (x : ℝ) : ℝ :=
   if j = 0 then 1 else Real.sqrt 2 * (Polynomial.Chebyshev.T ℝ (j : ℤ)).eval (2 * x - 1)
 
@@ -45,7 +45,7 @@ def chebAtom (j : ℕ) (x : ℝ) : ℝ :=
 coefficients read off a coefficient map `ϑ : ℕ → ℝ`. -/
 def chebSum (ϑ : ℕ → ℝ) (L : ℕ) (x : ℝ) : ℝ := ∑ j ∈ range L, ϑ j * chebAtom j x
 
-/-- Index set of the tensor Chebyshev dictionary `C_L`: `0 ≤ j_k ≤ L_k − 1` (D:577–581). -/
+/-- Index set of the tensor Chebyshev dictionary `C_L`: `0 ≤ j_k ≤ L_k − 1` (Appendix D). -/
 abbrev ChebIdx {d : ℕ} (L : Fin d → ℕ) := (k : Fin d) → Fin (L k)
 
 /-- Tensor Chebyshev atom on `[0,1]^d`: `Φ_j(x) = ∏_k φ_{j_k}(x_k)`. -/
@@ -55,7 +55,7 @@ def chebTensor {d : ℕ} (j : Fin d → ℕ) (x : Fin d → ℝ) : ℝ := ∏ k,
 def chebSeries {d : ℕ} {L : Fin d → ℕ} (θ : ChebIdx L → ℝ) (x : Fin d → ℝ) : ℝ :=
   ∑ j, θ j * chebTensor (fun k => (j k : ℕ)) x
 
-/-! ## The univariate class `C^α([0,1])` and the transfer constant (D:500–512) -/
+/-! ## The univariate class `C^α([0,1])` and the transfer constant (eq:cheb-Ctr) -/
 
 /-- `s = ⌈α⌉ − 1`, the number of derivatives in `C^α` (Lipschitz–Hölder convention at
 integers). -/
@@ -64,10 +64,10 @@ def chebS (α : ℝ) : ℕ := ⌈α⌉₊ - 1
 /-- `β = α − s ∈ (0,1]` for `α > 0`. -/
 def chebBeta (α : ℝ) : ℝ := α - chebS α
 
-/-- Ball of radius `R` of `C^α([0,1])` (D:502–503, with one radius for all the bounds as at
-D:60–68): `f` is `s` times continuously differentiable on `[0,1]`, with one-sided derivatives at the
-endpoints; `|f^{(j)}| ≤ R` on `[0,1]` for `0 ≤ j ≤ s`; and
-`|f^{(s)}(y) − f^{(s)}(z)| ≤ R |y − z|^β` on `[0,1]`. -/
+/-- Ball of radius `R` of `C^α([0,1])` (Appendix D, before eq:cheb-Ctr; one radius bounds all the
+terms, as for the isotropic Hölder classes): `f` is `s` times continuously differentiable on
+`[0,1]`, with one-sided derivatives at the endpoints; `|f^{(j)}| ≤ R` on `[0,1]` for `0 ≤ j ≤ s`;
+and `|f^{(s)}(y) − f^{(s)}(z)| ≤ R |y − z|^β` on `[0,1]`. -/
 def HolderBallIcc (α R : ℝ) (f : ℝ → ℝ) : Prop :=
   ContDiffOn ℝ (chebS α) f (Set.Icc 0 1) ∧
     (∀ j ≤ chebS α, ∀ y ∈ Set.Icc (0 : ℝ) 1,
@@ -89,31 +89,31 @@ def chebCtr (α : ℝ) (r : ℕ) : ℝ :=
     chebKappa (chebS α) (chebBeta α)
 
 /-- The smoothness transfer (eq:cheb-transfer) at fixed `(α, r)`: for every `f` in the ball of
-radius `R` of `C^α([0,1])`, the folded function `f ∘ x` lies in the periodic Hölder–Zygmund ball
-of radius `C_tr(α) R`. Lane B works against this premise; `ChebTransferStatement` is the theorem. -/
+radius `R` of `C^α([0,1])`, `f ∘ x` lies in the periodic Hölder–Zygmund ball of radius `C_tr(α) R`.
+The profile lemmas are first proved assuming this premise; `ChebTransferStatement` is the theorem. -/
 def ChebTransferPremise (α : ℝ) (r : ℕ) : Prop :=
   ∀ (R : ℝ) (f : ℝ → ℝ), HolderBallIcc α R f → HZBall1 α r (chebCtr α r * R) (f ∘ chebFold)
 
-/-- **The smoothness transfer** (first part of the proof of Lemma chebyshev-profile,
-D:536–553), for every `0 < α < r`. -/
+/-- **The smoothness transfer** (first step of the proof of Lemma chebyshev-profile,
+eq:cheb-transfer), for every `0 < α < r`. -/
 def ChebTransferStatement : Prop :=
   ∀ (α : ℝ) (r : ℕ), 0 < α → α < r → ChebTransferPremise α r
 
-/-! ## The sectional class (D:594–599) -/
+/-! ## The sectional class (Appendix D, before Lemma chebyshev-aniso-profile) -/
 
-/-- The sectional class `C^α_sec([0,1]^d; R)` (D:594–599): `f₀` continuous on the cube (H3), and
+/-- The sectional class `C^α_sec([0,1]^d; R)` of Appendix D: `f₀` continuous on the cube, and
 for every point `x` of the cube (faces included) and every direction `k`, the section of `f₀`
 through `x` in direction `k` lies in the ball of radius `R` of `C^{α_k}([0,1])`. -/
 def SecHolderBall {d : ℕ} (α : Fin d → ℝ) (R : ℝ) (f₀ : (Fin d → ℝ) → ℝ) : Prop :=
   ContinuousOn f₀ (unitCube d) ∧
     ∀ x ∈ unitCube d, ∀ k : Fin d, HolderBallIcc (α k) R (sectionAt f₀ x k)
 
-/-! ## Profile constants (D:526, D:610–614) -/
+/-! ## Profile constants (eq:chebyshev-profile, eq:chebyshev-aniso-profile) -/
 
 /-- The univariate profile constant `C = max{2, 4·3^α C_α C_tr(α)}` (eq:chebyshev-profile). -/
 def chebC (α : ℝ) (r : ℕ) (CJ : ℝ) : ℝ := max 2 (4 * 3 ^ α * CJ * chebCtr α r)
 
-/-- `c_k = R max{2, 4·3^{α_k} C_{α_k} C_tr(α_k)}` (D:612–615). -/
+/-- `c_k = R max{2, 4·3^{α_k} C_{α_k} C_tr(α_k)}` (Lemma chebyshev-aniso-profile). -/
 def chebCk (α : ℝ) (r : ℕ) (CJ R : ℝ) : ℝ := R * chebC α r CJ
 
 /-- `C_app = 3^{d−1} max_k c_k` (eq:chebyshev-aniso-profile), for `d ≥ 1`. -/
@@ -125,14 +125,14 @@ def chebCapp {d : ℕ} (hd : 0 < d) (α : Fin d → ℝ) (r : Fin d → ℕ) (CJ
 
 /-- Design matrix of the tensor Chebyshev dictionary `C_L` at a design `x`, for an arbitrary
 enumeration `e : Fin J ≃ C_L` of its atoms ("any fixed enumeration of the atoms may serve as the
-indexing", D:587). It is the paper's dictionary when every `L k ≥ 1`; if some `L k = 0` the index
-set is empty and `ProfileAt` has no admissible rectangle. -/
+indexing", Appendix D). It is the paper's dictionary when every `L k ≥ 1`; if some `L k = 0` the
+index set is empty and `ProfileAt` has no admissible rectangle. -/
 def chebDesign {d n J : ℕ} {L : Fin d → ℕ} (e : Fin J ≃ ChebIdx L) (x : Fin n → Fin d → ℝ) :
     Matrix (Fin n) (Fin J) ℝ :=
   designMatrix (fun j => chebTensor (fun k => ((e j) k : ℕ))) x
 
 /-- The sequence of design matrices for sizes `L_n`, totals `J_n` and enumerations
-`e_n : Fin J_n ≃ C_{L_n}` (S:160). -/
+`e_n : Fin J_n ≃ C_{L_n}` (cor:anisotropic). -/
 def chebXe {d : ℕ} {J : ℕ → ℕ} {L : ℕ → Fin d → ℕ} (e : ∀ n, Fin (J n) ≃ ChebIdx (L n))
     (x : ∀ n : ℕ, Fin n → Fin d → ℝ) (n : ℕ) : Matrix (Fin n) (Fin (J n)) ℝ :=
   chebDesign (e n) (x n)
@@ -152,20 +152,20 @@ def chebX {d : ℕ} (b : Fin d → ℝ) (x : ∀ n : ℕ, Fin n → Fin d → �
 
 /-! ## Statements -/
 
-/-- **Assumption 1 for every tensor Chebyshev dictionary** (D:528, D:619): any finite family of
-tensor atoms and any design in `[0,1]^d` give `BasisBound` with `K = 2^{d/2}`. -/
+/-- **Assumption 1 for every tensor Chebyshev dictionary** (lem:chebyshev-aniso-profile): any
+finite family of tensor atoms and any design in `[0,1]^d` give `BasisBound` with `K = 2^{d/2}`. -/
 def ChebyshevBasisStatement : Prop :=
   ∀ (n J d : ℕ) (idx : Fin J → Fin d → ℕ) (x : Fin n → Fin d → ℝ),
     (∀ i, x i ∈ unitCube d) →
     BasisBound (designMatrix (fun j => chebTensor (idx j)) x) (Real.sqrt 2 ^ d)
 
-/-- **Lemma chebyshev-profile** (D:514–531), sup-norm form with the displayed constant. For
-`α > 0`, `R ≥ 0`, `f` in the ball of radius `R` of `C^α([0,1])` and `m ≥ 1`, there is a
+/-- **Lemma chebyshev-profile** (lem:chebyshev-profile), sup-norm form with the displayed constant.
+For `α > 0`, `R ≥ 0`, `f` in the ball of radius `R` of `C^α([0,1])` and `m ≥ 1`, there is a
 coefficient map `ϑ`, chosen before the dictionary size and before the difference order and the
-Jackson constant (the construction of D:556–570 uses neither), with support in `{0, …, m − 1}` and
+Jackson constant (the construction in the proof uses neither), with support in `{0, …, m − 1}` and
 `|ϑ_j| ≤ R`, such that for every order `r > α`, every Jackson constant `C_J` for `(α, r)` and every
 dictionary size `L ≥ m`, `sup_{[0,1]} |f − Σ_{j<L} ϑ_j φ_j| ≤ max{2, 4·3^α C_J C_tr(α)} R m^{−α}`.
-The empirical-norm form (D:526) follows by bounding `empNorm` by the uniform error, with the same
+The empirical-norm form follows by bounding `empNorm` by the uniform error, with the same
 coefficient map; the actual-design interface is `ChebyshevProfileAtStatement` at `d = 1`. -/
 def ChebyshevProfileStatement : Prop :=
   ∀ (α R : ℝ) (f : ℝ → ℝ) (m : ℕ),
@@ -175,13 +175,13 @@ def ChebyshevProfileStatement : Prop :=
         ∀ L : ℕ, m ≤ L → ∀ x ∈ Set.Icc (0 : ℝ) 1,
           |f x - chebSum ϑ L x| ≤ chebC α r CJ * R * (m : ℝ) ^ (-α)
 
-/-- **Lemma chebyshev-aniso-profile** (D:601–622), sup-norm form with the displayed constant.
+/-- **Lemma chebyshev-aniso-profile** of Appendix D, sup-norm form with the displayed constant.
 For `d ≥ 1`, `α_k > 0`, `R ≥ 0`, `f₀` in `C^α_sec([0,1]^d; R)` and every rectangle `m` with
 `m_k ≥ 1`, there is a coefficient map `ϑ`, chosen before the dictionary sizes and before the
 difference orders and Jackson constants, supported in `∏_k {0, …, m_k − 1}`, with `|ϑ_j| ≤ R`, such
 that for all orders `r_k > α_k`, all Jackson constants `C_k` for `(α_k, r_k)` and all sizes `L ≥ m`
 (coordinatewise), `sup_{[0,1]^d} |f₀ − Σ_{j ∈ C_L} ϑ_j Φ_j| ≤ 3^{d−1} max_k c_k · Σ_k m_k^{−α_k}`.
-The empirical-norm form (D:617) is `ChebyshevProfileAtStatement`. -/
+The empirical-norm form in the lemma is `ChebyshevProfileAtStatement`. -/
 def ChebyshevAnisoProfileStatement : Prop :=
   ∀ (d : ℕ) (hd : 0 < d) (α : Fin d → ℝ) (R : ℝ) (f₀ : (Fin d → ℝ) → ℝ) (m : Fin d → ℕ),
     (∀ k, 0 < α k) → 0 ≤ R → SecHolderBall α R f₀ → (∀ k, 1 ≤ m k) →
@@ -193,9 +193,9 @@ def ChebyshevAnisoProfileStatement : Prop :=
             chebCapp hd α r CJ R * ∑ k, (m k : ℝ) ^ (-α k)
 
 /-- **The empirical profile for the actual design** (eq:aniso-profile at a fixed `n`, from
-D:601–622 and D:672): for `d ≥ 1`, `0 < α_k < r_k`, the Jackson inequality in every coordinate,
-`R ≥ 0`, `f₀` in `C^α_sec([0,1]^d; R)`, any sizes `L`, any enumeration `e` of `C_L` and any design
-in the cube, the profile `ProfileAt` holds with `C_sp = 1`, `C_app = 3^{d−1} max_k c_k` and
+lem:chebyshev-aniso-profile): for `d ≥ 1`, `0 < α_k < r_k`, the Jackson inequality in every
+coordinate, `R ≥ 0`, `f₀` in `C^α_sec([0,1]^d; R)`, any sizes `L`, any enumeration `e` of `C_L`
+and any design in the cube, `ProfileAt` holds with `C_sp = 1`, `C_app = 3^{d−1} max_k c_k` and
 `E = R`. This is the bridge from Lemma chebyshev-aniso-profile to the hypotheses of Corollary 1. -/
 def ChebyshevProfileAtStatement : Prop :=
   ∀ (d : ℕ) (hd : 0 < d) (α : Fin d → ℝ) (r : Fin d → ℕ) (CJ : Fin d → ℝ) (R : ℝ)
@@ -231,7 +231,7 @@ implies the paper's 6, and (WG5) is checked almost everywhere, as in all of `Cor
 As in `CorFourierStatement`, the prior is specialised to the horseshoe with this scale (the
 general-prior Corollary 1 is `CorollaryStatement`, which applies to the Chebyshev dictionary
 through `ChebyshevBasisStatement` and `ChebyshevProfileAtStatement`), and `c₅` is chosen after the
-truth and the design (Corollary 1 is pointwise in `f₀`, S:143–200). -/
+truth and the design (Corollary 1, cor:anisotropic, is pointwise in `f₀`). -/
 def CorChebOutcome {d : ℕ} (α : Fin d → ℝ) (J : ℕ → ℕ)
     (X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ) (f₀ : (Fin d → ℝ) → ℝ)
     (x : ∀ n : ℕ, Fin n → Fin d → ℝ) (σ η μ'' cδ Csp E Ceps : ℝ) : Prop :=
@@ -245,7 +245,7 @@ def CorChebOutcome {d : ℕ} (α : Fin d → ℝ) (J : ℕ → ℕ)
       (Aconst (Real.sqrt 2 ^ d) η σ (μ'' / 2) 1 c5)
 
 /-- Corollary 1 for the tensor Chebyshev dictionary at fixed `(d, α, r, C_J)`, with the paper's
-explicit constants (S:169 with D:621): for every `R > 0` and every `C_ε ≥ d C_app`,
+explicit constants (cor:anisotropic): for every `R > 0` and every `C_ε ≥ d C_app`,
 `C_app = 3^{d−1} max_k c_k`, every exponent `b_k ≥ β_k`, all sizes `L_{n,k}` and totals `J_n` with
 `L_{n,k} ≍ n^{b_k}` and `J_n ≍ ∏_k L_{n,k}` (`SizesComparable`), every enumeration
 `e_n : Fin J_n ≃ C_{L_n}`, every `f₀` in `C^α_sec([0,1]^d; R)`, every design in the cube, and every
@@ -260,7 +260,7 @@ def CorChebExplicit (d : ℕ) (hd : 0 < d) (α : Fin d → ℝ) (r : Fin d → �
       CorChebOutcome α J (chebXe e x) f₀ x σ η μ'' cδ 1 R Ceps
 
 /-- **Corollary 1, tensor Chebyshev dictionary, horseshoe prior, explicit constants**
-(S:143–204 with D:601–622): given the Jackson inequality in every coordinate, `CorChebExplicit`. -/
+(cor:anisotropic): given the Jackson inequality in every coordinate, `CorChebExplicit`. -/
 def CorChebyshevStatement : Prop :=
   ∀ (d : ℕ) (hd : 0 < d) (α : Fin d → ℝ) (r : Fin d → ℕ) (CJ : Fin d → ℝ),
     (∀ k, JacksonIneq (α k) (r k) (CJ k)) → CorChebExplicit d hd α r CJ
@@ -283,7 +283,7 @@ def CorChebyshevExStatement : Prop :=
 
 /-- **Corollary 1, tensor Chebyshev dictionary, `α ∈ (0,1)^d`, with no assumed classical
 input**: there are Jackson constants `C_J`, depending only on `α`, for which the Jackson
-inequality at order `r = 1` holds (by `jackson_lip`, Jackson.lean:301), and Corollary 1 holds with
+inequality at order `r = 1` holds (by `jackson_lip` in `Jackson`), and Corollary 1 holds with
 the explicit constants of `CorChebExplicit` at `r = 1`. -/
 def CorChebyshevHolderStatement : Prop :=
   ∀ (d : ℕ) (hd : 0 < d) (α : Fin d → ℝ), (∀ k, 0 < α k) → (∀ k, α k < 1) →
@@ -295,7 +295,7 @@ def CorChebyshevHolderStatement : Prop :=
 def ChebSanityHolder : Prop :=
   ∀ (α R : ℝ) (f : ℝ → ℝ), 0 < α → α ≤ 1 → (HolderBallIcc α R f ↔ HolderBall1 α R f)
 
-/-- The four values of D:512 for the smallest order `r = ⌊α⌋ + 1`:
+/-- The four values given after eq:cheb-Ctr for the smallest order `r = ⌊α⌋ + 1`:
 `C_tr(½) = 1 + √π`, `C_tr(1) = 1 + 2π`, `C_tr(2) = 1 + 6π²`, `C_tr(3) = 1 + 22π³`. -/
 def ChebSanityCtr : Prop :=
   chebCtr (1 / 2) (⌊(1 / 2 : ℝ)⌋₊ + 1) = 1 + Real.sqrt Real.pi ∧

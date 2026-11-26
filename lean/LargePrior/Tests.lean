@@ -2,7 +2,7 @@ import LargePrior.Covering
 import LargePrior.BasicTest
 
 /-!
-# Lemma 4: tests (blueprint `lem:tests`)
+# Lemma 4: tests (`lem:tests`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset

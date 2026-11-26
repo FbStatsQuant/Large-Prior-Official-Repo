@@ -2,7 +2,7 @@ import LargePrior.VdPBasics
 import LargePrior.Fejer
 
 /-!
-# The de la Vallée Poussin smoother: stability and the univariate error bound (blueprint §F.2–F.3)
+# Smoother stability and error (`eq:vdp-stable`, `eq:coordinate-Jackson`)
 -/
 
 open MeasureTheory Finset intervalIntegral

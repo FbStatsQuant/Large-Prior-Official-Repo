@@ -1,7 +1,7 @@
 import LargePrior.Basic
 
 /-!
-# Assumption 1 from a sup-norm bound; Fourier dictionaries (blueprint Part B)
+# Assumption 1 from a sup-norm bound; Fourier dictionaries
 -/
 
 open MeasureTheory Finset
@@ -13,8 +13,7 @@ namespace LargePrior
 
 variable {n J : ℕ}
 
-/-- A dictionary bounded by `b` on the design satisfies Assumption 1 with `K = b`
-(blueprint `lem:basis-of-sup`). -/
+/-- A dictionary bounded by `b` on the design satisfies Assumption 1 with `K = b`. -/
 lemma basisBound_of_abs_le {𝒳 : Type*} {ξ : Fin J → 𝒳 → ℝ} {x : Fin n → 𝒳} {b : ℝ}
     (hb : 0 ≤ b) (h : ∀ j i, |ξ j (x i)| ≤ b) : BasisBound (designMatrix ξ x) b := by
   intro j
@@ -38,7 +37,7 @@ lemma fourierTensor_abs_le {d : ℕ} (ν : Fin d → ℕ) (x : Fin d → ℝ) :
         Finset.prod_le_prod₀ (fun k _ => abs_nonneg _) fun k _ => fourierAtom_abs_le _ _
     _ = Real.sqrt 2 ^ d := by simp
 
-/-- **Assumption 1 for Fourier dictionaries** (blueprint `prop:fourier`). -/
+/-- **Assumption 1 for Fourier dictionaries**. -/
 theorem fourier_basis : FourierBasisStatement := by
   intro n J d idx x
   exact basisBound_of_abs_le (by positivity) fun j i => fourierTensor_abs_le _ _

@@ -1,7 +1,7 @@
 import LargePrior.SplineBook
 
 /-!
-# Dictionary sizes for the end-to-end corollaries (blueprint §E, first lemma)
+# Dictionary sizes for the end-to-end corollaries
 -/
 
 open Filter Finset
@@ -26,7 +26,7 @@ private lemma one_le_rpow_nat {n : ℕ} (hn : 1 ≤ n) {x : ℝ} (hx : 0 < x) :
     1 ≤ (n : ℝ) ^ x :=
   Real.one_le_rpow (by exact_mod_cast hn) hx.le
 
-/-- Fourier sizes: `L_{n,k} = 2⌈n^{b_k}⌉ + 1 ≍ n^{b_k}` and `J_n = ∏_k L_{n,k}` (blueprint E.1). -/
+/-- Fourier sizes: `L_{n,k} = 2⌈n^{b_k}⌉ + 1 ≍ n^{b_k}` and `J_n = ∏_k L_{n,k}`. -/
 lemma fourier_sizes {d : ℕ} {b : Fin d → ℝ} (hb : ∀ k, 0 < b k) :
     SizesComparable b (fun n k => 2 * fourierM b n k + 1) (fourierJ b) := by
   refine sizes_of_pointwise (c := 1) (C := 5) one_pos le_rfl (by norm_num) ?_ ?_
@@ -96,7 +96,7 @@ private lemma rpow_le_two_pow_ceil {n : ℕ} (hn : 1 ≤ n) {x : ℝ} (hx : 0 �
           rw [Real.rpow_add (by norm_num), Real.rpow_one, mul_comm]
 
 /-- Spline sizes: `L_{n,k} = U_{H_{n,k}} ≍ n^{b_k}` with `H_{n,k} = ⌈b_k log₂ n⌉`, and
-`J_n = ∏_k L_{n,k}` (blueprint E.1). -/
+`J_n = ∏_k L_{n,k}`. -/
 lemma spline_sizes {d q : ℕ} (hq : 1 ≤ q) {b : Fin d → ℝ} (hb : ∀ k, 0 < b k) :
     SizesComparable b (fun n k => splineUnionDim q (splineH b n k)) (splineJ q b) := by
   refine sizes_of_pointwise (c := 1) (C := 4 * q) one_pos le_rfl ?_ ?_ ?_

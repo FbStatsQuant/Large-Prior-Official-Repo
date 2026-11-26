@@ -1,7 +1,7 @@
 import LargePrior.Basic
 
 /-!
-# Gaussian facts (blueprint Facts 4.5, 7.4, 7.5 and Lemma 7.6)
+# Gaussian facts
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -55,16 +55,16 @@ private lemma measureReal_lin_ge_le (σ : ℝ) (v w : Fin n → ℝ) {t : ℝ} (
   simp only [Real.coe_toNNReal _ (sq_nonneg σ)]
   ring
 
-/-- Chernoff bound for a linear statistic of Gaussian data, upper tail (blueprint Fact 7.4). -/
+/-- Chernoff bound for a linear statistic of Gaussian data, upper tail. -/
 lemma gauss_lin_upper {σ : ℝ} (hσ : 0 < σ) (v w : Fin n → ℝ) {t : ℝ} (ht : 0 ≤ t) :
     dataLaw σ v {y | t ≤ ∑ i, (y i - v i) * w i} ≤
       ENNReal.ofReal (Real.exp (-(t ^ 2) / (2 * σ ^ 2 * ∑ i, w i ^ 2))) := by
-  -- `hσ` is part of the frozen statement; the bound holds for every `σ`.
+  -- `hσ` is part of the statement; the bound holds for every `σ`.
   have _ := hσ
   rw [← ofReal_measureReal]
   exact ENNReal.ofReal_le_ofReal (measureReal_lin_ge_le σ v w ht)
 
-/-- Chernoff bound for a linear statistic of Gaussian data, lower tail (blueprint Fact 7.4). -/
+/-- Chernoff bound for a linear statistic of Gaussian data, lower tail. -/
 lemma gauss_lin_lower {σ : ℝ} (hσ : 0 < σ) (v w : Fin n → ℝ) {t : ℝ} (ht : 0 ≤ t) :
     dataLaw σ v {y | ∑ i, (y i - v i) * w i ≤ -t} ≤
       ENNReal.ofReal (Real.exp (-(t ^ 2) / (2 * σ ^ 2 * ∑ i, w i ^ 2))) := by
@@ -77,10 +77,10 @@ lemma gauss_lin_lower {σ : ℝ} (hσ : 0 < σ) (v w : Fin n → ℝ) {t : ℝ} 
   rw [hset, ← hw]
   exact gauss_lin_upper hσ v (-w) ht
 
-/-- Two-sided tail of a centred real Gaussian (blueprint Fact 4.5). -/
+/-- Two-sided tail of a centred real Gaussian (`fact:gauss`). -/
 lemma gaussianReal_abs_gt_le {v : ℝ≥0} (hv : v ≠ 0) {u : ℝ} (hu : 0 ≤ u) :
     gaussianReal 0 v {t | u < |t|} ≤ ENNReal.ofReal (2 * Real.exp (-(u ^ 2) / (2 * v))) := by
-  -- `hv` is part of the frozen statement; the bound also holds for `v = 0`.
+  -- `hv` is part of the statement; the bound also holds for `v = 0`.
   have _ := hv
   have hX : HasSubgaussianMGF id v (gaussianReal 0 v) :=
     hasSubgaussianMGF_of_hasLaw ⟨aemeasurable_id, Measure.map_id⟩
@@ -109,7 +109,7 @@ lemma gaussianReal_abs_gt_le {v : ℝ≥0} (hv : v ≠ 0) {u : ℝ} (hu : 0 ≤ 
 
 lemma likRatio_pos (σ : ℝ) (f₀ g y : Fin n → ℝ) : 0 < likRatio σ f₀ g y := Real.exp_pos _
 
-/-- `L(g; y) ≤ exp(|y − f₀|² / (2σ²))` (blueprint Remark 2.6). -/
+/-- `L(g; y) ≤ exp(|y − f₀|² / (2σ²))`. -/
 lemma likRatio_le {σ : ℝ} (hσ : 0 < σ) (f₀ g y : Fin n → ℝ) :
     likRatio σ f₀ g y ≤ Real.exp ((∑ i, (y i - f₀ i) ^ 2) / (2 * σ ^ 2)) := by
   unfold likRatio
@@ -140,7 +140,7 @@ lemma continuous_likRatio (σ : ℝ) (X : Matrix (Fin n) (Fin J) ℝ) (f₀ : Fi
 /-! ### Change of measure -/
 
 /-- Tonelli for a product of one-coordinate functions on `Fin n → E`
-(adapted from `Theo89/Decomp.lean`). -/
+by Tonelli. -/
 private theorem lintegral_fin_prod {n : ℕ} {E : Type*}
     [MeasurableSpace E] {μ : Fin n → Measure E} [∀ i, SigmaFinite (μ i)]
     (f : Fin n → E → ℝ≥0∞) (hf : ∀ i, Measurable (f i)) :
@@ -165,7 +165,7 @@ private theorem lintegral_fin_prod {n : ℕ} {E : Type*}
               (hf i.succ).comp (measurable_pi_apply i)).aemeasurable
         _ = ∏ i, ∫⁻ x, f i x ∂(μ i) := by rw [Fin.prod_univ_succ]
 
-/-- Product of densities over a common base measure (adapted from `Theo89/Decomp.lean`). -/
+/-- Product of densities over a common base measure. -/
 private theorem pi_withDensity_fin {E : Type*} [MeasurableSpace E] (μ : Measure E)
     [SigmaFinite μ] (q : Fin n → E → ℝ≥0∞) (hq : ∀ i, Measurable (q i))
     [∀ i, SigmaFinite (μ.withDensity (q i))] :
@@ -215,7 +215,7 @@ private lemma prod_gaussianPDF_eq {σ : ℝ} (hσ : 0 < σ) (f₀ g y : Fin n �
   field_simp
   ring
 
-/-- Change of measure: `P_g = P_{f₀}` with density `L(g; ·)` (blueprint Fact 7.5). -/
+/-- Change of measure: `P_g = P_{f₀}` with density `L(g; ·)` (`fact:com`). -/
 lemma dataLaw_eq_withDensity {σ : ℝ} (hσ : 0 < σ) (f₀ g : Fin n → ℝ) :
     dataLaw σ g = (dataLaw σ f₀).withDensity (fun y => ENNReal.ofReal (likRatio σ f₀ g y)) := by
   have hm : Measurable (fun y : Fin n → ℝ => ∏ i, gaussianPDF (f₀ i) (σ ^ 2).toNNReal (y i)) :=

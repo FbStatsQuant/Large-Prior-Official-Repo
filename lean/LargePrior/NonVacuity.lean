@@ -2,7 +2,7 @@ import LargePrior.HorseshoeMain
 import LargePrior.Basis
 
 /-!
-# Non-vacuity (blueprint `prop:nonvacuity`)
+# Non-vacuity
 
 A concrete instance satisfying every hypothesis of `MainHorseshoeStatement`: the univariate
 Fourier dictionary `ψ₀, …, ψ_{n+1}` at the design `xᵢ = i/n`, the truth `f₀ = ψ₁`, `σ = 1`,

@@ -1,9 +1,9 @@
 import LargePrior.CorNonVacuityS
 
 /-!
-# Optional: the Jackson inequality for `0 < α < 1`, `r = 1` (blueprint §J)
+# Optional: the Jackson inequality for `0 < α < 1`, `r = 1`
 
-A non-vacuity witness for the classical input `JacksonIneq` (attack A1, finding 1): Fejér means
+A non-vacuity witness for the classical input `JacksonIneq`: Fejér means
 approximate a 1-periodic `α`-Hölder function to `O(q^{−α})` when `α < 1`. With it, the Fourier
 end-to-end corollary applies to `f₀ = ψ₁` (order `1/2`, difference order `1`) with no assumed input.
 The Jackson inequality and the resulting Fourier instance are both proved below.

@@ -5,13 +5,13 @@ import LargePrior.FourierExpand
 # Chebyshev tensorization via the Fourier de la Vallée Poussin smoother
 
 Reduction of the univariate and tensor-product Chebyshev approximation operators
-`P_m = Q_{2m − 1}` to the shipped Fourier development (`VdP`, `FourierTensor`, `FourierExpand`):
+`P_m = Q_{2m − 1}` to the Fourier development (`VdP`, `FourierTensor`, `FourierExpand`):
 
 1. Univariate error bound for `Qop (2 * m - 1)` with the paper's displayed constant
-   `chebC α r CJ = max 2 (4 * 3^α * CJ * chebCtr α r)` (D:556–568), keeping the sup-norm bound
-   `R` separate from the transferred Hölder–Zygmund radius `chebCtr α r * R`.
-2. Generic telescoping error bound for `Pop` with exact per-coordinate weights `3^k` (D:646–650),
-   specialised to `chebCapp`.
+   `chebC α r CJ = max 2 (4 * 3^α * CJ * chebCtr α r)` (proof of lem:chebyshev-profile), keeping
+   the sup-norm bound `R` separate from the transferred Hölder–Zygmund radius `chebCtr α r * R`.
+2. Generic telescoping error bound for `Pop` with exact per-coordinate weights `3^k`
+   (proof of lem:chebyshev-aniso-profile), specialised to `chebCapp`.
 3. Preservation of coordinatewise evenness and 1-periodicity under `Qop` and `Qcoord`, and
    coordinatewise evenness under `Pop` (`Pop_coordEven`, via internal periodicity).
 4. Cosine-only expansion of `Pop (fun k => 2 * m k - 1) g` through the public `Pop_expansion` at
@@ -114,7 +114,7 @@ lemma coef_eq_zero_of_even_periodic {g : ℝ → ℝ} (heven : ∀ t, g (-t) = g
   simp_rw [h2, intervalIntegral.integral_neg] at h1
   linarith
 
-/-! ## Univariate error bound for `Qop (2 * m - 1)` (D:556–568) -/
+/-! ## Univariate error bound for `Qop (2 * m - 1)` (proof of lem:chebyshev-profile) -/
 
 private lemma Qop_one (g : ℝ → ℝ) (u : ℝ) : Qop 1 g u = coef g 0 := by
   simp [Qop, budgetAtoms, qMult, freq, fourierAtom]
@@ -128,9 +128,9 @@ private lemma budgetDeg_cheb_bounds {m : ℕ} (hm : 2 ≤ m) :
   push_cast at h'
   linarith
 
-/-- **Univariate Chebyshev operator error bound** (D:556–568): for `P_m = Q_{2m−1}`, keeping the
-sup-norm bound `|g| ≤ R` separate from the transferred Hölder–Zygmund radius `chebCtr α r * R`
-yields the exact displayed constant `chebC α r CJ = max{2, 4 · 3^α C_J C_tr(α)}`. -/
+/-- **Univariate Chebyshev operator error bound** (proof of lem:chebyshev-profile): for
+`P_m = Q_{2m−1}`, keeping the sup-norm bound `|g| ≤ R` separate from the transferred radius
+`chebCtr α r * R` yields the exact displayed constant `chebC α r CJ = max{2, 4 · 3^α C_J C_tr(α)}`. -/
 lemma Qop_cheb_error {α : ℝ} {r : ℕ} {CJ R : ℝ} {g : ℝ → ℝ} (hα : 0 < α)
     (hJ : JacksonIneq α r CJ) (hR : ∀ t, |g t| ≤ R) (hHZ : HZBall1 α r (chebCtr α r * R) g)
     {m : ℕ} (hm : 1 ≤ m) (u : ℝ) :
@@ -140,8 +140,8 @@ lemma Qop_cheb_error {α : ℝ} {r : ℕ} {CJ R : ℝ} {g : ℝ → ℝ} (hα : 
   have hmpos : (0 : ℝ) < m := by exact_mod_cast hm
   have hmα : 0 ≤ (m : ℝ) ^ (-α) := Real.rpow_nonneg hmpos.le _
   rcases eq_or_lt_of_le hm with rfl | hm2
-  · -- m = 1: the shipped bound on the constant coefficient plus the pointwise bound on `g`.
-    -- D:568 puts the difference under the unit-mass integral first; the estimate is the same.
+  · -- m = 1: the bound `coef_abs_le` on the constant coefficient plus the pointwise bound on `g`.
+    -- The paper puts the difference under the unit-mass integral first; the estimate is the same.
     rw [show 2 * 1 - 1 = 1 by rfl, Qop_one]
     have h1 : |g u - coef g 0| ≤ 2 * R := by
       have hc0 := coef_abs_le hgc hR 0
@@ -192,7 +192,7 @@ lemma Qop_cheb_error {α : ℝ} {r : ℕ} {CJ R : ℝ} {g : ℝ → ℝ} (hα : 
           mul_le_mul_of_nonneg_right h4 (mul_nonneg hR0 hmα)
       _ = chebC α r CJ * R * (m : ℝ) ^ (-α) := by ring
 
-/-! ## Generic weighted telescoping bound (D:646–650) -/
+/-! ## Generic weighted telescoping bound (proof of lem:chebyshev-aniso-profile) -/
 
 private lemma foldr_Qcoord_error_weighted {d : ℕ} {f : (Fin d → ℝ) → ℝ} (hf : Continuous f)
     (n : Fin d → ℕ) (ε : Fin d → ℝ) (hε : ∀ k x, |f x - Qcoord (n k) k f x| ≤ ε k) :
@@ -225,9 +225,9 @@ private lemma foldr_Qcoord_error_weighted {d : ℕ} {f : (Fin d → ℝ) → ℝ
     rw [hsplit]
     exact (abs_add_le _ _).trans (by linarith)
 
-/-- **Generic weighted telescoping bound** (D:646–650): for any continuous `f` and per-coordinate
-errors `|f − Q^{(k)}_{n_k} f| ≤ ε_k`, `|f − P_n f| ≤ ∑_k 3^k ε_k` (0-indexed `k : Fin d`, matching
-the paper's `3^{k−1}` for `1 ≤ k ≤ d`). -/
+/-- **Generic weighted telescoping bound** (proof of lem:chebyshev-aniso-profile): for continuous
+`f` and errors `|f − Q^{(k)}_{n_k} f| ≤ ε_k`, `|f − P_n f| ≤ ∑_k 3^k ε_k` (0-indexed `k : Fin d`,
+matching the paper's `3^{k−1}` for `1 ≤ k ≤ d`). -/
 lemma Pop_error_weighted {d : ℕ} {f : (Fin d → ℝ) → ℝ} (hf : Continuous f) (n : Fin d → ℕ)
     (ε : Fin d → ℝ) (hε : ∀ k x, |f x - Qcoord (n k) k f x| ≤ ε k) (x : Fin d → ℝ) :
     |f x - Pop n f x| ≤ ∑ k : Fin d, 3 ^ (k : ℕ) * ε k := by
@@ -239,8 +239,8 @@ lemma Pop_error_weighted {d : ℕ} {f : (Fin d → ℝ) → ℝ} (hf : Continuou
     (fun k _ => ⟨Fin.cast (List.length_finRange).symm k, mem_univ _, by simp⟩) fun i _ => ?_
   simp [List.get_eq_getElem]
 
-/-- **Tensor Chebyshev operator error bound** (D:646–650): combining `Qop_cheb_error` in each
-coordinate with `Pop_error_weighted` yields the exact displayed constant `chebCapp`. -/
+/-- **Tensor Chebyshev operator error bound** (proof of lem:chebyshev-aniso-profile): combining
+`Qop_cheb_error` in each coordinate with `Pop_error_weighted` yields the displayed `chebCapp`. -/
 lemma Pop_cheb_error {d : ℕ} (hd : 0 < d) {α : Fin d → ℝ} {r : Fin d → ℕ} {CJ : Fin d → ℝ}
     {R : ℝ} {g : (Fin d → ℝ) → ℝ} (hα : ∀ k, 0 < α k)
     (hJ : ∀ k, JacksonIneq (α k) (r k) (CJ k)) (hg : Continuous g) (hR : ∀ u, |g u| ≤ R)
@@ -375,7 +375,7 @@ lemma Pop_coordEven {d : ℕ} {f : (Fin d → ℝ) → ℝ}
     ∀ i u, Pop n f (Function.update u i (-u i)) = Pop n f u :=
   (foldr_Qcoord_even_periodic heven hper n (List.finRange d)).1
 
-/-! ## Univariate cosine-only expansion (D:556–572) -/
+/-! ## Univariate cosine-only expansion (proof of lem:chebyshev-profile) -/
 
 /-- Univariate Chebyshev coefficient map extracted from `Qop (2 * m - 1) g`: for `m ≥ 1` (the
 range used by `Qop_cheb_expansion`) it is zero for `j ≥ m`. It is independent of dictionary size
@@ -385,9 +385,9 @@ def chebUnivarCoeff (g : ℝ → ℝ) (m j : ℕ) : ℝ :=
     qMult (2 * m - 1) j * coef g (chebCosIdx j)
   else 0
 
-/-- **Univariate cosine-only expansion** (D:556–572): for continuous, even, 1-periodic `g` with
-`|g| ≤ R` and `m ≥ 1`, `Qop (2 * m - 1) g` expands over cosine atoms `chebCosIdx j` (`j < m`)
-with coefficients `ϑ` independent of `L ≥ m`, vanishing for `j ≥ m`, and bounded by `R`. -/
+/-- **Univariate cosine-only expansion** (proof of lem:chebyshev-profile): for continuous, even,
+1-periodic `g` with `|g| ≤ R` and `m ≥ 1`, `Qop (2 * m - 1) g` expands over cosine atoms
+`chebCosIdx j` (`j < m`), coefficients `ϑ` independent of `L ≥ m`, zero for `j ≥ m`, bounded by `R`. -/
 lemma Qop_cheb_expansion {g : ℝ → ℝ} {R : ℝ} (hg : Continuous g) (heven : ∀ t, g (-t) = g t)
     (hper : Function.Periodic g 1) (hR : ∀ t, |g t| ≤ R) {m : ℕ} (hm : 1 ≤ m) :
     ∃ ϑ : ℕ → ℝ, (∀ j, m ≤ j → ϑ j = 0) ∧ (∀ j, |ϑ j| ≤ R) ∧
@@ -449,11 +449,11 @@ lemma Qop_cheb_expansion {g : ℝ → ℝ} {R : ℝ} (hg : Continuous g) (heven 
     · intro j _
       rw [freq_chebCosIdx]
 
-/-! ## Multivariate cosine-only expansion by reflection averaging and reindexing (D:653–667) -/
+/-! ## Multivariate cosine-only expansion by reflection averaging and reindexing -/
 
-/- Note on departure from the paper (D:659): instead of integrating `g · Ψ_ν` over `𝕋^d` to kill
-sine indices, we take the public `Pop_expansion` at `M k = m k - 1` and average `fourierSeries θ`
-over single-coordinate reflections `u_i ↦ −u_i` one coordinate at a time. -/
+/- Departure from the proof of Lemma chebyshev-aniso-profile: instead of integrating `g · Ψ_ν`
+over `𝕋^d` to kill sine indices, we take the public `Pop_expansion` at `M k = m k - 1` and average
+`fourierSeries θ` over single-coordinate reflections `u_i ↦ −u_i` one coordinate at a time. -/
 
 private def maskCoord {d : ℕ} {M : Fin d → ℕ} (i : Fin d) (θ : FourierIdx M → ℝ) :
     FourierIdx M → ℝ :=
@@ -546,10 +546,10 @@ lemma sum_chebIdx_pad {d : ℕ} {m L : Fin d → ℕ} (hL : ∀ k, m k ≤ L k) 
   · intro j _
     rfl
 
-/-- **Multivariate cosine-only expansion of `Pop (fun k => 2 * m k - 1) g`** (D:653–667):
-via public `Pop_expansion` at `M k = m k - 1`, reflection averaging removes all sine indices,
-reindexing `chebCosIdx` maps cosine indices to degrees `< m k`, and zero-padding extends the sum
-to every `L ≥ m` with the same coefficient map `ϑ`. -/
+/-- **Multivariate cosine-only expansion of `Pop (fun k => 2 * m k - 1) g`**
+(proof of lem:chebyshev-aniso-profile): via public `Pop_expansion` at `M k = m k - 1`, reflection
+averaging removes all sine indices, reindexing `chebCosIdx` maps cosine indices to degrees
+`< m k`, and zero-padding extends the sum to every `L ≥ m` with the same coefficient map `ϑ`. -/
 lemma Pop_cheb_expansion {d : ℕ} {g : (Fin d → ℝ) → ℝ} {R : ℝ} (hg : Continuous g)
     (heven : ∀ i u, g (Function.update u i (-u i)) = g u)
     (hper : ∀ i u, g (Function.update u i (u i + 1)) = g u) (hR : ∀ u, |g u| ≤ R)

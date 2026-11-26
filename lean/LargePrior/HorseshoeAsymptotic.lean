@@ -1,7 +1,7 @@
 import LargePrior.WGFixed
 
 /-!
-# The horseshoe satisfies Assumption 3 (blueprint `thm:hs-assumption3`)
+# The horseshoe satisfies Assumption 3
 
 Translation of Wei and Ghosal (2020), Theorem 3.3.
 -/
@@ -13,7 +13,7 @@ noncomputable section
 
 namespace LargePrior
 
-/-- `log x = o(x^ν)`, with coefficient parameter `μ`, for item 2 of the blueprint proof. -/
+/-- `log x = o(x^ν)`, with coefficient parameter `μ`. -/
 lemma eventually_two_Lambda_le_split {μ ν K : ℝ} (hμ : 0 < μ) (hν : 0 < ν) (hK : 0 < K) :
     ∀ᶠ x : ℝ in atTop, 2 * ((1 + μ) * Real.log x + Real.log 4) ≤ K * x ^ ν := by
   have h1 := (isLittleO_log_rpow_atTop hν).bound (show 0 < K / (4 * (1 + μ)) by positivity)
@@ -29,7 +29,7 @@ lemma eventually_two_Lambda_le_split {μ ν K : ℝ} (hμ : 0 < μ) (hν : 0 < �
       _ = K / 2 * x ^ ν := by field_simp; ring
   nlinarith
 
-/-- `log x = o(x^μ)`, in the form used for item 2 of the blueprint proof. -/
+/-- `log x = o(x^μ)`. -/
 private lemma eventually_two_Lambda_le {μ K : ℝ} (hμ : 0 < μ) (hK : 0 < K) :
     ∀ᶠ x : ℝ in atTop, 2 * ((1 + μ) * Real.log x + Real.log 4) ≤ K * x ^ μ :=
   eventually_two_Lambda_le_split hμ hμ hK
@@ -53,7 +53,7 @@ lemma rpow_neg_two_add_split {x μ ν : ℝ} (hx : 0 < x) :
     Real.rpow_add hx, Real.rpow_add hx, Real.rpow_two]
 
 /-- The tail at `u = min(c_δ, η) ε̃ / J` at a fixed `n`, with target exponent `μ` and the
-splitting `μ'' = μ + ν` (blueprint, "Tail at `u_n`"). -/
+splitting `μ'' = μ + ν`. -/
 lemma hs_tail_fixed_mu {J n : ℕ} {εt τ η cδ cτ μ ν : ℝ} (hJ2 : 2 ≤ J) (hn : 1 ≤ n)
     (hnε : 1 ≤ n * εt ^ 2) (hεt : 0 < εt) (hτ : 0 < τ) (hη : 0 < η) (hcδ : 0 < cδ)
     (hcτ : 0 < cτ) (hμ : 0 < μ) (hν : 0 < ν)
@@ -108,7 +108,7 @@ lemma hs_tail_fixed_mu {J n : ℕ} {εt τ η cδ cτ μ ν : ℝ} (hJ2 : 2 ≤ 
     _ = Real.pi / 4 * (min cδ η * εt / J * (J * Q)⁻¹) := by
         field_simp
 
-/-- The tail at `u = min(c_δ, η) ε̃ / J` at a fixed `n` (blueprint, "Tail at `u_n`"). -/
+/-- The tail at `u = min(c_δ, η) ε̃ / J` at a fixed `n`. -/
 private lemma hs_tail_fixed {J n : ℕ} {εt τ η cδ cτ μ'' : ℝ} (hJ2 : 2 ≤ J) (hn : 1 ≤ n)
     (hnε : 1 ≤ n * εt ^ 2) (hεt : 0 < εt) (hτ : 0 < τ) (hη : 0 < η) (hcδ : 0 < cδ)
     (hcτ : 0 < cτ) (hμ'' : 0 < μ'')
@@ -120,7 +120,7 @@ private lemma hs_tail_fixed {J n : ℕ} {εt τ η cδ cτ μ'' : ℝ} (hJ2 : 2 
   have hμ0 : 0 < μ'' / 2 := by positivity
   exact hs_tail_fixed_mu hJ2 hn hnε hεt hτ hη hcδ hcτ hμ0 hμ0 hΛ (by rwa [add_halves])
 
-/-- (WG5) budget at a fixed `n` with `c₅ = B(6 + 5B)` (blueprint, "(WG5) with `c₅`"). -/
+/-- (WG5) budget at a fixed `n` with `c₅ = B(6 + 5B)`. -/
 private lemma hs_wg5_budget {J n a : ℕ} {εt E τ B : ℝ} (hJ2 : 2 ≤ J) (ha1 : 1 ≤ a)
     (haJ : a ≤ J) (hτ : 0 < τ) (hτ1 : τ ≤ 1) (hE : 0 < E) (hB : 0 ≤ B)
     (hb1 : (a : ℝ) * Real.log J ≤ B * n * εt ^ 2) (hb2 : Real.log (1 / εt) ≤ B * Real.log J)

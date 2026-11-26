@@ -1,9 +1,9 @@
 import LargePrior.CorSeqA
 
 /-!
-# Corollary 1: sequence asymptotics (blueprint §B.3–B.4)
+# Corollary 1: sequence asymptotics
 
-Steps 2–3 of the proof of Corollary 1 that concern only the deterministic sequences
+Parts of the proof of Corollary 1 concerning the deterministic sequences
 `N_n, m_{n,k}, a_n, ε̃_n, δ_n, s_n, ε_n` (no dictionary, no prior).
 -/
 
@@ -160,7 +160,7 @@ private lemma two_sided_mono {K C x y : ℝ} (hK : 0 < K) (hKC : K ≤ C) (hx : 
   exact ⟨(mul_le_mul_of_nonneg_right hinv hx).trans h1,
     h2.trans (mul_le_mul_of_nonneg_right hKC hx)⟩
 
-/-- Eventual facts about the chosen sequences (blueprint B.3, Step 2 and G4): `J_n ≥ 2`,
+/-- Eventual facts about the chosen sequences (`lem:cor-budget`): `J_n ≥ 2`,
 `N_n ≥ 1`, `1 ≤ m_{n,k} ≤ L_{n,k}`, `1 ≤ a_n ≤ J_n`, `ε̃_n > 0`, `0 < δ_n ≤ ε̃_n / J_n`. -/
 lemma seq_eventually {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
@@ -214,7 +214,7 @@ lemma seq_eventually {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ
   · exact div_pos (mul_pos h.hcδ hεT) hJ0
   · exact div_le_div_of_nonneg_right (mul_le_of_le_one_left hεT.le h.hcδ1.le) hJ0.le
 
-/-- `a_n ≍ N_n^D`: `C_sp N_n^D ≤ a_n ≤ C N_n^D` for large `n` (blueprint B.4). -/
+/-- `a_n ≍ N_n^D`: `C_sp N_n^D ≤ a_n ≤ C N_n^D` for large `n` (`lem:cor-budget`). -/
 lemma corA_comparable {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     ∃ C : ℝ, 0 < C ∧ ∀ᶠ n : ℕ in atTop,
@@ -248,7 +248,7 @@ lemma tendsto_n_epsT_sq {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → 
     mul_nonneg hC2.le (Real.rpow_nonneg (by linarith) _)
   exact le_mul_of_one_le_right hX hlogJ
 
-/-! ### Explicit constants of eq:cor-constants (cor_v2, W2) -/
+/-! ### Explicit constants of eq:cor-constants -/
 
 /-- `0 < A' = A C_s / C_sp` for `A ≥ 1`. -/
 lemma corAprime_pos {A d : ℕ} {Csp Ceps : ℝ} (hA : 1 ≤ A) (hCsp : 0 < Csp) :
@@ -300,7 +300,7 @@ lemma cor_sRate_le_Cs {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → �
     exact this.trans (mul_le_mul_of_nonneg_right hcs1 hNDnn)
   · exact hceil.trans (mul_le_mul_of_nonneg_right hcs2 hNDnn)
 
-/-- Translation 3 of Appendix B: `A s_n ≤ A' a_n` for all large `n`
+/-- Support-bound translation in Appendix B: `A s_n ≤ A' a_n` for all large `n`
 (from `s_n ≤ C_s N_n^D` and `C_sp N_n^D ≤ a_n`). -/
 lemma cor_sRate_le_Aprime {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) (A : ℕ) :
@@ -352,7 +352,7 @@ lemma cor_sRate_le_Aprime {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d �
         unfold corAprime
         ring
 
-/-- Translation 2 of Appendix B: `c n ε_n² ≤ n ε̃_n²` for all large `n`, with
+/-- Exponent translation in Appendix B: `c n ε_n² ≤ n ε̃_n²` for all large `n`, with
 `c = C_ε² / C_s`. Since `n ε_n² = s_n log J_n`, `s_n ≤ C_s N_n^D` and
 `n ε̃_n² = C_ε² N_n^D log J_n`. -/
 lemma cor_exp_lower_explicit {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
@@ -561,7 +561,7 @@ private lemma orders_eps {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d →
           corRate α n :=
           mul_le_mul_of_nonneg_right (le_add_of_nonneg_right (inv_pos.2 hKl0).le) hR0
 
-/-- The orders of `s_n`, `a_n`, `ε_n` (first part of `CorConclusion`; G1, G2). -/
+/-- The orders of `s_n`, `a_n`, `ε_n` (first part of `CorConclusion`). -/
 lemma cor_orders {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     ∃ C : ℝ, 0 < C ∧ ∀ᶠ n : ℕ in atTop,
@@ -599,7 +599,7 @@ lemma cor_orders {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J
     _ ≤ (K1 + K2 + Cs / Csp) * corA Csp α n (J n) :=
         mul_le_mul_of_nonneg_right (by linarith) (Nat.cast_nonneg _)
 
-/-- `ε̃_n → 0` (G3; not used by Theorem 1, recorded for inspection). -/
+/-- `ε̃_n → 0` (not used by Theorem 1). -/
 lemma tendsto_corEpsT {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     Tendsto (fun n : ℕ => corEpsT Ceps α n (J n)) atTop (𝓝 0) := by

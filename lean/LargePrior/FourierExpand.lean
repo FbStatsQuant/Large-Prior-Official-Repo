@@ -1,7 +1,7 @@
 import LargePrior.FourierTensor
 
 /-!
-# Tensorization: the output of `Pop` in the tensor atoms (blueprint §F.5)
+# Tensorization: the output of `Pop` in the tensor atoms (`eq:tensor-coefficients`)
 
 `P_m f` is a combination of the tensor atoms `Ψ_ν` with `ν_k < budgetAtoms m_k`, with
 coefficients bounded by `sup |f|` (multipliers in `[0,1]`, `∫₀¹ |ψ| ≤ 1`).
@@ -74,7 +74,7 @@ private lemma continuous_coef_section {d : ℕ} {c : (Fin d → ℝ) → ℝ} (h
   exact (hc.comp (continuous_fst.update k continuous_snd)).mul
     ((continuous_fourierAtom j).comp continuous_snd)
 
-/-- Invariant of the expansion after processing the coordinates in `κ` (blueprint §F.5). -/
+/-- Invariant of the expansion after processing the coordinates in `κ` (`eq:tensor-coefficients`). -/
 private def ExpInv {d : ℕ} (M m : Fin d → ℕ) (A : ℝ) (κ : List (Fin d))
     (g : (Fin d → ℝ) → ℝ) : Prop :=
   ∃ c : FourierIdx M → (Fin d → ℝ) → ℝ,

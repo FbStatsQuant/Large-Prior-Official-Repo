@@ -6,8 +6,7 @@ import LargePrior.Spec
 Definitions and main statements (as `Prop`s) for the Lean formalization of Corollary 1 of
 *Large series priors for adaptive and optimal Bayesian nonparametric regression*, of its
 proof (Appendix B), and of the two sparse approximation lemmas of Appendix D (B-spline and
-Fourier dictionaries). Blueprint: `Corollary1/tex/Corollary1_blueprint.tex`.
-Repairs G1–G12 of `Corollary1/ASSUMPTIONS.md` are built in; modelling decisions are D1–D… there.
+Fourier dictionaries).
 
 Classical approximation theorems are *not* proved here. They enter as named hypotheses:
 * `JacksonIneq`: the periodic Jackson(–Stechkin) inequality (Fourier lemma);
@@ -91,7 +90,7 @@ sizes `L_{n,k} ≍ n^{b_k}` with `b_k ≥ β_k`, `J_n ≍ ∏_k L_{n,k}`; Assump
 the profile with fixed constants `C_sp, C_app, E` for all large `n`; the sequence constants
 `C_ε ≥ d C_app` ("`C_ε` sufficiently large", the condition the proof uses) and `c_δ ∈ (0,1)`;
 and Assumption 3 for the sequences `a_n, ε̃_n, δ_n, E_n = E` of `corA`, `corEpsT`, `corDelta`,
-with (WG4) required for one set of size `a_n` (cor_v2, W7; by `wg4_of_card_eq` it then holds for
+with (WG4) required for one set of size `a_n` (by `wg4_of_card_eq` it then holds for
 every set of size `a_n`, in particular for the active set `ξ*_n` built in the proof). -/
 structure CorHyp {d : ℕ} (α b : Fin d → ℝ) (L : ℕ → Fin d → ℕ) (J : ℕ → ℕ)
     (X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ) (f₀ : ∀ n : ℕ, Fin n → ℝ) (σ : ℝ)
@@ -399,7 +398,7 @@ def BSplineProfileStatement : Prop :=
           ∀ ι, |θ ι| ≤ E
 
 /-- **Lemma bspline-profile, part 2** (isotropic, sup-norm form, rectangle profile via
-`m = min_k m_k`, G10). Same as `BSplineProfileStatement` with `d ≥ 1`, a common truncation
+`m = min_k m_k`). Same as `BSplineProfileStatement` with `d ≥ 1`, a common truncation
 level `H`, scalar smoothness `α`, and the common-level one-block approximation. -/
 def BSplineProfileCubeStatement : Prop :=
   ∀ (d q : ℕ) (α Cstar Cdual R : ℝ),

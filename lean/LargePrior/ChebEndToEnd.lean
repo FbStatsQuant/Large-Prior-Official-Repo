@@ -99,7 +99,7 @@ theorem cor_chebyshev_ex_of (hT : ChebTransferStatement) : CorChebyshevExStateme
     (chebJ b) (chebL b) (fun n => (Fintype.equivFin (ChebIdx (chebL b n))).symm) f₀ x
     σ η μ'' cδ h (cheb_sizes hbpos) hcδ hcδ1
 
-/-! ## Unconditional Corollary 1 for `α ∈ (0, 1)^d` (MS1) -/
+/-! ## Unconditional Corollary 1 for `α ∈ (0, 1)^d` -/
 
 /-- **Corollary 1, tensor Chebyshev dictionary, `α ∈ (0, 1)^d`, with no assumed classical input**:
 combines `cheb_transfer_le_one` with `jackson_lip` at `r = 1`. -/

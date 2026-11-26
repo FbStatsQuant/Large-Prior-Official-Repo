@@ -4,8 +4,8 @@ import Mathlib
 # LargePrior: specification
 
 Definitions and the main statements (as `Prop`s) for the Lean formalization of Theorem 1 of
-*Large series priors for adaptive and optimal Bayesian nonparametric regression*
-(blueprint: `tex/LargePrior_blueprint.tex`), of the horseshoe verification of its prior
+*Large series priors for adaptive and optimal Bayesian nonparametric regression*,
+of the horseshoe verification of its prior
 conditions (WG3)–(WG5), and of the basis condition (Assumption 1) for Fourier and B-spline
 dictionaries.
 
@@ -13,7 +13,7 @@ Everything is stated on evaluation vectors: a function is identified with its va
 `n` design points, so `f₀ : Fin n → ℝ` and the dictionary is the `n × J` matrix
 `X i j = ξ_j(x_i)`; `f_θ = X *ᵥ θ`.
 
-Lean conventions to keep in mind (see STATEMENTS.md):
+Lean conventions to keep in mind (see `docs/statements.md`):
 * `Fin n → ℝ` carries the sup norm in Mathlib, so the empirical norm is the explicit `empNorm`.
 * Prior and posterior probabilities are `ℝ≥0∞`-valued measures; no `toReal` is taken.
 -/
@@ -144,7 +144,7 @@ def MasterConclusion (n J : ℕ) (σ : ℝ) (X : Matrix (Fin n) (Fin J) ℝ) (f�
       ≤ ENNReal.ofReal (2 * Real.exp (-(n * εt ^ 2))))
 
 /-- Hypotheses of Theorem 1 at a fixed sample size `n`: the assumptions at `n`, the standing
-requirement `δ ≤ ε̃/J`, and the seven eventual conditions of Section 5.8 (fields `e1`–`e7`). -/
+requirement `δ ≤ ε̃/J`, and seven explicit numeric conditions (fields `e1`–`e7`). -/
 structure MasterHyp (n J : ℕ) (σ : ℝ) (X : Matrix (Fin n) (Fin J) ℝ) (f₀ : Fin n → ℝ)
     (pdf : ℝ → ℝ) (εt δ E M : ℝ) (a : ℕ) (K η μ c4 c5 : ℝ) : Prop where
   hn : 0 < n
@@ -182,8 +182,7 @@ def MasterStatement : Prop :=
     MasterConclusion n J σ X f₀ pdf εt δ M a K η μ c4 c5
 
 /-- Hypotheses of Theorem 1 as stated in the paper, for sequences indexed by `n`.
-Every condition on the sequences is required only for all sufficiently large `n` (this is
-weaker than the standalone document's "for every `n`" and matches the manuscript); the
+Every condition on the sequences is required only for all sufficiently large `n`; the
 constants `σ, K, η, μ, c₄, c₅` are fixed. `J_n ≥ 2` eventually follows from `J_n → ∞`. -/
 structure AsymptoticHyp (J : ℕ → ℕ) (X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ)
     (f₀ : ∀ n : ℕ, Fin n → ℝ) (σ : ℝ) (pdf : ℕ → ℝ → ℝ) (εt δ E M : ℕ → ℝ) (a : ℕ → ℕ)
@@ -361,7 +360,7 @@ structure MainHorseshoeHyp (J : ℕ → ℕ) (X : ∀ n : ℕ, Matrix (Fin n) (F
     Real.log (1 / τ n) ≤ B * Real.log (J n) ∧
     Real.log (E n) ≤ B * Real.log (J n)
 
-/-- **Theorem 1 for the horseshoe prior** (Corollary in the blueprint): Theorem 1 with
+/-- **Theorem 1 for the horseshoe prior**: Theorem 1 with
 `π_n = horseshoePDF τ_n`; the constants are `μ = μ''/2`, `c₄ = 1`, `c₅ = B(6 + 5B)`. -/
 def MainHorseshoeStatement : Prop :=
   ∀ (J : ℕ → ℕ) (X : ∀ n : ℕ, Matrix (Fin n) (Fin (J n)) ℝ) (f₀ : ∀ n : ℕ, Fin n → ℝ)

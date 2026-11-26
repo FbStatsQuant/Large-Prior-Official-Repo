@@ -3,7 +3,7 @@ import LargePrior.HorseshoeAsymptotic
 import LargePrior.Horseshoe
 
 /-!
-# Corollary 1 with the horseshoe prior (blueprint §B.7)
+# Corollary 1 with the horseshoe prior
 
 The horseshoe with `τ_n = J_n^{−(2+μ'')}/√n` satisfies Assumption 3 for the corollary's
 sequences, by the existing translation of Wei and Ghosal (2020), Theorem 3.3
@@ -17,7 +17,7 @@ noncomputable section
 
 namespace LargePrior
 
-/-- Bound 2: `log(1/ε̃_n) ≤ (|log C_ε| + r) log n`. -/
+/-- Inverse-radius bound: `log(1/ε̃_n) ≤ (|log C_ε| + r) log n`. -/
 private lemma log_inv_epsT_le {d : ℕ} {α : Fin d → ℝ} {Ceps : ℝ} (hC : 0 < Ceps)
     (hr : 0 ≤ rateExp α) {n J : ℕ} (hn : 0 < n) (hN : 1 ≤ corN n J) (hlogJ : 1 ≤ Real.log J)
     (hlogn : 1 ≤ Real.log n) :
@@ -35,7 +35,7 @@ private lemma log_inv_epsT_le {d : ℕ} {α : Fin d → ℝ} {Ceps : ℝ} (hC : 
   have h3 := neg_abs_le (Real.log Ceps)
   nlinarith
 
-/-- Bound 3: `log(1/τ_n) = (2 + μ'') log J_n + ½ log n`. -/
+/-- Inverse-scale bound: `log(1/τ_n) = (2 + μ'') log J_n + ½ log n`. -/
 private lemma log_inv_tau_eq {μ'' : ℝ} {n J : ℕ} (hn : 0 < n) (hJ : 0 < J) :
     Real.log (1 / corTau μ'' n J) = (2 + μ'') * Real.log J + Real.log n / 2 := by
   have hnR : (0 : ℝ) < n := by exact_mod_cast hn
@@ -48,7 +48,7 @@ private lemma log_inv_tau_eq {μ'' : ℝ} {n J : ℕ} (hn : 0 < n) (hJ : 0 < J) 
 
 /-- The budget conditions of `HorseshoeAssumption3Statement` for the corollary's sequences:
 some `B ≥ 0` has, for large `n`, `a_n log J_n ≤ B n ε̃_n²`, `log(1/ε̃_n) ≤ B log J_n`,
-`log(1/τ_n) ≤ B log J_n`, `log E ≤ B log J_n` (blueprint B.7). -/
+`log(1/τ_n) ≤ B log J_n`, `log E ≤ B log J_n`. -/
 lemma cor_horseshoe_budget {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) {E μ'' : ℝ} (hE : 0 < E)
     (hμ'' : 0 < μ'') :
@@ -57,7 +57,7 @@ lemma cor_horseshoe_budget {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d �
       Real.log (1 / corEpsT Ceps α n (J n)) ≤ B * Real.log (J n) ∧
       Real.log (1 / corTau μ'' n (J n)) ≤ B * Real.log (J n) ∧
       Real.log E ≤ B * Real.log (J n) := by
-  -- Positivity of `E` is retained in the frozen API; the budget bound only needs `|log E|`.
+  -- Positivity of `E` is retained in the API; the budget bound only needs `|log E|`.
   have _ := hE
   obtain ⟨hJtop, c1, C1, hc1, hlog⟩ := logJ_comparable h
   obtain ⟨Ca, hCa, hA⟩ := corA_comparable h

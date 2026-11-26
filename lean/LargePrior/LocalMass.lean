@@ -1,7 +1,7 @@
 import LargePrior.Posterior
 
 /-!
-# Lemma 1: local prior mass (blueprint `lem:local-mass`)
+# Lemma 1: local prior mass (`lem:local-mass`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -23,7 +23,7 @@ lemma measurableSet_localBall (X : Matrix (Fin n) (Fin J) ℝ) (f₀ : Fin n →
     continuous_empNorm.comp ((continuous_const.matrix_mulVec continuous_id).sub continuous_const)
   exact (isClosed_le hc continuous_const).measurableSet
 
-/-! ### Step 1: an `ℓ₁` coefficient ball lies inside the local ball -/
+/-! ### an `ℓ₁` coefficient ball lies inside the local ball -/
 
 private lemma mem_localBall_of_l1 {X : Matrix (Fin n) (Fin J) ℝ} {f₀ : Fin n → ℝ} {K εt η : ℝ}
     (hX : BasisBound X K) (hK : 0 ≤ K) {θ₀ θ : Fin J → ℝ} (h0 : empNorm (f₀ - X *ᵥ θ₀) ≤ εt)
@@ -55,7 +55,7 @@ private lemma l1_le_of_blocks {θ₀ θ : Fin J → ℝ} {S : Finset (Fin J)} {�
     rw [← add_mul, ← Nat.cast_add, Finset.card_add_card_compl, Fintype.card_fin]
   linarith
 
-/-! ### Step 3: block independence under the product prior -/
+/-! ### block independence under the product prior -/
 
 /-- The prior of a box on the active coordinates. -/
 private lemma prior_box {pdf : ℝ → ℝ} (hpdf : IsProbDensity pdf) (S : Finset (Fin J))
@@ -117,7 +117,7 @@ private lemma prior_localBall_ge {X : Matrix (Fin n) (Fin J) ℝ} {f₀ : Fin n 
   obtain ⟨h1, h2⟩ := hθ
   exact mem_localBall_of_l1 hX hK h0 (l1_le_of_blocks hJδ hθ₀ (hin θ h1) h2)
 
-/-! ### Step 4: case `E ≥ h` -/
+/-! ### case `E ≥ h` -/
 
 private lemma interval_facts {x E h t : ℝ} (hx : |x| ≤ E) (hhE : h ≤ E) (hh : 0 ≤ h)
     (ht : t ∈ Set.Icc (if 0 < x then x - h else x) ((if 0 < x then x - h else x) + h)) :
@@ -179,7 +179,7 @@ private lemma case1_mass {pdf : ℝ → ℝ} {E εt c5 η : ℝ} {a : ℕ} {S : 
     _ ≤ _ := Finset.prod_le_prod fun j _ =>
         coordPrior_Icc_ge hlow (fun t ht => (interval_facts (hθE j) hhE hh ht).1) hh
 
-/-! ### Step 5: case `E < h` -/
+/-! ### case `E < h` -/
 
 private lemma case2_real {J a : ℕ} {μ : ℝ} (hJ : 2 ≤ J) (haJ : a ≤ J)
     (e2 : 2 ≤ (J : ℝ) ^ μ) :
@@ -230,7 +230,7 @@ private lemma case2_mass {pdf : ℝ → ℝ} (hpdf : IsProbDensity pdf) {δ μ :
         rw [Finset.prod_const, hcard, ENNReal.ofReal_pow (by linarith)]
     _ ≤ _ := Finset.prod_le_prod fun _ _ => hsingle
 
-/-! ### Step 6: assembly -/
+/-! ### assembly -/
 
 /-- **Lemma 1** (local prior mass): `Π(B(L̃ ε̃)) ≥ exp(−C_Π n ε̃²)`. -/
 theorem local_mass {X : Matrix (Fin n) (Fin J) ℝ} {f₀ : Fin n → ℝ} {pdf : ℝ → ℝ}
@@ -243,7 +243,7 @@ theorem local_mass {X : Matrix (Fin n) (Fin J) ℝ} {f₀ : Fin n → ℝ} {pdf 
     (e1 : εt ≤ η) (e2 : 2 ≤ (J : ℝ) ^ μ) (e3 : Real.log 2 ≤ n * εt ^ 2) :
     ENNReal.ofReal (Real.exp (-(CPi c4 c5 * n * εt ^ 2))) ≤
       prior J pdf (localBall X f₀ (Ltil K η * εt)) := by
-  -- `hE`, `hμ`, `hc4` are part of the frozen statement and not needed by the proof.
+  -- `hE`, `hμ`, `hc4` are part of the statement and not needed by the proof.
   have _ := hE
   have _ := hμ
   have _ := hc4

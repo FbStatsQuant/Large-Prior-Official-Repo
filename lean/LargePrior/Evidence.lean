@@ -1,7 +1,7 @@
 import LargePrior.LocalMass
 
 /-!
-# Lemma 2: evidence lower bound (blueprint `lem:evidence`)
+# Lemma 2: evidence lower bound (`lem:evidence`)
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -15,8 +15,7 @@ variable {n J : ℕ}
 
 /-! ### (i) The ball `B` and bounds on it -/
 
-/-- `B(r)` is closed, hence measurable. Kept as an alias of `measurableSet_localBall` (the frozen
-statement list of v2/v3 contains this name); it no longer duplicates the proof. -/
+/-- `B(r)` is closed, hence measurable. Alias of `measurableSet_localBall`. -/
 private lemma measurableSet_localBall' (X : Matrix (Fin n) (Fin J) ℝ) (f₀ : Fin n → ℝ) (r : ℝ) :
     MeasurableSet (localBall X f₀ r) :=
   measurableSet_localBall X f₀ r
@@ -203,7 +202,7 @@ theorem evidence_lower {σ : ℝ} (hσ : 0 < σ) (hn : 0 < n) (X : Matrix (Fin n
         ENNReal.ofReal (Real.exp
           (-((c + (Real.sqrt 2 * L / σ + L ^ 2 / (2 * σ ^ 2))) * n * εt ^ 2)))} ≤
       ENNReal.ofReal (Real.exp (-(n * εt ^ 2))) := by
-  -- The bound uses the prior-mass inequality directly; `hc` is retained for the frozen interface.
+  -- The bound uses the prior-mass inequality directly; `hc` is retained for the interface.
   have _ := hc
   set B := localBall X f₀ (L * εt) with hBdef
   have hBmeas : MeasurableSet B := measurableSet_localBall X f₀ (L * εt)

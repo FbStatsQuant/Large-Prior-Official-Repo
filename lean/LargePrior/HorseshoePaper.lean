@@ -1,14 +1,14 @@
 import LargePrior.HorseshoeAsymptotic
 
 /-!
-# The horseshoe paragraph of the paper (v3: W1, W5)
+# The horseshoe paragraph of the paper
 
 The paper (Section 2, after Theorem 1) states: if, for a constant `μ' > 0`,
 `τ_n ≤ J_n^{−(2+μ')}/√n`, `−log τ_n = O(log J_n)`, `log E_n = O(log J_n)`, `δ_n ≍ ε̃_n/J_n`,
 `a_n log J_n ≲ n ε̃_n²` and `n ε̃_n²/log J_n → ∞` (eq:hs-conditions), then the horseshoe with the
 deterministic global scale `τ_n` satisfies Assumption 3, **with any `μ < μ'` in (WG3)**.
 
-* `HorseshoeAssumption3MuStatement` generalizes the frozen `HorseshoeAssumption3Statement`
+* `HorseshoeAssumption3MuStatement` generalizes `HorseshoeAssumption3Statement`
   (which fixes `μ = μ''/2`) to every `μ ∈ (0, μ'')`.
 * `HorseshoePaperConditionsStatement` is the paragraph itself: the conditions of
   eq:hs-conditions, with explicit `O`-constants (one-sided, which is weaker), imply that there is
@@ -77,7 +77,7 @@ def HorseshoePaperConditionsStatement : Prop :=
           WG4 (horseshoePDF (τ n)) (J n) S η (εt n) 1 n) ∧
         WG5 (horseshoePDF (τ n)) (E n) (εt n) c5 (a n) n
 
-/-- **Wei–Ghosal Theorem 3.3 with any `μ ∈ (0, μ'')`** (W1). -/
+/-- **Wei–Ghosal Theorem 3.3 with any `μ ∈ (0, μ'')`**. -/
 theorem horseshoe_assumption3_mu : HorseshoeAssumption3MuStatement := by
   intro J εt δ E τ a η μ μ'' cδ cτ B hJ hnεt hη hμ hμμ'' hcδ hcτ hB ha hεt hE hτ hδ hτJ hbud
   have hJR : Tendsto (fun n => (J n : ℝ)) atTop atTop := tendsto_natCast_atTop_atTop.comp hJ
@@ -97,7 +97,7 @@ theorem horseshoe_assumption3_mu : HorseshoeAssumption3MuStatement := by
     rwa [add_sub_cancel]
   exact hs_fixed_mu hJ2 hn1 hnε hη hμ hν hcδ hcτ hB hQn hPn hΛ han hεn hEn hτn hδn hτJ' hbn
 
-/-- **The paper's horseshoe paragraph** (W5). -/
+/-- **The paper's horseshoe paragraph**. -/
 theorem horseshoe_paper_conditions : HorseshoePaperConditionsStatement := by
   intro J εt δ E τ a η μ' cδ Cτ CE Ca hJ hrat hη hμ' hcδ ha hεt hE hτ hτle hCτ hCE hδ hCa
   set B : ℝ := max (max Ca Cτ) (max CE 0) with hBdef
@@ -171,7 +171,7 @@ theorem horseshoe_paper_conditions : HorseshoePaperConditionsStatement := by
   exact horseshoe_assumption3_mu J εt δ E τ a η μ μ' cδ 1 B hJ hnε hη hμ hμμ' hcδ one_pos hB0
     ha hεt hE hτ hδ hτle' hbudget
 
-/-- The frozen `HorseshoeAssumption3Statement` is the instance `μ = μ''/2` of
+/-- `HorseshoeAssumption3Statement` is the instance `μ = μ''/2` of
 `HorseshoeAssumption3MuStatement`. -/
 theorem horseshoe_assumption3_of_mu : HorseshoeAssumption3Statement := by
   intro J εt δ E τ a η μ'' cδ cτ B hJ hnεt hη hμ'' hcδ hcτ hB ha hεt hE hτ hδ hτJ hbud

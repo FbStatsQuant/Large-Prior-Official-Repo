@@ -1,7 +1,7 @@
 import LargePrior.Basis
 
 /-!
-# B-splines: nonnegativity, partition of unity, Assumption 1 (blueprint Part B)
+# B-splines: nonnegativity, partition of unity, Assumption 1
 -/
 
 open MeasureTheory Finset
@@ -11,7 +11,7 @@ noncomputable section
 
 namespace LargePrior
 
-/-! ## Knots (blueprint `lem:knots`) -/
+/-! ## Knots -/
 
 lemma knot_mono (q K : ℕ) : Monotone (knot q K) := by
   intro i j hij
@@ -69,7 +69,7 @@ lemma knot_lt_one_iff {q K i : ℕ} (hK : 1 ≤ K) : knot q K i < 1 ↔ i + 1 < 
     · have := (knot_eq_one_iff hK).1 h1
       omega
 
-/-! ## Support and nonnegativity (blueprint `lem:bspl-support`, `lem:bspl-nonneg`) -/
+/-! ## Support and nonnegativity -/
 
 private lemma bspl_one (q K i : ℕ) (x : ℝ) :
     bspl q K 1 i x = if (knot q K i ≤ x ∧ x < knot q K (i + 1)) ∨
@@ -176,7 +176,7 @@ lemma bspl_nonneg (q K k i : ℕ) (x : ℝ) : 0 ≤ bspl q K k i x := by
   | zero => exact le_refl _
   | succ n => exact bspl_nonneg_aux q K x n i
 
-/-! ## Partition of unity (blueprint `prop:bspl-unity`) -/
+/-! ## Partition of unity -/
 
 /-- Order one, `x < 1`: `N₁(i,x) = 1{tᵢ ≤ x} − 1{tᵢ₊₁ ≤ x}`. -/
 private lemma bspl_one_eq_sub_of_lt {q K i : ℕ} {x : ℝ} (hx : x < 1) :
@@ -278,7 +278,7 @@ theorem bspl_sum_eq_one {q K k : ℕ} (hq : 1 ≤ q) (hK : 1 ≤ K) (hk1 : 1 ≤
   | zero => exact bspl_sum_one hq hK hx
   | succ n ih => exact (bspl_sum_succ hK (by omega) x).trans (ih (by omega))
 
-/-! ## B-splines lie in `[0, 1]` (blueprint `cor:bspl-unit`) -/
+/-! ## B-splines lie in `[0, 1]` -/
 
 lemma bspline_nonneg (q K i : ℕ) (x : ℝ) : 0 ≤ bspline q K i x := bspl_nonneg q K q i x
 
@@ -300,7 +300,7 @@ lemma bsplineTensor_mem_Icc {d : ℕ} {q K : Fin d → ℕ} (hq : ∀ k, 1 ≤ q
     Finset.prod_le_one₀ (fun k _ => bspline_nonneg _ _ _ _)
       (fun k _ => bspline_le_one (hq k) (hK k) (i k) (hx k))⟩
 
-/-- **Assumption 1 for B-spline dictionaries** (blueprint `prop:bspline-basis`). -/
+/-- **Assumption 1 for B-spline dictionaries**. -/
 theorem bspline_basis : BSplineBasisStatement := by
   intro n J d q K i x hq hK hx
   apply basisBound_of_abs_le zero_le_one

@@ -1,7 +1,7 @@
 import LargePrior.Spec
 
 /-!
-# (WG5): the Lean form and the paper's form (cor_v2, W3)
+# (WG5): the Lean form and the paper's form
 
 The paper states (WG5) as `a_n [log a_n + 2 log(1/ε̃_n) − log π_inf] ≤ c₅ n ε̃_n²` with
 `π_inf = inf_{|t| ≤ E_n} π_n(t) > 0` and `c₅ ≥ 0`, without a positive part. The Lean `WG5` uses

@@ -3,7 +3,7 @@ import LargePrior.SplineReadout
 import LargePrior.SplinePad
 
 /-!
-# Lemma bspline-profile (blueprint §S.4)
+# Lemma bspline-profile (`lem:bspline-profile`)
 -/
 
 open Finset

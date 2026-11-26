@@ -1,7 +1,7 @@
 import LargePrior.Horseshoe
 
 /-!
-# (WG3)–(WG5) at a fixed sample size (blueprint Part P, fixed `n`)
+# (WG3)–(WG5) at a fixed sample size
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -11,13 +11,13 @@ noncomputable section
 
 namespace LargePrior
 
-/-- (WG3) from a tail bound at a smaller threshold (blueprint `lem:wg3-of-tail`). -/
+/-- (WG3) from a tail bound at a smaller threshold. -/
 lemma wg3_of_tail {pdf : ℝ → ℝ} {δ μ u : ℝ} {J : ℕ} (huδ : u ≤ δ)
     (htail : coordPrior pdf {t | u < |t|} ≤ ENNReal.ofReal ((J : ℝ) ^ (-(1 + μ)))) :
     WG3 pdf δ μ J :=
   le_trans (measure_mono fun _ (ht : δ < |_|) => lt_of_le_of_lt huδ ht) htail
 
-/-- (WG4) for every active set, from a tail bound at `η ε̃ / J` (blueprint `lem:wg4-of-tail`). -/
+/-- (WG4) for every active set, from a tail bound at `η ε̃ / J`. -/
 lemma wg4_of_tail {pdf : ℝ → ℝ} (hpdf : IsProbDensity pdf) {J : ℕ} (hJ : 2 ≤ J)
     {μ η εt c4 : ℝ} {n : ℕ} (hμ : 0 < μ) (hJμ : 2 ≤ (J : ℝ) ^ μ) (hη : 0 < η) (hεt : 0 < εt)
     (hc4 : Real.log 2 ≤ c4 * n * εt ^ 2)
@@ -95,7 +95,7 @@ lemma wg4_of_tail {pdf : ℝ → ℝ} (hpdf : IsProbDensity pdf) {J : ℕ} (hJ :
     exact (ENNReal.add_le_add_iff_right ENNReal.ofReal_ne_top).mp h3
   exact (ENNReal.ofReal_le_ofReal hexp).trans (hGlow.trans (measure_mono hGsub))
 
-/-- (WG5) for the horseshoe with `π_low = c_HS τ / max(E, τ)²` (blueprint `lem:wg5-hs`). -/
+/-- (WG5) for the horseshoe with `π_low = c_HS τ / max(E, τ)²`. -/
 lemma horseshoe_wg5 {τ E εt c5 : ℝ} {a n : ℕ} (hτ : 0 < τ) (hE : 0 < E)
     (hbudget : (a : ℝ) * max 0 (Real.log a + 2 * Real.log (1 / εt) -
         Real.log (hsConst * τ / max E τ ^ 2)) ≤ c5 * n * εt ^ 2) :

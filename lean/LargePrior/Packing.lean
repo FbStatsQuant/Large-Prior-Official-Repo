@@ -1,7 +1,7 @@
 import LargePrior.Basic
 
 /-!
-# Lemma 6: packing bound in a finite-dimensional inner product space (blueprint `lem:packing`)
+# Lemma 6: packing bound in a finite-dimensional inner product space (`lem:packing`)
 -/
 
 open MeasureTheory Metric

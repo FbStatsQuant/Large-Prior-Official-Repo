@@ -1,7 +1,7 @@
 import LargePrior.FourierExpand
 
 /-!
-# Lemma fourier-profile (blueprint §F.6)
+# Lemma fourier-profile (`lem:fourier-profile`)
 -/
 
 open MeasureTheory Finset

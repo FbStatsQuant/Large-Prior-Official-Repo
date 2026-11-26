@@ -1,7 +1,7 @@
 import LargePrior.TrigBasics
 
 /-!
-# The Fejér kernel in real form (blueprint §F.1(6))
+# The Fejér kernel in real form (`eq:fejer-kernel`)
 -/
 
 open MeasureTheory Finset intervalIntegral

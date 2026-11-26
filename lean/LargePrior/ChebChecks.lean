@@ -217,7 +217,7 @@ private lemma cheb_holder_witness {d : ℕ} (hd : 0 < d) {α : Fin d → ℝ}
       hHyp hsize (by norm_num) (by norm_num)
   exact ⟨CJ, chebCapp_pos hd one_pos, c5, hc5, hConclusion⟩
 
-/-- W1: the two-coordinate corollary for the product at smoothness `(1/2, 3/4)`. -/
+/-- Non-vacuity example: Corollary 1 at `d = 2` for `f₀(y) = y₀ y₁` at smoothness `(1/2, 3/4)`. -/
 theorem cor_chebyshev_witness_two :
     let α : Fin 2 → ℝ := ![1 / 2, 3 / 4]
     let f₀ : (Fin 2 → ℝ) → ℝ := fun y => y 0 * y 1
@@ -255,7 +255,7 @@ theorem cor_chebyshev_witness_two :
     have h := design_fraction_mem i
     exact ⟨h, ⟨sub_nonneg.mpr h.2, sub_le_self _ h.1⟩⟩
 
-/-- W2: the one-coordinate corollary for the identity at smoothness `1/2`. -/
+/-- Non-vacuity example: Corollary 1 at `d = 1` for `f₀(y) = y₀` at smoothness `1/2`. -/
 theorem cor_chebyshev_witness_one :
     let α : Fin 1 → ℝ := fun _ => 1 / 2
     let f₀ : (Fin 1 → ℝ) → ℝ := fun y => y 0

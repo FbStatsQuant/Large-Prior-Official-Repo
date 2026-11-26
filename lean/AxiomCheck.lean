@@ -22,7 +22,7 @@ example : BSplineBasisStatement := bspline_basis
 #print axioms nonvacuity_conclusion
 #print axioms posterior_ref_invariant
 
-/-! Corollary 1 and the sparse approximation lemmas (corollary run; statements frozen as cor_v2 on 2026-11-03). -/
+/-! Corollary 1 and the sparse approximation lemmas. -/
 
 example : CorollaryStatement := corollary_main
 example : CorHorseshoeStatement := cor_horseshoe
@@ -53,14 +53,14 @@ example : CorTheorem1InputsStatement := cor_asymptoticHyp
 #print axioms corFourierHalf_nonvacuity
 #print axioms corFourier_instance_conclusion
 
-/-! cor_v2 additions (2026-11-03): W4 export, W7 permutation invariance, W3 (WG5) bridge. -/
+/-! Theorem 1 inputs, permutation invariance, and the paper's (WG5). -/
 
 #print axioms cor_asymptoticHyp
 #print axioms wg4_of_card_eq
 #print axioms wg5_iff_noPos
 #print axioms wg5Paper_implies_wg5
 
-/-! v3 additions (2026-11-03): the paper's horseshoe paragraph (W1, W5). -/
+/-! The paper's horseshoe paragraph. -/
 
 example : HorseshoeAssumption3MuStatement := horseshoe_assumption3_mu
 example : HorseshoePaperConditionsStatement := horseshoe_paper_conditions
@@ -70,8 +70,8 @@ example : HorseshoeAssumption3Statement := horseshoe_assumption3_of_mu
 #print axioms horseshoe_paper_conditions
 #print axioms horseshoe_assumption3_of_mu
 
-/-! L-02 additions (2026-11-26): the tensor Chebyshev dictionary (statements frozen in
-`ChebSpec.lean`, commit 2c40352). `cor_chebyshev` is the anisotropic Corollary 1. -/
+/-! The tensor Chebyshev dictionary.
+`cor_chebyshev` is the anisotropic Corollary 1. -/
 
 example : ChebyshevBasisStatement := chebyshev_basis
 example : ChebTransferStatement := cheb_transfer_statement

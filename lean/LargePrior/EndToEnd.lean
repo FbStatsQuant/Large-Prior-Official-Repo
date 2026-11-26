@@ -6,7 +6,7 @@ import LargePrior.Basis
 import LargePrior.BSpline
 
 /-!
-# Corollary 1 for the concrete dictionaries with the horseshoe prior (blueprint §E)
+# Corollary 1 for the concrete dictionaries with the horseshoe prior
 
 Assumption 2 is derived from the function class through the profile lemmas: Fourier
 (periodic Hölder–Zygmund ball) and multiresolution B-splines.
@@ -77,8 +77,8 @@ lemma spline_basisBound {d q : ℕ} (hq : 1 ≤ q) (b : Fin d → ℝ) {x : ∀ 
     (fun j k => ((((splineEquiv q b n).symm j) k).2 : ℕ)) (x n)
     (fun _ _ => hq) (fun _ _ => Nat.one_le_two_pow) (fun m k => hx n m k)
 
-/-- Transfer of a sup-norm Fourier profile to the empirical profile of `fourierX` (blueprint
-E.2): `C_sp = 1`, `C_app = C R`, `E = R + 1`. -/
+/-- Transfer of a sup-norm Fourier profile to the empirical profile of `fourierX`
+(`eq:sup-to-empirical`): `C_sp = 1`, `C_app = C R`, `E = R + 1`. -/
 lemma profileAt_fourier {d : ℕ} {b : Fin d → ℝ} {x : ∀ n : ℕ, Fin n → Fin d → ℝ}
     {f₀ : (Fin d → ℝ) → ℝ} {α : Fin d → ℝ} {C R : ℝ} (hC : 0 ≤ C) (hR : 0 ≤ R)
     (n : ℕ) (hprof : ∀ m : Fin d → ℕ, (∀ k, 1 ≤ m k ∧ m k ≤ 2 * fourierM b n k + 1) →
@@ -100,7 +100,7 @@ lemma profileAt_fourier {d : ℕ} {b : Fin d → ℝ} {x : ∀ n : ℕ, Fin n �
       f₀ hB fun i => ha (x n i)
 
 /-- Transfer of a sup-norm spline profile on the cube to the empirical profile of `splineX`
-(blueprint E.2), for design points in the cube. -/
+(`eq:sup-to-empirical`), for design points in the cube. -/
 lemma profileAt_spline {d q : ℕ} {b : Fin d → ℝ} {x : ∀ n : ℕ, Fin n → Fin d → ℝ}
     {f₀ : (Fin d → ℝ) → ℝ} {α : Fin d → ℝ} {Csp Capp E : ℝ} (hx : ∀ n i, x n i ∈ unitCube d)
     (hCapp : 0 ≤ Capp)

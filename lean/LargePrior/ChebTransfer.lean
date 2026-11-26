@@ -1,12 +1,12 @@
 import LargePrior.ChebSpec
 
 /-!
-# LargePrior: the smoothness transfer for the Chebyshev fold (L-02, Lane A)
+# LargePrior: the smoothness transfer for the Chebyshev fold
 
 The transfer `f ↦ f ∘ chebFold` from `C^α([0,1])` into the periodic Hölder–Zygmund ball of radius
-`C_tr(α) R` (eq:cheb-transfer, D:538–554).
+`C_tr(α) R` (eq:cheb-transfer, in the proof of Lemma chebyshev-profile).
 
-* `cheb_transfer_le_one` (T1): the case `0 < α ≤ 1` (`s = 0`, `β = α`).
+* `cheb_transfer_le_one`: the case `0 < α ≤ 1` (`s = 0`, `β = α`).
 * Fold lemmas `*_tr`: range, period 1, `π`-Lipschitz bound and smoothness.
 * Forward differences: `fdiff_eq_fwdDiff_iter` and the doubling bound `abs_fwdDiff_iter_le`.
 
@@ -79,7 +79,7 @@ theorem abs_fwdDiff_iter_le (h : ℝ) (n : ℕ) :
       _ ≤ 2 ^ n * (2 * M) := ih _ _ h1 y
       _ = 2 ^ (n + 1) * M := by ring
 
-/-! ## T1: the transfer for `0 < α ≤ 1` -/
+/-! ## The transfer for `0 < α ≤ 1` -/
 
 theorem chebS_of_le_one {α : ℝ} (hα1 : α ≤ 1) : chebS α = 0 := by
   have : ⌈α⌉₊ ≤ 1 := Nat.ceil_le.mpr (by exact_mod_cast hα1)
@@ -93,7 +93,7 @@ theorem chebCtr_of_le_one {α : ℝ} (r : ℕ) (hα1 : α ≤ 1) :
     chebCtr α r = 1 + 2 ^ (r - 1) * π ^ α := by
   simp [chebCtr, chebKappa, chebS_of_le_one hα1, chebBeta_of_le_one hα1]
 
-/-- **T1: the smoothness transfer for `0 < α ≤ 1`** (D:536–538 with `s = 0`, then D:552). Here
+/-- **The smoothness transfer for `0 < α ≤ 1`** (the case `s = 0` of eq:cheb-transfer). Here
 `|Δ_h g| ≤ R |x(u+h) − x(u)|^α ≤ π^α R |h|^α`, and the other `r − 1` differences at most double
 the sup bound, so `A = R` and `B = 2^{r−1} π^α R`. -/
 theorem cheb_transfer_le_one {α : ℝ} {r : ℕ} (hα : 0 < α) (hα1 : α ≤ 1) (hr : α < r) :

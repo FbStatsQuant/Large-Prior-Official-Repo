@@ -1,7 +1,7 @@
 import LargePrior.CorSpec
 
 /-!
-# Zero-padding a one-block spline into the multiresolution dictionary (blueprint §S.3)
+# Zero-padding a one-block spline into the multiresolution dictionary
 -/
 
 open Finset

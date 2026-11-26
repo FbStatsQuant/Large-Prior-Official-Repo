@@ -1,7 +1,7 @@
 import LargePrior.CorNonVacuity
 
 /-!
-# Non-vacuity, spline side, and Corollary 1 for univariate Hölder classes (blueprint §N, §H)
+# Non-vacuity, spline side, and Corollary 1 for univariate Hölder classes
 
 For order `q = 1`: B-spline stability (`BSplineReadout 1 1`) and the one-block approximation of
 every `α`-Hölder function on `[0,1]`, `0 < α ≤ 1`, are proved. Hence `cor_holder`: Corollary 1 for
@@ -178,7 +178,7 @@ lemma betaExp_dim_one {α : ℝ} (hα : 0 < α) (k : Fin 1) :
 `θ_i = f(i/2^ℓ)` gives error at most `R 2^{−ℓα} = R D_ℓ^{−α}` on `[0,1]` (proved, not assumed). -/
 theorem splineOneBlock_holder {α R : ℝ} {f : ℝ → ℝ} (hα : 0 < α) (hα1 : α ≤ 1)
     (hf : HolderBall1 α R f) : SplineOneBlock (d := 1) 1 (fun _ => α) R (fun y => f (y 0)) := by
-  -- The frozen statement retains `hα1`; this approximation proof only needs `hα > 0`.
+  -- The statement retains `hα1`; this approximation proof only needs `hα > 0`.
   have _ := hα1
   intro ℓ
   refine ⟨fun j => (fun i : ℕ => f ((i : ℝ) / ((2 ^ ℓ 0 : ℕ) : ℝ))) (j 0 : ℕ), fun x hx => ?_⟩

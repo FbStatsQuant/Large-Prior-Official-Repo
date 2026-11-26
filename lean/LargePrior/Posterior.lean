@@ -1,7 +1,7 @@
 import LargePrior.Gaussian
 
 /-!
-# Posterior facts and the posterior decomposition (blueprint Lemmas 7.7, 7.8)
+# Posterior facts and the posterior decomposition
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -80,13 +80,13 @@ lemma measurable_posterior_apply {σ : ℝ} (hσ : 0 < σ) (X : Matrix (Fin n) (
     (f₀ : Fin n → ℝ) (pri : Measure (Fin J → ℝ)) [IsProbabilityMeasure pri]
     {H : Set (Fin J → ℝ)} (hH : MeasurableSet H) :
     Measurable (fun y => posterior σ X f₀ pri y H) := by
-  -- `hσ` is part of the frozen statement; measurability holds for every `σ`.
+  -- `hσ` is part of the statement; measurability holds for every `σ`.
   have _ := hσ
   simp_rw [posterior_apply σ X f₀ pri _ hH, ENNReal.div_eq_inv_mul]
   exact (measurable_lintegral_lik σ X f₀ pri).inv.mul
     (measurable_lintegral_lik σ X f₀ (pri.restrict H))
 
-/-- Pointwise form of the decomposition (blueprint Lemma 7.8, before integrating in `y`). -/
+/-- Pointwise form of the decomposition. -/
 private lemma posterior_le_pointwise {σ : ℝ} (hσ : 0 < σ) (X : Matrix (Fin n) (Fin J) ℝ)
     (f₀ : Fin n → ℝ) (pri : Measure (Fin J → ℝ)) [IsProbabilityMeasure pri]
     {U Θc : Set (Fin J → ℝ)} {R : Set (Fin n → ℝ)} (hU : MeasurableSet U)
@@ -137,8 +137,7 @@ private lemma lintegral_setLIntegral_lik_mul {σ : ℝ} (hσ : 0 < σ)
   refine lintegral_congr fun θ => ?_
   exact lintegral_likRatio_mul hσ f₀ (X *ᵥ θ) hh
 
-/-- The decomposition of `E₀ Π(U | Y)` (blueprint Lemma 7.8; standalone displays
-(decomposition) and (remainder)). -/
+/-- The decomposition of `E₀ Π(U | Y)` (`eq:decomposition`, `eq:remainder`). -/
 theorem posterior_decomposition {σ : ℝ} (hσ : 0 < σ) (X : Matrix (Fin n) (Fin J) ℝ)
     (f₀ : Fin n → ℝ) (pri : Measure (Fin J → ℝ)) [IsProbabilityMeasure pri]
     {U Θc : Set (Fin J → ℝ)} {R : Set (Fin n → ℝ)} (hU : MeasurableSet U)
@@ -147,7 +146,7 @@ theorem posterior_decomposition {σ : ℝ} (hσ : 0 < σ) (X : Matrix (Fin n) (F
       dataLaw σ f₀ R + dataLaw σ f₀ {y | evidence σ X f₀ pri y < ENNReal.ofReal dstar} +
         ENNReal.ofReal dstar⁻¹ *
           (pri Θc + ∫⁻ θ in U ∩ Θcᶜ, dataLaw σ (X *ᵥ θ) Rᶜ ∂pri) := by
-  -- `hΘc` is part of the frozen statement; the bound holds for every `Θc`.
+  -- `hΘc` is part of the statement; the bound holds for every `Θc`.
   have _ := hΘc
   have hDm : MeasurableSet {y | evidence σ X f₀ pri y < ENNReal.ofReal dstar} :=
     measurableSet_lt (measurable_lintegral_lik σ X f₀ pri) measurable_const

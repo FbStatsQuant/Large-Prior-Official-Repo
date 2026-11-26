@@ -1,7 +1,7 @@
 import LargePrior.Spec
 
 /-!
-# Elementary facts: empirical norm, rates, constants (blueprint §7.1)
+# Elementary facts: empirical norm, rates, constants
 -/
 
 open MeasureTheory ProbabilityTheory Filter Finset
@@ -68,7 +68,7 @@ lemma continuous_empNorm : Continuous (empNorm : (Fin n → ℝ) → ℝ) := by
   unfold empNorm
   fun_prop
 
-/-- An average of squares never exceeds the largest square (blueprint Lemma 5.2). -/
+/-- An average of squares never exceeds the largest square. -/
 lemma empNorm_le_of_abs_le {b : ℝ} (hb : 0 ≤ b) (u : Fin n → ℝ) (h : ∀ i, |u i| ≤ b) :
     empNorm u ≤ b := by
   rw [empNorm]
@@ -104,7 +104,7 @@ lemma empNorm_mulVec_le {X : Matrix (Fin n) (Fin J) ℝ} {K : ℝ} (hX : BasisBo
   rw [empNorm_smul, mul_comm K]
   exact mul_le_mul_of_nonneg_left (hX j) (abs_nonneg _)
 
-/-! ## Rates (standalone Fact 1) -/
+/-! ## Rates (`fact:rates`) -/
 
 lemma le_sRate (n J a : ℕ) (εt : ℝ) : a ≤ sRate n J a εt := le_max_left _ _
 

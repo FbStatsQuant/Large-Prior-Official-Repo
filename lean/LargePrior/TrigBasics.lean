@@ -1,7 +1,7 @@
 import LargePrior.CorSpec
 
 /-!
-# Trigonometric facts for the Fourier lemma (blueprint §F.1)
+# Trigonometric facts for the Fourier lemma
 
 Orthonormality of the real atoms on `[0,1]`, their `L¹` bound, the pairing identity, and the
 pairing reindex of sums over atoms.

@@ -1,7 +1,7 @@
 import LargePrior.CorSpec
 
 /-!
-# Corollary 1: exponents, `log J_n`, and the `n ε̃_n²` identity (blueprint §B.1, B.2, B.4)
+# Corollary 1: exponents, `log J_n`, and the `n ε̃_n²` identity
 -/
 
 open Filter Finset
@@ -39,7 +39,7 @@ private lemma denom_pos {d : ℕ} {α : Fin d → ℝ} (hd : 0 < d) (hα : ∀ k
   have h2 : (0 : ℝ) < d := by exact_mod_cast hd
   linarith
 
-/-- Positivity of the exponents: `α* > 0`, `r > 0`, `0 < D < 1`, `β_k > 0` (blueprint B.1). -/
+/-- Positivity of the exponents: `α* > 0`, `r > 0`, `0 < D < 1`, `β_k > 0` (`lem:cor-exponents`). -/
 lemma exponents_pos {d : ℕ} {α : Fin d → ℝ} (hd : 0 < d) (hα : ∀ k, 0 < α k) :
     0 < alphaStar α ∧ 0 < rateExp α ∧ 0 < dimExp α ∧ dimExp α < 1 ∧ ∀ k, 0 < betaExp α k := by
   have ha := alphaStar_pos hd hα
@@ -113,7 +113,7 @@ private lemma J_bounds {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → �
       _ ≤ C * (C ^ d * (n : ℝ) ^ (∑ k, b k)) := mul_le_mul_of_nonneg_left hup hCpos.le
       _ = C ^ (d + 1) * (n : ℝ) ^ (∑ k, b k) := by ring
 
-/-- `J_n → ∞` and `log J_n ≍ log n` (blueprint B.2). -/
+/-- `J_n → ∞` and `log J_n ≍ log n` (`lem:cor-budget`). -/
 lemma logJ_comparable {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → ℕ} {J : ℕ → ℕ}
     {Csp Ceps cδ : ℝ} (h : SeqHyp α b L J Csp Ceps cδ) :
     Tendsto J atTop atTop ∧ ∃ c C : ℝ, 0 < c ∧ ∀ᶠ n : ℕ in atTop,
@@ -150,7 +150,7 @@ lemma logJ_comparable {d : ℕ} {α b : Fin d → ℝ} {L : ℕ → Fin d → �
     have h2 := (div_le_iff₀ hBpos).mp hl2
     constructor <;> nlinarith
 
-/-- `n ε̃_n² = C_ε² N_n^D log J_n` whenever `n > 0` and `J_n > 1` (blueprint B.4). -/
+/-- `n ε̃_n² = C_ε² N_n^D log J_n` whenever `n > 0` and `J_n > 1` (`lem:cor-rates`). -/
 lemma n_epsT_sq_eq {d : ℕ} {α : Fin d → ℝ} (hd : 0 < d) (hα : ∀ k, 0 < α k) (Ceps : ℝ)
     {n J : ℕ} (hn : 0 < n) (hJ : 1 < J) :
     (n : ℝ) * corEpsT Ceps α n J ^ 2 = Ceps ^ 2 * corN n J ^ dimExp α * Real.log J := by

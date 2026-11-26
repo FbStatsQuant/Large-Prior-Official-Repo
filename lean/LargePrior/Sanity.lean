@@ -7,7 +7,6 @@ Small lemmas that would expose a wrongly written definition: explicit values of 
 low-order B-splines, Fourier atoms, the empirical norm, the likelihood ratio, the half-Cauchy and
 horseshoe densities, and the fact that the posterior does not depend on the reference point of the
 likelihood ratio (so that it is the Bayes posterior).
-Blueprint: Remark `rem:bspl-sanity` (partB.tex) and Remark `rem:Dfinite` (LargePrior_blueprint.tex).
 -/
 
 open MeasureTheory ProbabilityTheory Finset

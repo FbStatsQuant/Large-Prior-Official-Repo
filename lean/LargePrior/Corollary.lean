@@ -3,7 +3,7 @@ import LargePrior.Asymptotic
 import LargePrior.WG4Perm
 
 /-!
-# Corollary 1, abstract form (blueprint §B.5–B.6)
+# Corollary 1, abstract form
 
 Assumption 2 from the profile at the balanced budget, and the corollary from Theorem 1.
 -/
@@ -30,7 +30,7 @@ private lemma corM_rpow_le {n J d : ℕ} {α : Fin d → ℝ} (hd : 0 < d) (hα 
     linarith [hαβ k]
   rwa [h2] at h1
 
-/-- **Assumption 2 from the profile** (blueprint B.5, Step 2): at a fixed `n` with `N_n ≥ 1`,
+/-- **Assumption 2 from the profile** (`lem:cor-approximant`): at a fixed `n` with `N_n ≥ 1`,
 `1 ≤ m_{n,k} ≤ L_k`, and `a_n ≤ J`, the profile vector at the balanced budget `m_n`, with an
 active set of exactly `a_n` indices containing its support, satisfies Assumption 2 with
 `ε̃_n = corEpsT`, `δ_n = corDelta`, `E_n = E`, `a_n = corA`, provided `C_ε ≥ d C_app`. -/
