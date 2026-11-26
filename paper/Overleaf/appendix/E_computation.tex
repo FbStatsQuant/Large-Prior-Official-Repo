@@ -41,7 +41,7 @@ These checks establish that the chain targets the posterior; they say nothing ab
 
 \paragraph*{Timing.} Table~\ref{tab:timing} reports timings at the largest size of Section~\ref{sec:convergence}, $n=20{,}000$ and $J=1024$, on one core of a shared machine, for $1000$ sweeps with a half-Cauchy global scale and fixed noise variance. With a structured Gram matrix, $1000$ sweeps take about a quarter of a second, and the setup takes longer than the sampling. The dense factorization, needed for the Chebyshev dictionary on an equally spaced grid, makes the same sweeps between $180$ and $250$ times slower. No timing of the package itself is available at this size. In the production runs of Section~\ref{sec:convergence}, on one core of a computing cluster, the median wall time of a complete fit of $7{,}000$ sweeps, setup and posterior summaries included, ranged over the four dictionary and design pairs from $0.30$ to $0.35$ seconds at $n=1000$ ($J=125$), from $0.81$ to $1.06$ seconds at $n=10{,}000$ ($J=630$), and from $1.57$ to $1.95$ seconds at $n=20{,}000$ ($J=1024$).
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Seconds for $1000$ sweeps of the sampler at $n=20{,}000$ and $J=1024$, on one core of a shared machine; nodes are the Gauss--Chebyshev nodes, and B-splines are cubic. The wall time is that of the whole call, including setup and posterior summaries. The dense case was timed without the per-sweep accuracy check, which adds $O(J^2)$ operations per sweep; with it, the whole call took $59.5$ seconds.}
 \label{tab:timing}
