@@ -41,8 +41,13 @@ write_sha256sums <- function(dir, files, sums_file = file.path(dir, "SHA256SUMS.
 #   --refresh: download everything again and record the new hashes (use this
 #              only to accept a revised upstream file; results may then differ
 #              from the paper).
+#   strict = FALSE (sunspots only): a raw-file mismatch is reported, not fatal,
+#              because that source appends new months to its files; the caller
+#              then checks the prepared series instead. Returns TRUE when the
+#              raw files match the recorded hashes.
 prepare_raw <- function(raw, raw_files, download_all,
-                        refresh = "--refresh" %in% commandArgs(trailingOnly = TRUE)) {
+                        refresh = "--refresh" %in% commandArgs(trailingOnly = TRUE),
+                        strict = TRUE) {
   sums <- file.path(raw, "SHA256SUMS.txt")
   if (refresh) {
     download_all()
@@ -56,6 +61,10 @@ prepare_raw <- function(raw, raw_files, download_all,
   }
   if (!file.exists(sums)) stop("SHA256SUMS.txt is missing; use --refresh to record new hashes")
   if (!check_sha256sums(raw)) {
+    if (!strict) {
+      cat("raw files differ from SHA256SUMS.txt (hashes of the paper's run)\n")
+      return(invisible(FALSE))
+    }
     stop("raw files do not match SHA256SUMS.txt (hashes of the paper's run). ",
          "The source may have been revised; rerun with --refresh to accept the current version.")
   }

@@ -75,3 +75,5 @@ A run with a non-default `--nmc` or `--burn` writes to `output/_quick/` instead.
 ## 5. Raw data handling
 
 A prep script downloads a raw file only if it is missing. It then checks every raw file against `data/raw/<name>/SHA256SUMS.txt`, which holds the hashes from the paper's run, and stops on a mismatch. `--refresh` downloads the files again and records new hashes. Use it only to accept a revised upstream file; results may then differ from the paper.
+
+The sunspot script differs in one respect, because SILSO appends a month to its files every month. A raw-file mismatch is reported but is not fatal; the strict check is applied to the prepared series (January 1900 to December 2024), which must be identical to the paper's input, shipped as `data/sunspots.csv`. If it is not, the script stops and leaves that file untouched unless `--refresh` is given.

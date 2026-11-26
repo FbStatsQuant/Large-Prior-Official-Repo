@@ -1,5 +1,19 @@
 # prep_sunspots.R -- MODEL.md Section 2A, 5. Output: data/sunspots.csv (t, x, y)
 # Usage: Rscript prep_sunspots.R [--refresh]
+#
+# data/sunspots.csv, the prepared series the paper used, ships with the
+# repository, so this script is only needed to rebuild it from SILSO.
+# SILSO appends a month to its files every month, so the raw files of a fresh
+# download no longer have the hashes recorded for the paper's run (files as of
+# October 2026). That is reported and is not an error here: the strict check is
+# on the prepared series, January 1900 to December 2024, which must be
+# identical to the paper's input.
+#   default:   rebuild from the downloaded files; stop, and leave the shipped
+#              data/sunspots.csv untouched, unless the result is identical to
+#              the paper's input;
+#   --refresh: download again, record the new raw hashes and write whatever the
+#              current files give (the current-data workflow; results may then
+#              differ from the paper).
 # Locate this script's folder and load the shared helpers (common.R); the
 # applications/ root is found from there (or from LP_APP_ROOT).
 local({
@@ -18,8 +32,16 @@ download_all <- function() {
   download.file("https://www.sidc.be/SILSO/INFO/sndtotcsv.php", f_d, mode = "wb", quiet = TRUE)
 }
 
-# Raw data handling (MODEL.md Section 5): see prepare_raw() in common.R
-prepare_raw(raw, raw_files, download_all)
+# Raw data handling (MODEL.md Section 5): see prepare_raw() in common.R.
+# strict = FALSE: a raw-file mismatch is reported; the prepared series is checked below.
+refresh <- "--refresh" %in% commandArgs(trailingOnly = TRUE)
+raw_ok  <- prepare_raw(raw, raw_files, download_all, strict = FALSE)
+
+# SHA-256 of the paper's prepared data/sunspots.csv: with LF line endings, and
+# with CRLF line endings (the paper's run wrote the file on Windows; this second
+# value is the input hash printed in reference_outputs/sunspots_summary.txt).
+paper_sha256 <- c("4d8d3be7fa14a1e81c7c74c425bd0c9e7ea2513eb57e5b6b344505b5f6e4884e",
+                  "bdfb32d712d9d244c93f6c4341274f3ffe377e374b0d0570aab5909df7d1eccb")
 
 # Monthly file: year; month; decimal date; mean SN; std dev; n obs; definitive flag
 m <- read.table(f_m, sep = ";", strip.white = TRUE, header = FALSE)
@@ -46,7 +68,20 @@ has <- key %in% names(dm)
 diffs <- abs(m$sn[has] - as.numeric(dm[key[has]]))
 cat("months with daily values:", sum(has), " max |monthly - daily mean| =", max(diffs), "\n")
 if (any(diffs > 0.1)) stop("sunspots reference check failed")
-# Write output only after all checks have passed
+# Strict check of the prepared series against the paper's input, then write.
+tmp <- tempfile(fileext = ".csv")
+write.csv(out, tmp, row.names = FALSE, quote = FALSE)
+same_as_paper <- sha256_file(tmp) %in% paper_sha256
+unlink(tmp)
+if (same_as_paper) {
+  cat("prepared series (1900-2024) is identical to the paper's input",
+      if (isTRUE(raw_ok)) "\n" else "(the raw files differ only outside it)\n")
+} else if (refresh) {
+  cat("--refresh: the prepared series differs from the paper's input; results may differ from the paper\n")
+} else {
+  stop("the prepared series for 1900-2024 differs from the paper's input: SILSO has revised values inside ",
+       "the window. data/sunspots.csv was left unchanged. Rerun with --refresh to use the current data.")
+}
 write.csv(out, file.path(root, "data", "sunspots.csv"), row.names = FALSE, quote = FALSE)
 cat("n =", n, " first t =", out$t[1], " last t =", out$t[n],
     " min y =", min(out$y), " max y =", max(out$y), "\n")

@@ -45,11 +45,18 @@ applications/
 │   └── common.R           paths and checksum helpers
 ├── data/
 │   ├── buoy.csv           prepared wave-height series
+│   ├── sunspots.csv       prepared sunspot series, the paper's snapshot (see above)
 │   └── raw/               NOAA buoy files, plus SHA256SUMS.txt for all three sources
-└── reference_outputs/     summaries of the paper run, the full buoy fit, and Figure 4
+└── reference_outputs/     summaries of the paper run, the three fitted curves, and Figure 4
 ```
 
-The reference summaries record n, the number of columns, τ, E[σ | y], the active frequencies and the input hash. A rerun of the buoy example reproduces `reference_outputs/buoy_fit.csv` byte for byte.
+## Reference outputs
+
+- `<name>_summary.txt` (paper run): n, the number of columns, τ, E[σ | y], the active frequencies and the input hash.
+- `<name>_fit.csv`: what Figure 4 is drawn from, one row per observation: `t`, `x`, the data `y`, the posterior mean `fhat` and the 95% band `lo`, `hi`. No posterior draws are shipped.
+  - `buoy_fit.csv` is the paper run's file. A rerun of the buoy example reproduces it byte for byte.
+  - `sunspots_fit.csv` and `bike_fit.csv` were not kept from the paper run. They were regenerated from the same inputs, seed and chain length with the repository's sampler in the mode that reproduces `horseshoe` 0.2.0 draw for draw ([`../sampler`](../sampler), `floor = "package"`). The regenerated fits give the paper run's E[σ | y] to all six printed decimals and exactly its active frequencies for both series; the same procedure applied to the buoy series reproduces the paper run's `buoy_fit.csv` to within 1e-13. A rerun with `run_applications.R` should agree with them to rounding error.
+- `applications_fig.png`: Figure 4 as in the paper. `Rscript code/make_figure.R --from=reference_outputs` redraws it from the three fit files; the result shows the same curves, bands and points, but fonts and anti-aliasing depend on the machine, so the image file is not byte-identical.
 
 ## Data sources
 

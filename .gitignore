@@ -38,8 +38,8 @@ simulations/*/figures/
 simulations/scaling/processed/
 simulations/scaling/summary/
 simulations/scaling/logs/
+simulations/*/tables/
 applications/output/
-applications/data/sunspots.csv
 applications/data/bike.csv
 # raw files downloaded by prep_sunspots.R and prep_bike.R (their SHA256SUMS.txt stay tracked)
 applications/data/raw/sunspots/*

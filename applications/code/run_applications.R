@@ -13,6 +13,8 @@
 #   Rscript run_applications.R                      # all three, nmc = 20000, burn = 10000
 #   Rscript run_applications.R bike buoy            # only these (also "bike,buoy")
 #   Rscript run_applications.R sunspots --nmc=500 --burn=100   # quick test -> output/_quick/
+#   Rscript run_applications.R --quick              # the same as --nmc=500 --burn=100, all three
+# Any other option is an error.
 # =====================================================================
 
 # Locate this script's folder and load the shared helpers (common.R); the
@@ -40,6 +42,11 @@ nmc  <- nmc_default
 burn <- burn_default
 
 args <- commandArgs(trailingOnly = TRUE)
+flags   <- grep("^--", args, value = TRUE)
+unknown <- flags[!(flags == "--quick" | grepl("^--(nmc|burn)=", flags))]
+if (length(unknown)) stop("unknown option: ", paste(unknown, collapse = " "),
+                          " (options: --quick, --nmc=N, --burn=N)")
+if ("--quick" %in% flags) { nmc <- 500L; burn <- 100L }   # smoke test; --nmc= / --burn= below override
 for (a in grep("^--nmc=",  args, value = TRUE)) nmc  <- as.integer(sub("^--nmc=",  "", a))
 for (a in grep("^--burn=", args, value = TRUE)) burn <- as.integer(sub("^--burn=", "", a))
 run_names <- unlist(strsplit(grep("^--", args, value = TRUE, invert = TRUE), ","))
