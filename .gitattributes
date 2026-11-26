@@ -1,9 +1,13 @@
 * text=auto
 *.lean text eol=lf
 *.R text eol=lf
+*.cpp text eol=lf
 *.sh text eol=lf
 *.slurm text eol=lf
 *.md text
+*.csv text eol=lf
+**/reference_outputs/*.txt text eol=lf
+**/reference_outputs/*.tex text eol=lf
 *.png binary
 *.jpg binary
 *.pdf binary

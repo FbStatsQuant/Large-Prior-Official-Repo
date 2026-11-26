@@ -11,19 +11,33 @@ lean/.lake/
 *.aux
 *.log
 *.synctex.gz
+*.bbl
+*.blg
+*.out
+*.fls
+*.fdb_latexmk
+*.toc
+paper/Overleaf/main.pdf
 
 # OS files
 .DS_Store
 Thumbs.db
 
+# Compiled code: the sampler compiles hs_fast.cpp on first use
+sampler/.cache/
+sampler/checks/.cache/
+*.o
+*.so
+
 # Outputs written by the scripts at run time
-simulations/benchmarks/results/
-simulations/benchmarks/quick_results/
-simulations/benchmarks/trend_plots/
-simulations/scaling/**/results/
-simulations/scaling/**/processed/
-simulations/scaling/**/logs/
-simulations/scaling/final/
+sampler/output/
+sampler/checks/output/
+simulations/*/results/
+simulations/*/quick_results/
+simulations/*/figures/
+simulations/scaling/processed/
+simulations/scaling/summary/
+simulations/scaling/logs/
 applications/output/
 applications/data/sunspots.csv
 applications/data/bike.csv

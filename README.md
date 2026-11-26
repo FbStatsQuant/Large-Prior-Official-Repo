@@ -1,44 +1,57 @@
 # Large series priors
 
-[![R 4.4.1](https://img.shields.io/badge/R-4.4.1-276DC3)](https://www.r-project.org/)
+[![R 4.5.2](https://img.shields.io/badge/R-4.5.2-276DC3)](https://www.r-project.org/)
 [![Lean 4](https://img.shields.io/badge/Lean-v4.35.0--rc2-0f4c81)](https://lean-lang.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT%20%28sampler%3A%20GPL--3%29-lightgrey)](#citation-and-license)
 
-This repository has the code and Lean proofs for **Large series priors for adaptive and optimal Bayesian nonparametric regression**, by Felipe Bedoya and Meng Li (Department of Statistics, Rice University).
+This repository has the code, the paper and the Lean proofs for **Large series priors for adaptive and optimal Bayesian nonparametric regression**, by Felipe Bedoya and Meng Li (Department of Statistics, Rice University).
 
 ## The idea
 
-A random series prior usually needs a prior on the number of terms, and that forces the sampler to move between models of different dimension. We skip that step. We expand the regression function in a **large, fixed** number of basis functions, J_n ≍ n^b (Fourier or B-splines), and let a **Horseshoe prior** on the coefficients decide which terms matter. With the basis fixed, the posterior is that of an ordinary Bayesian linear regression, so any Horseshoe sampler can fit it.
+A random series prior usually needs a prior on the number of terms, and that forces the sampler to move between models of different dimension. We skip that step. We expand the regression function in a **large, fixed** dictionary of J_n ≍ n^b functions and let a **Horseshoe prior** on the coefficients decide which terms matter. The paper works with three dictionaries: Fourier, B-splines, and tensor-product Chebyshev polynomials. With the dictionary fixed, the posterior is that of an ordinary Bayesian linear regression.
 
-On the theory side, Theorem 1 gives posterior contraction for product shrinkage priors under prior-mass conditions adapted from Wei and Ghosal (2020). Corollary 1 turns this into adaptive, near-minimax rates over anisotropic Hölder-type classes, using one prior fixed in advance. The rate is driven mainly by how sparsely the basis represents the true function.
+On the theory side, Theorem 1 gives posterior contraction for product shrinkage priors under prior-mass conditions adapted from Wei and Ghosal (2020). Corollary 1 turns this into adaptive contraction rates over anisotropic Hölder-type classes, using one prior fixed in advance. The rate is driven mainly by how sparsely the dictionary represents the true function.
+
+On the computing side, a fixed dictionary means a fixed design matrix, and for the three dictionaries its Gram matrix X'X is diagonal, diagonal plus rank one, or banded. [`sampler/`](sampler) has `hs_fast()`, an exact Horseshoe Gibbs sampler that uses this structure: the coefficient draw costs O(J_n) per sweep instead of O(J_n³), with a verified dense fallback for other designs. It targets the exact posterior by default, and with `floor = "package"` it reproduces the [`horseshoe`](https://CRAN.R-project.org/package=horseshoe) package draw for draw.
 
 ![Horseshoe fits to monthly sunspots, daily bike rentals and ocean wave heights](applications/reference_outputs/applications_fig.png)
 
-*Figure 2 of the paper: posterior means (navy) and 95% bands for the three real-data examples, all fitted with the same rules.*
+*Figure 4 of the paper: posterior means (navy) and 95% bands for the three real-data examples, all fitted with the same rules.*
 
 ## What's here
 
-| Folder | In the paper | How to run | Time |
+Every figure and table of the paper comes from a script in this repository.
+
+| In the paper | Folder | How to run (from that folder) | Time |
 |---|---|---|---|
-| [`simulations/benchmarks/`](simulations/benchmarks) | §3.1: Figure 1, Table 1 | `Rscript run_all.R`, then `Rscript trend_plots.R` | 30–60 min per function |
-| [`simulations/scaling/`](simulations/scaling) | §3.2: Table 2 | SLURM arrays, then `Rscript table2_slopes.R` | 15,500 cluster tasks |
-| [`applications/`](applications) | §3.3: Figure 2 | `code/prep_*.R`, `run_applications.R`, `make_figure.R` | about 45 min |
-| [`paper/`](paper) | Appendix: proofs of all lemmas | read `lemma_proofs.pdf` | |
-| [`lean/`](lean) | Theorem 1, Corollary 1, the sparse approximation lemmas | `lake build`, then `lake env lean AxiomCheck.lean` | about 15 min with the Mathlib cache |
+| §3.1: Figure 1, coefficient recovery | [`simulations/recovery/`](simulations/recovery) | `Rscript recovery.R`, then `Rscript make_figure.R` | about 10 s |
+| §3.2: Table 1, Figure 2, comparison with least squares and ridge | [`simulations/benchmarks/`](simulations/benchmarks) | `Rscript benchmarks.R`, then `Rscript make_figure.R` | about 30 s |
+| §3.3: Table 2, Figure 3, empirical rates | [`simulations/scaling/`](simulations/scaling) | from the shipped results: `Rscript summarize.R --from=reference_outputs`, then `Rscript make_figures.R --from=reference_outputs` | seconds; the full experiment is 400 cluster tasks, about 8 core-hours |
+| §3.4: Figure 4, three real series | [`applications/`](applications) | `code/prep_*.R`, `run_applications.R`, `make_figure.R` | about 45 min |
+| §3.5 and Appendix E: the sampler; Table 3, timings | [`sampler/`](sampler) | `Rscript timing.R`; four validation scripts in `checks/` | about 2 min; checks 10 s to 3 min each |
+| The paper itself, with all proofs | [`paper/`](paper) | read `large_series_priors.pdf`, or `latexmk -pdf main.tex` | |
+| Theorem 1, Corollary 1, the sparse approximation lemmas | [`lean/`](lean) | `lake build`, then `lake env lean AxiomCheck.lean` | about 15 min with the Mathlib cache |
 
-Each folder has its own README with the settings, the commands and the outputs. Every R script runs from its own folder and writes next to itself, so nothing needs editing.
+Each folder has its own README with the settings, the commands and the outputs. Every R script runs from its own folder with plain `Rscript` and writes next to itself, so nothing needs editing. Scripts that fit a model accept `--quick` for a fast smoke test.
 
-Each folder also ships the outputs of the paper run, so you can compare without rerunning:
+Each folder also ships `reference_outputs/` (small CSV files, text summaries and figures; no posterior draws), so you can compare without rerunning:
 
-- Redrawing Figure 1 from the shipped results gives a byte-identical image, and all 54 entries of Table 1 match.
+- Sections 3.1 and 3.2 rerun in under a minute each. The shipped outputs are such reruns at the paper's settings; they agree with the runs reported in the paper to rounding error, and they give every entry of Table 1 and every number quoted in Section 3.1 as printed.
+- For Section 3.3, the shipped per-fit results of the paper's run (15,600 fits) give Table 2, Figure 3 and the numbers quoted in the text. A single task of the experiment can be rerun on a laptop and compared with its shipped rows.
+- For the sampler, the shipped Table 3 holds the paper's timings (they depend on the machine), and the four validation scripts print PASS or FAIL.
 - Rerunning the buoy example reproduces its shipped fit byte for byte.
-- The Lean build has no `sorry` and uses only Lean's three standard axioms.
+- The Lean build has no `sorry` and uses only Lean's three standard axioms. It covers Theorem 1, Corollary 1 and the sparse approximation lemmas for all three dictionaries; the classical approximation inputs enter as explicit hypotheses.
 
 ## Requirements
 
-**R.** The paper runs used R 4.4.1 with [`horseshoe`](https://CRAN.R-project.org/package=horseshoe) 0.2.0 for every MCMC fit, `ggplot2` for the figures and `digest` for the data checksums. `splines` ships with R. The cluster runs used R 4.5.2.
+**R.** The paper's simulations ran under R 4.5.2 and the applications under R 4.4.1; the scripts here were also checked under R 4.6.0.
+
+- [`sampler/`](sampler) and [`simulations/`](simulations) need a C++ compiler and the packages `Rcpp`, `RcppArmadillo` and `digest`; the sampler compiles itself the first time it is sourced. Figures use base R graphics with cairo. `splines` ships with R.
+- [`applications/`](applications) uses the [`horseshoe`](https://CRAN.R-project.org/package=horseshoe) package, version 0.2.0, as the paper does for these fits, plus `ggplot2` for the figure and `digest` for the data checksums. One of the sampler's validation scripts also compares against `horseshoe` 0.2.0.
 
 **Lean.** Install [elan](https://github.com/leanprover/elan). It fetches the pinned toolchain and Mathlib for you.
+
+**LaTeX.** A full TeX Live, only if you want to recompile the paper.
 
 ## Data
 
@@ -51,6 +64,8 @@ Sources and citations are in [`applications/README.md`](applications/README.md).
 
 ## Citation and license
 
-`CITATION.cff` has the reference; GitHub shows it under "Cite this repository". The code and Lean sources are MIT-licensed (see [`LICENSE`](LICENSE)). The third-party data stay under their providers' terms.
+`CITATION.cff` has the reference; GitHub shows it under "Cite this repository".
+
+The repository is MIT-licensed (see [`LICENSE`](LICENSE)), with one exception: the folder [`sampler/`](sampler) is distributed under the GNU General Public License, version 3 (see [`sampler/LICENSE`](sampler/LICENSE)), because `hs_fast()` adapts code from the R package [`horseshoe`](https://CRAN.R-project.org/package=horseshoe) 0.2.0 by Stéphanie van der Pas, James Scott, Antik Chakraborty and Anirban Bhattacharya, which is GPL-3. We thank its authors. The third-party data stay under their providers' terms.
 
 Questions or problems? Please open an issue.
