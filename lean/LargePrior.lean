@@ -44,3 +44,12 @@ import LargePrior.CorSanity
 import LargePrior.WG4Perm
 import LargePrior.WG5Bridge
 import LargePrior.HorseshoePaper
+import LargePrior.ChebSpec
+import LargePrior.ChebBasis
+import LargePrior.ChebTransfer
+import LargePrior.ChebTransferHigh
+import LargePrior.ChebTensor
+import LargePrior.ChebProfile
+import LargePrior.ChebEndToEnd
+import LargePrior.ChebMain
+import LargePrior.ChebChecks

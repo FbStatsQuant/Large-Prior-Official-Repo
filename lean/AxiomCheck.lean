@@ -69,3 +69,37 @@ example : HorseshoeAssumption3Statement := horseshoe_assumption3_of_mu
 #print axioms horseshoe_assumption3_mu
 #print axioms horseshoe_paper_conditions
 #print axioms horseshoe_assumption3_of_mu
+
+/-! L-02 additions (2026-11-26): the tensor Chebyshev dictionary (statements frozen in
+`ChebSpec.lean`, commit 2c40352). `cor_chebyshev` is the anisotropic Corollary 1. -/
+
+example : ChebyshevBasisStatement := chebyshev_basis
+example : ChebTransferStatement := cheb_transfer_statement
+example : ChebyshevProfileStatement := chebyshev_profile
+example : ChebyshevAnisoProfileStatement := chebyshev_aniso_profile
+example : ChebyshevProfileAtStatement := chebyshev_profile_at
+example : CorChebyshevStatement := cor_chebyshev
+example : CorChebyshevExStatement := cor_chebyshev_ex
+example : CorChebyshevHolderStatement := cor_chebyshev_holder
+example : ChebSanityHolder := cheb_sanity_holder
+example : ChebSanityCtr := cheb_sanity_ctr
+example : ChebSanityAnisoUniv := cheb_sanity_aniso_univ
+
+#print axioms chebyshev_basis
+#print axioms cheb_transfer
+#print axioms cheb_transfer_statement
+#print axioms chebyshev_profile
+#print axioms chebyshev_aniso_profile
+#print axioms chebyshev_profile_at
+#print axioms cor_chebyshev
+#print axioms cor_chebyshev_ex
+#print axioms cor_chebyshev_holder
+#print axioms cheb_sanity_holder
+#print axioms cheb_sanity_ctr
+#print axioms cheb_sanity_aniso_univ
+#print axioms cheb_witness_sq
+#print axioms cheb_witness_sq_transfer
+#print axioms chebCtr_two_three
+#print axioms cheb_witness_sq_mul
+#print axioms cor_chebyshev_witness_two
+#print axioms cor_chebyshev_witness_one

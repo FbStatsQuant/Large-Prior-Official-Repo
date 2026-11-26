@@ -6,10 +6,10 @@ This folder contains machine-checked proofs, in Lean 4 with Mathlib, of the pape
 
 - **Theorem 1**: posterior contraction for product shrinkage priors under Assumptions 1–3.
 - **The Horseshoe paragraph** after Theorem 1: the Horseshoe with a deterministic global scale satisfies Assumption 3.
-- **Corollary 1**: adaptive near-minimax rates from the sparse approximation profile.
-- **The sparse approximation lemmas** (B-spline and Fourier): the Fourier and B-spline approximation profiles. The classical approximation theorems they rely on enter as explicit hypotheses (see below).
+- **Corollary 1**: adaptive contraction rates from the sparse approximation profile.
+- **The sparse approximation lemmas** for the three dictionaries of the paper: Fourier, B-spline and Chebyshev (tensor products of Chebyshev polynomials on [0,1]^d, for sectional Hölder classes). The classical approximation theorems they rely on enter as explicit hypotheses (see below).
 
-Everything is proved: there is no `sorry`, and the only axioms are Lean's standard three (`propext`, `Classical.choice`, `Quot.sound`).
+Every theorem is proved: there is no `sorry`, and the only axioms are Lean's standard three (`propext`, `Classical.choice`, `Quot.sound`). The classical approximation inputs (the Jackson–Stechkin inequality, B-spline stability and the one-block spline approximation) are hypotheses of the profile lemmas and end-to-end statements, not axioms, so `#print axioms` does not list them; see "Differences from the paper" below.
 
 ## Build and check
 
@@ -46,8 +46,14 @@ lake env lean AxiomCheck.lean   # prints the axioms each main theorem uses
 | Corollary 1 end to end: multiresolution B-splines | `CorBSplineStatement` | `cor_bspline` |
 | Corollary 1 end to end: B-splines, isotropic | `CorBSplineCubeStatement` | `cor_bspline_cube` |
 | Corollary 1 end to end: C^α([0,1]), 0 < α ≤ 1, nothing assumed | `CorHolderStatement` | `cor_holder` |
+| Assumption 1 for Chebyshev atoms | `ChebyshevBasisStatement` | `chebyshev_basis` |
+| Smoothness transfer under the Chebyshev fold | `ChebTransferStatement` | `cheb_transfer_statement` |
+| Chebyshev profile lemma, univariate and sectional anisotropic | `ChebyshevProfileStatement`, `ChebyshevAnisoProfileStatement` | `chebyshev_profile`, `chebyshev_aniso_profile` |
+| Chebyshev profile at a design (the input of Corollary 1) | `ChebyshevProfileAtStatement` | `chebyshev_profile_at` |
+| Corollary 1 end to end: sectional Hölder f₀, Chebyshev | `CorChebyshevStatement`, `CorChebyshevExStatement` | `cor_chebyshev`, `cor_chebyshev_ex` |
+| Corollary 1 end to end: Chebyshev, α ∈ (0,1)^d, nothing assumed | `CorChebyshevHolderStatement` | `cor_chebyshev_holder` |
 
-The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), [`LargePrior/CorSpec.lean`](LargePrior/CorSpec.lean) and [`LargePrior/HorseshoePaper.lean`](LargePrior/HorseshoePaper.lean). [`docs/statements.md`](docs/statements.md) explains each one in plain mathematics, so you can compare it with the paper without reading Lean.
+The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), [`LargePrior/CorSpec.lean`](LargePrior/CorSpec.lean), [`LargePrior/HorseshoePaper.lean`](LargePrior/HorseshoePaper.lean) and [`LargePrior/ChebSpec.lean`](LargePrior/ChebSpec.lean). [`docs/statements.md`](docs/statements.md) explains each one in plain mathematics, so you can compare it with the paper without reading Lean.
 
 ## Differences from the paper
 
@@ -67,11 +73,13 @@ The statements are collected in [`LargePrior/Spec.lean`](LargePrior/Spec.lean), 
 
 As a result, `CorHolderStatement`, which is Corollary 1 for every f₀ in a C^α([0,1]) ball with 0 < α ≤ 1, has no assumed input at all.
 
+**The Chebyshev dictionary** inherits the Corollary 1 differences above. The profile lemmas, `CorChebyshevStatement` and `CorChebyshevHolderStatement` keep the paper's displayed constants: C_sp = 1, E = R and, in the corollaries, any C_ε ≥ d·C_app, with C_app written out. Those two corollaries hold for any sizes L_{n,k} ≍ n^{b_k} and any enumeration of the atoms. The convenience form `CorChebyshevExStatement` has existential constants and the ceiling sizes ⌈n^{b_k}⌉. The smoothness transfer under the fold is proved for every α > 0. The Jackson inequality is the only classical input. It is proved for 0 < α < 1, so `CorChebyshevHolderStatement`, which is Corollary 1 for α ∈ (0,1)^d in any dimension, has no assumed input. For α_k ≥ 1 the Jackson inequality stays a hypothesis. The end-to-end statements use the Horseshoe, as `cor_horseshoe` does. Not formalized: the Gauss–Chebyshev Gram identity, the arcsine-weight coefficient formulas, the inclusions between the classes, and Jackson for α ≥ 1. [`docs/statements.md`](docs/statements.md) §§10–12 has the details.
+
 ## Files
 
 ```
 lean/
-├── LargePrior/            the development (Spec.lean and CorSpec.lean hold the statements)
+├── LargePrior/            the development (Spec, CorSpec, HorseshoePaper and ChebSpec hold the statements)
 ├── LargePrior.lean        imports every module
 ├── AxiomCheck.lean        type and axiom checks for the main results
 ├── docs/statements.md     the statements in plain mathematics
@@ -83,11 +91,12 @@ A rough map of `LargePrior/`. Every file opens with a short description.
 
 | Part | Modules |
 |---|---|
-| Statements | `Spec`, `CorSpec`, `HorseshoePaper` |
+| Statements | `Spec`, `CorSpec`, `HorseshoePaper`, `ChebSpec` |
 | Theorem 1 | `Basic`, `Gaussian`, `Posterior`, `LocalMass`, `Evidence`, `Sieve`, `BasicTest`, `Packing`, `Covering`, `Tests`, `Master`, `Asymptotic`, `WG4Perm`, `WG5Bridge` |
 | Horseshoe | `Horseshoe`, `WGFixed`, `HorseshoeAsymptotic`, `HorseshoeMain` |
 | Dictionaries | `Basis`, `BSpline` |
 | Corollary 1 | `CorSeqA`, `CorSeq`, `Corollary`, `CorHorseshoe`, `EndSizes`, `EndToEnd` |
 | Fourier profile | `TrigBasics`, `Fejer`, `VdPBasics`, `VdP` (de la Vallée Poussin), `FourierTensor`, `FourierExpand`, `FourierProfile`, `Jackson` |
 | B-spline profile | `SplineBook`, `SplineReadout`, `SplinePad`, `SplineProfile` |
-| Checks | `NonVacuity`, `CorNonVacuity`, `CorNonVacuityS`, `Sanity`, `CorSanity` |
+| Chebyshev | `ChebBasis`, `ChebTransfer`, `ChebTransferHigh`, `ChebTensor`, `ChebProfile`, `ChebEndToEnd`, `ChebMain` |
+| Checks | `NonVacuity`, `CorNonVacuity`, `CorNonVacuityS`, `Sanity`, `CorSanity`, `ChebChecks` |
